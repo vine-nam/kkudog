@@ -1,0 +1,230 @@
+/* 캘린터 all header읠 next 에 마진 조정 */
+.next {
+  margin-left: 15px;
+  margin-right: 0px;
+}
+
+/* mybook, search에 책 정보 */
+.book-list span p {
+  font-size: 12px;
+  line-height: 97%;
+}
+.book-list img {
+  width: 20%;
+  max-width: 85px !important;
+  margin-right: 22px;
+}
+
+.search-book-list a {
+  color: #000;  
+}
+.search-book-list li:hover {
+  background: #fafafa;
+}
+.add-book {
+  width: 100%;
+}
+
+/* p태그 폰트 사이지가 작은 것 같소 */
+.calendar p {
+  font-size: 10px;
+}
+
+/* mybook info */
+/* ul태그에 쓸데없이 margin이 있다. */
+.collection, .collapsible {
+  margin: 0;
+}
+/* li태그에 쓸데없이 padding이 있다. */
+.collection.with-header .collection-item {
+  padding-left: 20px;
+}
+
+/* write에 버튼의 크기를 늘리자 */
+.write button {
+  width: 100%;
+}
+
+/* footer 바닥에 고정 */
+footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+
+/* footer에 content가 가져짐으로 footer만큼 content에 padding을 줌 */
+.content {
+  padding-bottom: 44px;
+}
+
+.table-view img {
+  width: 100%;
+}
+
+.description {
+  padding-right: 15px;
+}
+
+/* mybook info에 삭제, 수정시 필요한 정보 
+실질적으로 사용자가 필요한 정보는 아니라서 숨긴다. */
+.rowid, .index {
+  display: none;
+}
+
+
+/* mybook-contents-tpl에 pre태그에 줄바꿈을 준다. */
+pre {
+  white-space: pre-wrap;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+#mybook-list {
+  padding-left: 20px;
+}
+#mybook-list li {
+  padding: 3%;
+  float: left;
+}
+#mybook-list img {
+  width: 67px;
+  height: 100px;
+}
+
+/* home의 캐릭터 이미지 관려 */
+#character {
+  margin: 20px auto;
+  text-align: center;
+}
+#character td {
+  padding: 0 20px;
+}
+#character img {
+  width: 80px;
+  margin-right: 10px;
+}
+
+/* calender */
+/* table 초기화? */
+table {
+  width: auto !important;
+}
+table th, td {
+  padding: 2px 5px !important;
+}
+.calendar {
+  margin: 3%;
+}
+.calendar_wrap{ 
+  width: 100%;
+  text-align: center;
+}
+.calendar_wrap table {
+  margin: auto;
+}
+.calendar caption{ 
+  font-size: 1.5em;
+  color: orange;
+  padding: 10px;
+}
+.calendar th, .calendar td{
+  border: 1px solid #666;
+  border-collapse: collapse;
+  font-size: 0.5em;
+  width: 44px;
+}
+.calendar th{
+  text-align: center;
+  vertical-align: middle;
+}
+.calendar td {
+  vertical-align: top;;
+  height: 44px;
+}
+.calendar td div{
+  text-align: left;
+  height: 6px;
+}
+.calendar td p {
+  background: #26a96a;
+  color: #111;
+  margin: auto;
+  height: 31px;
+  width: 1%;
+  border-radius: 50%;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+.calendar th:first-child, .calendar td:first-child{ color: red;}	
+
+#prev, #next{
+  display: inline-block;
+  text-decoration: none;
+  padding: 5px;
+}
+
+/* calender-all */
+.calendar_wrap .calendar-all {
+  margin: 5px;
+  float: left;
+  width: 30%;
+  height: auto;
+  font-size: 0.7rem;
+}
+.calendar-all caption{ 
+  font-size: 1em;
+  padding: 1px;
+}
+.calendar-all th {
+  font-weight: initial;
+}
+.calendar-all th, .calendar-all td{ 
+  height: auto;
+  width: 9%;
+  border: 0px;
+  text-align: center;
+  padding: 3px 1px !important;
+}
+.circle {
+  background: #26a96a;
+  color: #111;
+  border-radius: 50%;
+}
+
+
+/* mybook content의 more 버튼 누르면 나타날 것들 */
+.hidden {
+  display: none;
+}
+.show {
+  display: block;
+  display: block;
+  background: #fff;
+  position: absolute;
+  right: 20px;
+}
+.show li {
+  cursor: pointer;
+  padding: 4px 20px;
+}
+.show li:hover {
+  background: #f5f5f5;
+}
+/* mybook info의 헤더? 부분 */
+.header-more {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+.header-more-ul {
+  top: 10px;
+}  
+
+
+/* percent */
+.percent {
+  background: #484848;
+}

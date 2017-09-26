@@ -1,45 +1,499 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>KKU-DOG</h1>
+
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src * gap: ws: https://ssl.gstatic.com;style-src * 'unsafe-inline' 'self' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;img-src * data: 'unsafe-inline' 'self' content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">   
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="assets/materialize/css/materialize.min.css"  media="screen,projection"/>
+  <link href="assets/css/styles.css" rel="stylesheet">
+  <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <title>꾸독</title>
+
+</head>
+
+<body>
+  <script src="js/view/HomeView.js"></script>
+  <script src="js/view/CalendarView.js"></script>
+  <script src="js/view/CalendarAllHomeView.js"></script>
+  <script src="js/view/CalendarAllView.js"></script>
+  <script src="js/view/MybookView.js"></script>
+  <script src="js/view/MybookListView.js"></script>
+  <script src="js/view/MybookInfoView.js"></script>
+  <script src="js/view/MybookContentsView.js"></script>
+  <script src="js/view/SearchView.js"></script>
+  <script src="js/view/SearchListView.js"></script>
+  <script src="js/view/SearchBookInfoView.js"></script>
+  <script src="js/view/WriteView.js"></script>
+  <script src="js/view/FooterBarView.js"></script>
+
+  <script src="lib/handlebars.js"></script>
+
+  <script id="home-tpl" type="text/template">
+    <header>
+      <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">꾸독</a>
+          <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+          <ul class="side-nav" id="mobile-demo">
+            <li><a href="#">Sass</a></li>
+            <li><a href="#">Components</a></li>
+            <li><a href="#">JavaScript</a></li>
+          </ul>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
+      </nav>
+      <!-- <a class="icon icon-bars pull-left"></a>
+      <a class="icon icon-search pull-right search-key" href="#search"></a>
+      <h1 class="title">Title</h1> -->
+    </header>
+    <div class="content">
+      <table id="character">
+        <tr>
+          <td class="centered">
+            <img src="img/{{0}}">
+          </td>
+          <td>
+            <p>완독: 3권</p>
+            <p>전체 읽은 페이지: 50쪽</p>
+            <p>오늘 읽은 페이지: 10쪽</p>
+            <span class="icon fa fa-heart" aria-hidden="true"></span>
+            <span class="icon fa fa-heart" aria-hidden="true"></span>
+            <span class="icon fa fa-heart" aria-hidden="true"></span>
+          </td>
+        </tr>
+      </table>
+      <div class="calendar"></div>
+    </div>
+    <footer></footer>
+  </script>
+
+  <script id="calendar-tpl" type="text/template">
+    <div class="calendar_wrap">
+      <table>
+        <caption>
+          <span class="year">{{year}}</span>년
+          <span class="month">{{month}}</span>월
+        </caption>
+        <tr>
+          <th>일</th>
+          <th>월</th>
+          <th>화</th>
+          <th>수</th>
+          <th>목</th>
+          <th>금</th>
+          <th>토</th>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[0]}}}</div>{{#if c_page.[0]}}<p>{{c_page.[0]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[1]}}}</div>{{#if c_page.[1]}}<p>{{c_page.[1]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[2]}}}</div>{{#if c_page.[2]}}<p>{{c_page.[2]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[3]}}}</div>{{#if c_page.[3]}}<p>{{c_page.[3]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[4]}}}</div>{{#if c_page.[4]}}<p>{{c_page.[4]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[5]}}}</div>{{#if c_page.[5]}}<p>{{c_page.[5]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[6]}}}</div>{{#if c_page.[6]}}<p>{{c_page.[6]}}</p>{{/if}}</td>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[7]}}}</div>{{#if c_page.[7]}}<p>{{c_page.[7]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[8]}}}</div>{{#if c_page.[8]}}<p>{{c_page.[8]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[9]}}}</div>{{#if c_page.[9]}}<p>{{c_page.[9]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[10]}}}</div>{{#if c_page.[10]}}<p>{{c_page.[10]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[11]}}}</div>{{#if c_page.[11]}}<p>{{c_page.[11]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[12]}}}</div>{{#if c_page.[12]}}<p>{{c_page.[12]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[13]}}}</div>{{#if c_page.[13]}}<p>{{c_page.[13]}}</p>{{/if}}</td>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[14]}}}</div>{{#if c_page.[14]}}<p>{{c_page.[14]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[15]}}}</div>{{#if c_page.[15]}}<p>{{c_page.[15]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[16]}}}</div>{{#if c_page.[16]}}<p>{{c_page.[16]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[17]}}}</div>{{#if c_page.[17]}}<p>{{c_page.[17]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[18]}}}</div>{{#if c_page.[18]}}<p>{{c_page.[18]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[19]}}}</div>{{#if c_page.[19]}}<p>{{c_page.[19]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[20]}}}</div>{{#if c_page.[20]}}<p>{{c_page.[20]}}</p>{{/if}}</td>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[21]}}}</div>{{#if c_page.[21]}}<p>{{c_page.[21]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[22]}}}</div>{{#if c_page.[22]}}<p>{{c_page.[22]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[23]}}}</div>{{#if c_page.[23]}}<p>{{c_page.[23]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[24]}}}</div>{{#if c_page.[24]}}<p>{{c_page.[24]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[25]}}}</div>{{#if c_page.[25]}}<p>{{c_page.[25]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[26]}}}</div>{{#if c_page.[26]}}<p>{{c_page.[26]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[27]}}}</div>{{#if c_page.[27]}}<p>{{c_page.[27]}}</p>{{/if}}</td>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[28]}}}</div>{{#if c_page.[28]}}<p>{{c_page.[28]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[29]}}}</div>{{#if c_page.[29]}}<p>{{c_page.[29]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[30]}}}</div>{{#if c_page.[30]}}<p>{{c_page.[30]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[31]}}}</div>{{#if c_page.[31]}}<p>{{c_page.[31]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[32]}}}</div>{{#if c_page.[32]}}<p>{{c_page.[32]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[33]}}}</div>{{#if c_page.[33]}}<p>{{c_page.[33]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[34]}}}</div>{{#if c_page.[34]}}<p>{{c_page.[34]}}</p>{{/if}}</td>
+        </tr>
+        <tr>
+          <td><div>{{{c_date.[35]}}}</div>{{#if c_page.[35]}}<p>{{c_page.[35]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[36]}}}</div>{{#if c_page.[36]}}<p>{{c_page.[36]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[37]}}}</div>{{#if c_page.[37]}}<p>{{c_page.[37]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[38]}}}</div>{{#if c_page.[38]}}<p>{{c_page.[38]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[39]}}}</div>{{#if c_page.[39]}}<p>{{c_page.[39]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[40]}}}</div>{{#if c_page.[40]}}<p>{{c_page.[40]}}</p>{{/if}}</td>
+          <td><div>{{{c_date.[41]}}}</div>{{#if c_page.[41]}}<p>{{c_page.[41]}}</p>{{/if}}</td>
+       </tr>
+      </table>
+      <a href="#" id="prev">이전달</a>
+      <a href="#" id="next">다음달</a>
+    </div>
+  </script>
+
+  <script id="calendar-all-home-tpl" type="text/template">
+    <header>
+      <nav>
+        <ul class="brand-logo center">
+          <li>
+            <i class="material-icons prev">chevron_left</i>
+          </li>
+          <li class="year">{{this}}</li>
+          <li>
+            <i class="material-icons next">chevron_right</i>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="content"></div>
+    <footer></footer>
+  </script>
+
+  <script id="calendar-all-tpl" type="text/template">
+    <div class="calendar_wrap">
+      {{#each this}}
+      <table class="calendar calendar-all">
+        <caption>
+          <span class="month">{{month}}</span>월
+        </caption>
+        <tr>
+          <th>일</th>
+          <th>월</th>
+          <th>화</th>
+          <th>수</th>
+          <th>목</th>
+          <th>금</th>
+          <th>토</th>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[0]}}circle{{/if}}">{{{c_date.[0]}}}</td>
+          <td class="{{#if c_page.[1]}}circle{{/if}}">{{{c_date.[1]}}}</td>
+          <td class="{{#if c_page.[2]}}circle{{/if}}">{{{c_date.[2]}}}</td>
+          <td class="{{#if c_page.[3]}}circle{{/if}}">{{{c_date.[3]}}}</td>
+          <td class="{{#if c_page.[4]}}circle{{/if}}">{{{c_date.[4]}}}</td>
+          <td class="{{#if c_page.[5]}}circle{{/if}}">{{{c_date.[5]}}}</td>
+          <td class="{{#if c_page.[6]}}circle{{/if}}">{{{c_date.[6]}}}</td>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[7]}}circle{{/if}}">{{{c_date.[7]}}}</td>
+          <td class="{{#if c_page.[8]}}circle{{/if}}">{{{c_date.[8]}}}</td>
+          <td class="{{#if c_page.[9]}}circle{{/if}}">{{{c_date.[9]}}}</td>
+          <td class="{{#if c_page.[10]}}circle{{/if}}">{{{c_date.[10]}}}</td>
+          <td class="{{#if c_page.[11]}}circle{{/if}}">{{{c_date.[11]}}}</td>
+          <td class="{{#if c_page.[12]}}circle{{/if}}">{{{c_date.[12]}}}</td>
+          <td class="{{#if c_page.[13]}}circle{{/if}}">{{{c_date.[13]}}}</td>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[14]}}circle{{/if}}">{{{c_date.[14]}}}</td>
+          <td class="{{#if c_page.[15]}}circle{{/if}}">{{{c_date.[15]}}}</td>
+          <td class="{{#if c_page.[16]}}circle{{/if}}">{{{c_date.[16]}}}</td>
+          <td class="{{#if c_page.[17]}}circle{{/if}}">{{{c_date.[17]}}}</td>
+          <td class="{{#if c_page.[18]}}circle{{/if}}">{{{c_date.[18]}}}</td>
+          <td class="{{#if c_page.[19]}}circle{{/if}}">{{{c_date.[19]}}}</td>
+          <td class="{{#if c_page.[20]}}circle{{/if}}">{{{c_date.[20]}}}</td>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[21]}}circle{{/if}}">{{{c_date.[21]}}}</td>
+          <td class="{{#if c_page.[22]}}circle{{/if}}">{{{c_date.[22]}}}</td>
+          <td class="{{#if c_page.[23]}}circle{{/if}}">{{{c_date.[23]}}}</td>
+          <td class="{{#if c_page.[24]}}circle{{/if}}">{{{c_date.[24]}}}</td>
+          <td class="{{#if c_page.[25]}}circle{{/if}}">{{{c_date.[25]}}}</td>
+          <td class="{{#if c_page.[26]}}circle{{/if}}">{{{c_date.[26]}}}</td>
+          <td class="{{#if c_page.[27]}}circle{{/if}}">{{{c_date.[27]}}}</td>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[28]}}circle{{/if}}">{{{c_date.[28]}}}</td>
+          <td class="{{#if c_page.[29]}}circle{{/if}}">{{{c_date.[29]}}}</td>
+          <td class="{{#if c_page.[30]}}circle{{/if}}">{{{c_date.[30]}}}</td>
+          <td class="{{#if c_page.[31]}}circle{{/if}}">{{{c_date.[31]}}}</td>
+          <td class="{{#if c_page.[32]}}circle{{/if}}">{{{c_date.[32]}}}</td>
+          <td class="{{#if c_page.[33]}}circle{{/if}}">{{{c_date.[33]}}}</td>
+          <td class="{{#if c_page.[34]}}circle{{/if}}">{{{c_date.[34]}}}</td>
+        </tr>
+        <tr>
+          <td class="{{#if c_page.[35]}}circle{{/if}}">{{{c_date.[35]}}}</td>
+          <td class="{{#if c_page.[36]}}circle{{/if}}">{{{c_date.[36]}}}</td>
+          <td class="{{#if c_page.[37]}}circle{{/if}}">{{{c_date.[37]}}}</td>
+          <td class="{{#if c_page.[38]}}circle{{/if}}">{{{c_date.[38]}}}</td>
+          <td class="{{#if c_page.[39]}}circle{{/if}}">{{{c_date.[39]}}}</td>
+          <td class="{{#if c_page.[40]}}circle{{/if}}">{{{c_date.[40]}}}</td>
+          <td class="{{#if c_page.[41]}}circle{{/if}}">{{{c_date.[41]}}}</td>
+        </tr>
+      </table>
+      {{/each}}
+    </div>
+  </script>
+
+  <script id="mybook-tpl" type="text/template">
+    <header>
+      <nav>
+        <a class="brand-logo center">내 책</a>
+      </nav>
+    </header>
+    <div class="content"></div>
+    <footer></footer>
+  </script>
+
+  <script id="mybook-list-tpl" type="text/template">
+    <ul id="mybook-list">
+      {{#each this}}
+      <li>
+        <a href="#mybook/{{@index}}">
+          <img class="z-depth-3" src="{{image}}">
+          <!-- <div class="percent" style="width: {{percent}}%">
+            {{percent}}%
+          </div> -->
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <script id="mybook-info-tpl" type="text/template">
+    <header>
+      <nav>
+        <a class="brand-logo center">{{{title}}}</a>
+        <ul>
+          <li>
+            <a class="back"><i class="material-icons">arrow_back</i></a>
+          </li>
+        </ul>
+        <ul class="right">
+          <li>
+            <a href="#write"><i class="material-icons">create</i></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <ul class="book-list collection with-header">
+      <li class="valign-wrapper collection-header">
+        <img class="responsive-img z-depth-2"
+        src="{{#if image}}{{image}}"+
+          "{{else}}img/image-not-found.png{{/if}}">
+        <span>
+          <i class="material-icons more header-more right">more_vert</i>
+          <ul class="hidden header-more-ul z-depth-3">
+            <li class="delete">삭제</li>
+          </ul>
+        </span>
+        <span>
+          {{{title}}}
+          {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
+          {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
+          {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
+        </span>
+      </li>
+      <div class="contents"></div>
+    </ul>
+  </script>
+
+  <script id="mybook-contents-tpl" type="text/template">
+    {{#each this}}
+      <li class="collection-item">
+        <span>
+          <i class="material-icons more right">more_vert</i>
+          <ul class="hidden z-depth-3">
+            <li class="update">수정</li>
+            <li class="delete">삭제</li>
+          </ul>
+          <p class="rowid">{{rowid}}</p>
+          <p class="index">{{@index}}</p>
+        </span>
+        <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
+        <pre>{{{ contents }}}</pre>
+      </li>
+    {{/each}}
+  </script>
+
+  <script id="write-tpl" type="text/template">
+    <header>
+      <nav>
+        <a class="brand-logo center">{{{title}}}</a>
+        <ul>
+          <li>
+            <a class="back"><i class="material-icons">arrow_back</i></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="row">
+      <form class="write col s12" id="target" action="#write" method="post">
+        <div class="row">
+          <div class="input-field col s12"> 
+            읽은 페이지
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s4">
+            <input id="s_page" type="number" name="s_page" value="{{data.s_page}}" data-length="5">
+            <label for="s_page">시작 페이지</label>
+          </div>
+          <div class="input-field col s4">
+            <input id="e_page" type="number" name="e_page" value="{{data.e_page}}" data-length="5">
+            <label for="e_page">종료 페이지</label>
+          </div>
+          <div class="input-field col s4">
+            <input id="page" type="number" name="page" readonly value="{{data.page}}" data-length="5">
+            <label for="page" class="page">총 페이지</label>
+          </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12"> 
+              책 내용
+            </div>
+          </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea id="textarea1" name="contents" class="materialize-textarea">{{data.contents}}</textarea>
+            <!-- <label for="textarea">책 내용</label> -->
+          </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">등록하기</button>
+      </form>
+    </div>
+  </script>
+
+
+  <script id="search-tpl" type="text/template">
+    <header>
+      <nav>
+        <div class="nav-wrapper">
+          <form id="target" action="#search" method="get">
+            <div class="input-field">
+              <input id="search" type="search" name="search" required>
+              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              <i class="material-icons close">close</i>
+            </div>
+          </form>
+        </div>
+      </nav>
+    </header>
+    <div class="content"></div>
+    <footer></footer>
+  </script>
+
+  <script id="search-list-tpl" type="text/template">
+    <ul class="collection search-book-list book-list" data-collapsible="accordion">
+      {{#each this}}
+      <li class="collection-item">
+        <a href="#search/{{@index}}" class="navigate-right">
+        <div class="valign-wrapper collection-header">
+          <img class="responsive-img z-depth-2"
+            src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
+              "{{else}}img/image-not-found.png{{/if}}">
+          <span>
+            {{{volumeInfo.title}}}
+            {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
+            {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
+            {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}}
+          </span>
+        </div>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <script id="search-book-info-tpl" type="text/template">
+    <header>
+      <nav>
+        <a class="brand-logo center">책 정보</a>
+        <ul>
+          <li>
+            <a class="back"><i class="material-icons">arrow_back</i></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <ul class="book-list collection with-header">
+      <li class="valign-wrapper collection-header">
+          <img src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
+            "{{else}}img/image-not-found.png{{/if}}">
+        <span>
+          {{{volumeInfo.title}}}
+          {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
+          {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
+          {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}}
+        </span>
+      <li>
+      <li class="collection-item">
+        상세정보
+        <p>{{{volumeInfo.description}}}</p>
+      </li>
+      <li class="collection-item">  
+        <button class="btn waves-effect waves-light add-book" type="submit" name="action">추가하기</button>
+      </li>
+    </ul>
+  </script>
+
+
+  <script id="footer-bar-tpl" type="text/template">
+    <nav class="nav-extended">
+      <div class="nav-content">
+        <ul class="tabs tabs-transparent tabs-fixed-width">
+          <li class="tab">
+            <a class="{{#if home}}active{{/if}}" href="#"><i  class="material-icons">home</i>
+            </a>
+          </li>
+          <li class="tab">
+            <a class="{{#if mybook}}active{{/if}}" href="#mybook"><i  class="material-icons">book</i>
+            </a>
+          </li>
+          <li class="tab">
+            <a class="{{#if calendar}}active{{/if}}" href="#calendar"><i class="material-icons">insert_invitation</i>
+            </a>
+          </li>
+          <li class="tab">
+            <a class="{{#if search}}active{{/if}}" href="#search"><i  class="material-icons">search</i>
+            </a>
+          </li>
+          <li class="tab">
+            <a class="{{#if settings}}active{{/if}}" href="#">
+              <i class="material-icons">settings</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </script>
+
+  <script src="lib/jquery.js"></script>
+  <script src="lib/router.js"></script>
+  <script src="js/api/key.js"></script>
+  <script src="js/api/index.js"></script>
+  <script src="js/data/index.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/app.js"></script>
+  <script src="assets/materialize/js/materialize.js"></script>
+  <script src="cordova.js"></script>
+  <script type="text/javascript">
+    // $(function () {
+    //   // 이 이벤트가 발생했다는 것은 cordova의 초기화가 모두 완료되었다는 의미.
+    //   $(document).on('deviceready', function () {
+    //     sqlite_db();
+    //     //  sqlite_db().initDatabase();
+    //     // cordova의 초기화 완료 후 1초의 시간을 더 딜레이 시키고 인트로화면이 사라지게 한다.
+    //     // --> 인트로 화면이 너무 빨리 사라지는 것을 방지하기 위해서 1초의 딜레이를 적용함.
+    //     //setTimeout(function () {
+    //     navigator.splashscreen.hide();
+    //     //}, 1000);
+    //   });
+    // });
+  </script>
+</body>
+
 </html>

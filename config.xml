@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordva.kkudog" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>kkudog</name>
+<widget id="com.muk2.books" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>꾸독</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
@@ -22,6 +22,29 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <platform name="android">
+        <icon density="ldpi" src="res/icon/android/logo-pink.png" />
+        <icon density="mdpi" src="res/icon/android/logo-pink.png" />
+        <icon density="hdpi" src="res/icon/android/logo-pink.png" />
+        <icon density="xhdpi" src="res/icon/android/logo-pink.png" />
+    </platform>
+    <platform name="android">
+        <splash density="port-hdpi" src="res/screen/android/screen-hdpi-portrait.png" />
+        <splash density="port-ldpi" src="res/screen/android/screen-ldpi-portrait.png" />
+        <splash density="port-mdpi" src="res/screen/android/screen-mdpi-portrait.png" />
+        <splash density="port-xhdpi" src="res/screen/android/screen-xhdpi-portrait.png" />
+        <splash density="land-hdpi" src="res/screen/android/screen-hdpi-landscape.png" />
+        <splash density="land-ldpi" src="res/screen/android/screen-ldpi-landscape.png" />
+        <splash density="land-mdpi" src="res/screen/android/screen-mdpi-landscape.png" />
+        <splash density="land-xhdpi" src="res/screen/android/screen-xhdpi-landscape.png" />
+    </platform>
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="SplashMaintainAspectRatio" value="false" />
+    <preference name="android-build-tool" value="gradle" />
     <engine name="android" spec="^6.2.3" />
+    <plugin name="cordova-plugin-console" spec="^1.0.7" />
+    <plugin name="cordova-plugin-dialogs" spec="^1.3.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
+    <plugin name="cordova-sqlite-storage" spec="^2.0.4" />
 </widget>
