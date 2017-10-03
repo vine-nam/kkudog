@@ -1,4 +1,4 @@
-var MybookContentsView = function () {
+var MybookMonthContentsView = function () {
   
     var items;
   

@@ -6,10 +6,12 @@ $(document).on('deviceready', function () {
   CalendarView.prototype.template = Handlebars.compile($("#calendar-tpl").html());
   CalendarAllHomeView.prototype.template = Handlebars.compile($("#calendar-all-home-tpl").html());
   CalendarAllView.prototype.template = Handlebars.compile($("#calendar-all-tpl").html());
+  CalendarMonthHomeView.prototype.template = Handlebars.compile($("#calendar-month-home-tpl").html());
   MybookView.prototype.template = Handlebars.compile($("#mybook-tpl").html());
   MybookListView.prototype.template = Handlebars.compile($("#mybook-list-tpl").html());
   MybookInfoView.prototype.template = Handlebars.compile($("#mybook-info-tpl").html());
   MybookContentsView.prototype.template = Handlebars.compile($("#mybook-contents-tpl").html());
+  MybookMonthContentsView.prototype.template = Handlebars.compile($("#mybook-month-contents-tpl").html());
   SearchView.prototype.template = Handlebars.compile($("#search-tpl").html());
   SearchListView.prototype.template = Handlebars.compile($("#search-list-tpl").html());
   SearchBookInfoView.prototype.template = Handlebars.compile($("#search-book-info-tpl").html());
@@ -25,6 +27,7 @@ $(document).on('deviceready', function () {
   var index;
   var page = 1;
   var isLoading = false;
+  var year, month;
 
   router.addRoute('', function () {
     items = [];
@@ -37,7 +40,13 @@ $(document).on('deviceready', function () {
   router.addRoute('calendar', function () {
     $('body').html(new CalendarAllHomeView().render().$el);
     $('footer').html(new FooterBarView("calendar").render().$el);
-    $(".button-collapse").sideNav();
+  });
+
+  router.addRoute('calendar/:index', function (i) {
+    var temp = $('.year').html();
+    temp===''||temp===undefined ? year : year = $('.year').html();
+    month = parseInt(i);
+    $('body').html(new CalendarMonthHomeView(year, ++month).render().$el);
   });
 
   //api옮기기...
@@ -100,7 +109,11 @@ $(document).on('deviceready', function () {
   });
   
   router.addRoute('write', function () {
-    $('body').html(new WriteView(items_mb[index]).render().$el);
+    var data;
+    if(items_mb[index]) {
+      data = items_mb[index];
+    }
+    $('body').html(new WriteView(data).render().$el);
   });
 
   router.start();

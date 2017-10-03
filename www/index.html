@@ -19,10 +19,12 @@
   <script src="js/view/CalendarView.js"></script>
   <script src="js/view/CalendarAllHomeView.js"></script>
   <script src="js/view/CalendarAllView.js"></script>
+  <script src="js/view/CalendarMonthHomeView.js"></script>
   <script src="js/view/MybookView.js"></script>
   <script src="js/view/MybookListView.js"></script>
   <script src="js/view/MybookInfoView.js"></script>
   <script src="js/view/MybookContentsView.js"></script>
+  <script src="js/view/MybookMonthContentsView.js"></script>
   <script src="js/view/SearchView.js"></script>
   <script src="js/view/SearchListView.js"></script>
   <script src="js/view/SearchBookInfoView.js"></script>
@@ -48,7 +50,7 @@
       <a class="icon icon-search pull-right search-key" href="#search"></a>
       <h1 class="title">Title</h1> -->
     </header>
-    <div class="content">
+    <div class="home-table">
       <table id="character">
         <tr>
           <td class="centered">
@@ -72,10 +74,12 @@
   <script id="calendar-tpl" type="text/template">
     <div class="calendar_wrap">
       <table>
-        <caption>
-          <span class="year">{{year}}</span>년
-          <span class="month">{{month}}</span>월
-        </caption>
+        {{#if cm}}
+          <caption>
+            <span class="year">{{year}}</span>년
+            <span class="month">{{month}}</span>월
+          </caption>
+        {{/if}}
         <tr>
           <th>일</th>
           <th>월</th>
@@ -140,8 +144,10 @@
           <td><div>{{{c_date.[41]}}}</div>{{#if c_page.[41]}}<p>{{c_page.[41]}}</p>{{/if}}</td>
        </tr>
       </table>
-      <a href="#" id="prev">이전달</a>
-      <a href="#" id="next">다음달</a>
+      {{#if cm}}
+        <a href="#" id="prev">이전달</a>
+        <a href="#" id="next">다음달</a>
+      {{/if}}
     </div>
   </script>
 
@@ -166,6 +172,7 @@
   <script id="calendar-all-tpl" type="text/template">
     <div class="calendar_wrap">
       {{#each this}}
+      <a href="#calendar/{{@index}}">
       <table class="calendar calendar-all">
         <caption>
           <span class="month">{{month}}</span>월
@@ -234,8 +241,40 @@
           <td class="{{#if c_page.[41]}}circle{{/if}}">{{{c_date.[41]}}}</td>
         </tr>
       </table>
+      </a>
       {{/each}}
     </div>
+  </script>
+
+  <script id="calendar-month-home-tpl" type="text/template">
+    <header>
+      <nav>
+        <ul>
+          <li class="brand-logo left">
+            <span class="year">{{year}}</span>
+            / <span class="month">{{month}}</span>
+            <span class="date"></span>
+          </li>
+          <li class="right">
+            <a class="change-md">일</a>
+          </li>
+          <li class="right">
+            <a>
+              <i class="material-icons next">keyboard_arrow_up</i>
+            </a>
+          </li>
+          <li class="right">
+            <a>
+              <i class="material-icons prev">keyboard_arrow_down</i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="calendar"></div> 
+    <ul class="book-list collection with-header">     
+      <div class="contents"></div>
+    </ul>
   </script>
 
   <script id="mybook-tpl" type="text/template">
@@ -315,6 +354,30 @@
         </span>
         <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
         <pre>{{{ contents }}}</pre>
+      </li>
+    {{/each}}
+  </script>
+
+  <script id="mybook-month-contents-tpl" type="text/template">
+    {{#each this}}
+      <li class="collection-item">
+        <img class="responsive-img month-img z-depth-2"
+          src="{{#if image}}{{image}}"+
+            "{{else}}img/image-not-found.png{{/if}}">
+        <span>
+          <i class="material-icons more right">more_vert</i>
+          <ul class="hidden z-depth-3">
+            <li class="update">수정</li>
+            <li class="delete">삭제</li>
+          </ul>
+          <p class="rowid">{{rowid}}</p>
+          <p class="index">{{@index}}</p>
+        </span>
+        <span class="info">
+          <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
+          <p>{{{title}}}</p>
+          <pre>{{{ contents }}}</pre>
+        <span>
       </li>
     {{/each}}
   </script>

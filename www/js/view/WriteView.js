@@ -1,6 +1,7 @@
-var WriteView = function (items) {
+var WriteView = function (item) {
   
-  var items = items;
+  var items = {};
+  // var isUpdate;
   var s_val, e_val, result;
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
 
@@ -10,6 +11,7 @@ var WriteView = function (items) {
     this.$el.on('submit', '#target', this.submit);
     this.$el.on('keyup', '#s_page', this.s_page);
     this.$el.on('keyup', '#e_page', this.e_page);
+    items = item;
     this.render();
   };
 
@@ -26,21 +28,22 @@ var WriteView = function (items) {
       items.isbn,//db에 저장된걸 가져오는 거라서 그냥 isbn임★★
       query[0].split("=")[1],
       query[1].split("=")[1],
-      // query[2].split("=")[1],//이거 필요한가??
+      query[2].split("=")[1],
       decodeURIComponent(query[3].split("=")[1]),
       new Date()
       // new Date(2017, (query[0].split("=")[1])/12, query[1].split("=")[1])
     ];
-// alert(data[4]);
+
     var executeQuery;
+    alert("isUpdate"+items.isUpdate);
     if(items.isUpdate) {
-      executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, contents=? WHERE rowid=?";
+      executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, page=?, contents=? WHERE rowid=?";
       data.shift();
       data.pop();
       data.push(items.data.rowid);
       items.isUpdate = false;
     } else {
-      executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?)";
+      executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?,?)";
     }
 
     database.transaction(function (transaction) {
@@ -85,12 +88,22 @@ var WriteView = function (items) {
     }
   }
 
-  this.setWrite = function(data) {
-    items.data = data;
-    items.data.page = items.data.e_page-items.data.s_page+1;
+  this.setWrite = function(item, hash) {
+    items.data = item;
     items.isUpdate = true;
-    // this.render();
-    location.href="#write";
+    if(hash) {
+      window.location.hash = "1";
+      this.render();
+    } else {
+      location.href="#write";
+    }
+  }
+  this.setCalWrite = function(data) {
+    items.data.s_page = items.s_page;
+    items.data.s_page = items.e_page;
+    items.data.page = items.page;
+    items.data.s_page = items.contents;
+    items.isUpdate = true;
   }
 
   this.render = function () {
@@ -98,6 +111,14 @@ var WriteView = function (items) {
       items.data = "";
     }
     this.$el.html(this.template(items));
+
+    if($("#s_page").val()) 
+      $("#s_page").addClass("active");
+    if($("#e_page").val()) 
+      $("#e_page").addClass("active");
+    if($("#page").val()) 
+      $("#page").addClass("active");
+
     return this;
   };
 

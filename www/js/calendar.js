@@ -12,11 +12,15 @@ var calendar = function () {
     return new_month;
   }
 
-  function getCal(new_year, new_month) { 
+  function getCal(new_year, new_month, date) { 
+    if(date) {
+      date = date;
+    } else {
+      date = 1;
+    }
     c_date = [];
-    console.log(new_year +", "+ new_month);
 
-    var	d = new Date(new_year, new_month-1, 1),
+    var	d = new Date(new_year, new_month-1, date),
         // 월별 일수 구하기
         d_length = 32 - new Date(new_year, new_month-1, 32).getDate(),
         year = d.getFullYear(),
@@ -24,10 +28,10 @@ var calendar = function () {
         date = d.getDate(),
         day = d.getDay();
 
-    console.log("new_year//" + new_year);
-    console.log("new_month//" + new_month);
-    console.log("date//" + date);
-    console.log("day//" + day);
+    // console.log("new_year//" + new_year);
+    // console.log("new_month//" + new_month);
+    // console.log("date//" + date);
+    // console.log("day//" + day);
 
     // caption 영역 날짜 표시 객체
     // 테이블 초기화
@@ -43,6 +47,7 @@ var calendar = function () {
     return {
       year: year,
       month: month+1,
+      date: date-1,
       c_date: c_date
     }
   }

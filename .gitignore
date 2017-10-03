@@ -10,3 +10,5 @@ www/js/data/database.js
 www/js/api/key.js
 www/img/book-img.png
 www/img/logo.png
+*.log
+*.db

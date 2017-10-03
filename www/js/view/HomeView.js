@@ -23,6 +23,22 @@ var HomeView = function (page, isLoading) {
 
     this.$el = $('<div/>');
 
+    this.$el.on('click', 'td', function(event) {
+      event.preventDefault();
+      var target = $( event.target );
+      var date;
+      if (!target.is("div")) {
+        if(target.is("td")) {
+          date = target.children("div").text();
+        } else {
+          date = target.parent().children("div").text();
+        } 
+      } else {
+        date = target.text();
+      }
+
+    });
+
     this.$el.on('click', '#prev', function (event) {
       event.preventDefault();
       items = cal.getCal(year, --month);
@@ -51,9 +67,9 @@ var HomeView = function (page, isLoading) {
     });
 
     // 테스트 코드
-    // items.c_page = [,,,,,,1,2,3,4];
-    // calendarView.setCal(items);
-    // calendarView.render();
+    items.c_page = [,,,,,,1,2,3,4];
+    calendarView.setCal(items);
+    calendarView.render();
 
     this.render();
   };

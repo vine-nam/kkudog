@@ -26,7 +26,7 @@ var sqlite_db = function () {
       // );
       transaction.executeSql(executeQuery, [],
         function (tx, result) {//Success
-          alert("Table created MybookTable successfully");
+          // alert("Table created MybookTable successfully");
         },
         function (error) {// Error
           alert("Error occurred while creating the table.");
@@ -37,11 +37,12 @@ var sqlite_db = function () {
   }
 
 //디비 설계가 필요행~~~
+//page도 넣기~~~~~~~~`
   function createWriteTable() {
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS WriteTable ('
-        + 'isbn TEXT, '//책 isbn
-        + 's_page INTEGER NOT NULL, e_page INTEGER NOT NULL, '
+        + 'isbn TEXT NOT NULL, '//책 isbn
+        + 's_page INTEGER NOT NULL, e_page INTEGER NOT NULL, page INTEGER NOT NULL, '
         + 'contents TEXT NOT NULL, date TEXT NOT NULL'
         + ');';
       // transaction.executeSql('DROP TABLE IF EXISTS WriteTable', [],
@@ -54,7 +55,7 @@ var sqlite_db = function () {
       // );
       transaction.executeSql(executeQuery, [],
         function (tx, result) {//Success
-          alert("Table created WriteTable successfully");
+          // alert("Table created WriteTable successfully");
         },
         function (error) {// Error
           alert("Error occurred while creating the table.");

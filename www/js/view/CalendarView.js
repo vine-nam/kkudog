@@ -1,9 +1,9 @@
-var DBPage = function() {
+var DBPage = function () {
   var database;
   var c_page;
-  this.initialize = function() {
+  this.initialize = function () {
     database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
-  }
+  };
   this.month = function (key) {
     switch (key) {
       case 1:
@@ -33,35 +33,36 @@ var DBPage = function() {
       default:
         break;
     }
-  }
-  this.getData = function(items) {
+  };
+  this.getData = function (items) {
     var results;
     var deferred = $.Deferred();
     var query = [
-      '%'+this.month(items.month)+'%'+items.year+'%'
+      '%' + this.month(items.month) + '%' + items.year + '%'
     ];
     database.transaction(function (transaction) {
-      transaction.executeSql("SELECT rowid, s_page, e_page, date FROM WriteTable WHERE date LIKE ?", query, function (tx, results) {
+      transaction.executeSql("SELECT rowid, page, date FROM WriteTable WHERE date LIKE ?", query, function (tx, results) {
         results = results.rows;
         var data = [];
         var c_page = [];
         var dt;
-        var s_page, e_page, page, date;
+        var page, date;
         var len = results.length, i;
-        var startDay = new Date(items.year, items.month-1, 0).getDay();
+        var startDay = new Date(items.year, items.month - 1, 0).getDay();
+        if(startDay===6) {
+          startDay = -1;
+        }
 
         for (i = 0; i < len; i++) {
-    
-          s_page = results.item(i).s_page;
-          e_page = results.item(i).e_page;
-          page = e_page - s_page + 1;
+
+          page = results.item(i).page
           date = results.item(i).date;
-    
+
           dt = new Date(date);
           day = dt.getDate() + startDay;
           //뭔가 복잡해졌어;;;;이름잘못지어서;;;;
-          
-          if(c_page[day]===undefined){
+
+          if (c_page[day] === undefined) {
             c_page[day] = page;
           } else {
             c_page[day] += page;
@@ -72,7 +73,59 @@ var DBPage = function() {
       }, null);
     });
     return deferred.promise();
-  }
+  };
+  this.getItems = function (items) {
+    var results;
+    var deferred = $.Deferred();
+    var query = [
+      '%' + this.month(items.month) + '%' + items.year + '%'
+    ];
+    var executeQuery = "SELECT w.rowid rowid, * FROM "
+    + "WriteTable w INNER JOIN MybookTable m ON w.isbn=m.isbn "
+    + "WHERE date LIKE ?";//왜 언디파인드야!1!!//컬럼 이름이 달라지는 건가???
+    database.transaction(function (transaction) {
+      transaction.executeSql(executeQuery, query, function (tx, results) {
+        data = [];
+        var month, day;
+        var len = results.rows.length, i;
+        var isbn, s_page, e_page, contents, date;
+        for (i = 0; i < len; i++) {
+          rowid = results.rows.item(i).rowid;
+          isbn = results.rows.item(i).isbn;
+          image = results.rows.item(i).image;
+          title = results.rows.item(i).title;
+          s_page = results.rows.item(i).s_page;
+          e_page = results.rows.item(i).e_page;
+          page = results.rows.item(i).page;
+          contents = results.rows.item(i).contents;
+          date = results.rows.item(i).date;
+
+          var dt = new Date(date);
+          month = dt.getMonth() + 1;
+          day = dt.getDate();
+          date = month + "월 " + day + "일";
+          // alert(dt);
+          data[i] = {
+            rowid: rowid,
+            isbn: isbn,
+            image: image,
+            title: title,
+            s_page: s_page,
+            e_page: e_page,
+            page: page,
+            contents: contents,
+            date: date
+          };
+        }
+        // // items.data = data;
+
+        deferred.resolve(data);
+      }, function(error) {
+        navigator.notification.alert('error: ' + error.message);
+      });
+    });
+    return deferred.promise();
+  };
 
   this.initialize();
 }

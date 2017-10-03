@@ -4,7 +4,7 @@ var MybookInfoView = function (items) {
 
   var data;
   var items = items;
-  var contentsView;
+  var mybookcontentsView;
   var rowid;
   var index;
   //test serve
@@ -28,7 +28,7 @@ var MybookInfoView = function (items) {
   this.initialize = function () {
     this.$el = $('<div/>');
     this.$el.on('click', '.back', this.back);
-    this.$el.on('click', function(e) {//분리시키기엔 화면에 너무 복잡하여 나~~~중에 함 보겠다.
+    this.$el.on('click', function(e) {
       if(!$(e.target).hasClass("more")) {
         if ($("ul").hasClass("show")) {
           $("ul").removeClass("show");
@@ -45,7 +45,7 @@ var MybookInfoView = function (items) {
     // mybookcontentsView.setMybook(data);
 
     database.transaction(function (transaction) {
-      transaction.executeSql('SELECT rowid, * FROM WriteTable WHERE isbn=? ORDER BY rowid', [items.isbn], function (tx, results) {
+      transaction.executeSql('SELECT rowid, * FROM WriteTable WHERE isbn=? ORDER BY rowid DESC', [items.isbn], function (tx, results) {
 
         data = [];
         var month, day;
@@ -56,6 +56,7 @@ var MybookInfoView = function (items) {
           // isbn = results.rows.item(i).isbn;
           s_page = results.rows.item(i).s_page;
           e_page = results.rows.item(i).e_page;
+          // page = results.rows.item(i).page;
           contents = results.rows.item(i).contents;
           date = results.rows.item(i).date;
 
@@ -63,11 +64,12 @@ var MybookInfoView = function (items) {
           month = dt.getMonth() + 1;
           day = dt.getDate();
           date = month + "월 " + day + "일";
-// alert(dt);
+
           data[i] = {
             rowid: rowid,
             s_page: s_page,
             e_page: e_page,
+            // page: page,
             contents: contents,
             date: date
           };
@@ -75,7 +77,9 @@ var MybookInfoView = function (items) {
         // items.data = data;
         mybookcontentsView.setMybook(data);
 
-      }, null);
+      }, function(error) {
+        navigator.notification.alert('error: ' + error.message);
+      });
     });
 
     this.render();
@@ -105,6 +109,7 @@ var MybookInfoView = function (items) {
         isbn = results.rows.item(0).isbn;
         s_page = results.rows.item(0).s_page;
         e_page = results.rows.item(0).e_page;
+        page = results.rows.item(0).page;
         contents = results.rows.item(0).contents;
         date = results.rows.item(0).date;
         items = { //rowid 있음 주의 **
@@ -112,6 +117,7 @@ var MybookInfoView = function (items) {
           isbn: isbn, 
           s_page: s_page, 
           e_page: e_page, 
+          page: page, 
           contents: contents
         };
        

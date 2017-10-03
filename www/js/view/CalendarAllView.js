@@ -30,6 +30,9 @@ var DBPageAll = function () {
           dt = new Date(date);
           month = dt.getMonth();
           startDay = new Date(year, month, 0).getDay();
+          if(startDay===6) {
+            startDay = -1;
+          }
           day = dt.getDate() + startDay;
           
           items[month].c_page[day] = true;
