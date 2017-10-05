@@ -50,7 +50,7 @@
       <a class="icon icon-search pull-right search-key" href="#search"></a>
       <h1 class="title">Title</h1> -->
     </header>
-    <div class="home-table">
+    <div class="home-table content">
       <table id="character">
         <tr>
           <td class="centered">
@@ -72,7 +72,7 @@
   </script>
 
   <script id="calendar-tpl" type="text/template">
-    <div class="calendar_wrap">
+    <div class="calendar-wrap">
       <table>
         {{#if cm}}
           <caption>
@@ -154,13 +154,19 @@
   <script id="calendar-all-home-tpl" type="text/template">
     <header>
       <nav>
-        <ul class="brand-logo center">
-          <li>
-            <i class="material-icons prev">chevron_left</i>
+        <ul>
+          <li class="brand-logo left">
+            <span class="year">{{this}}</span>
           </li>
-          <li class="year">{{this}}</li>
-          <li>
-            <i class="material-icons next">chevron_right</i>
+          <li class="right">
+            <a>
+              <i class="material-icons next">keyboard_arrow_up</i>
+            </a>
+          </li>
+          <li class="right">
+            <a>
+              <i class="material-icons prev">keyboard_arrow_down</i>
+            </a>
           </li>
         </ul>
       </nav>
@@ -170,7 +176,7 @@
   </script>
 
   <script id="calendar-all-tpl" type="text/template">
-    <div class="calendar_wrap">
+    <div class="calendar-wrap">
       {{#each this}}
       <a href="#calendar/{{@index}}">
       <table class="calendar calendar-all">
@@ -271,7 +277,7 @@
         </ul>
       </nav>
     </header>
-    <div class="calendar"></div> 
+    <div class="calendar content"></div> 
     <ul class="book-list collection with-header">     
       <div class="contents"></div>
     </ul>
@@ -482,25 +488,27 @@
         </ul>
       </nav>
     </header>
-    <ul class="book-list collection with-header">
-      <li class="valign-wrapper collection-header">
-          <img src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
-            "{{else}}img/image-not-found.png{{/if}}">
-        <span>
-          {{{volumeInfo.title}}}
-          {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
-          {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
-          {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}}
-        </span>
-      <li>
-      <li class="collection-item">
-        상세정보
-        <p>{{{volumeInfo.description}}}</p>
-      </li>
-      <li class="collection-item">  
-        <button class="btn waves-effect waves-light add-book" type="submit" name="action">추가하기</button>
-      </li>
-    </ul>
+    <div class="content">
+      <ul class="book-list collection with-header">
+        <li class="valign-wrapper collection-header">
+            <img src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
+              "{{else}}img/image-not-found.png{{/if}}">
+          <span>
+            {{{volumeInfo.title}}}
+            {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
+            {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
+            {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}}
+          </span>
+        </li>
+        <li class="collection-item">
+          상세정보
+          <p>{{{volumeInfo.description}}}</p>
+        </li>
+        <li class="collection-item button-li">  
+          <button class="btn waves-effect waves-light add-book" type="submit" name="action">추가하기</button>
+        </li>
+      </ul>
+    </div>
   </script>
 
 

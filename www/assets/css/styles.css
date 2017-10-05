@@ -1,3 +1,25 @@
+header nav {
+  position: fixed;
+  top: 0px;
+}
+footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+header ~ .content {
+  padding-top: 56px;
+}
+@media only screen and (min-width: 601px) {
+  header ~ .content {
+    padding-top: 64px;
+  }
+}
+.content {
+  overflow: auto;
+  padding-bottom: 48px;
+}
+
 /* mybook, search에 책 정보 */
 .book-list span p {
   font-size: 14px;
@@ -47,17 +69,6 @@
   width: 100%;
 }
 
-/* footer 바닥에 고정 */
-footer {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-}
-
-/* footer에 content가 가져짐으로 footer만큼 content에 padding을 줌 */
-.content {
-  padding-bottom: 44px;
-}
 
 .table-view img {
   width: 100%;
@@ -113,16 +124,17 @@ ul {
   width: auto !important;
 }
 table th, td {
-  padding: 2px 5px !important;
+  padding: 2px 3px !important;
 }
 .calendar {
-  margin: 3%;
+  padding-bottom: 0;
 }
-.calendar_wrap{ 
-  width: 100%;
-  text-align: center;
+.calendar-wrap{ 
+  /* width: 100%;
+  text-align: center; */
+  /* padding: 0.3em; */
 }
-.calendar_wrap table {
+.calendar-wrap table {
   margin: auto;
 }
 .calendar caption{ 
@@ -151,13 +163,15 @@ table th, td {
 .calendar td p {
   background: #26a96a;
   color: #111;
-  margin: auto;
-  height: 31px;
-  width: 1%;
+  padding: 7px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
   text-align: center;
   display: table-cell;
   vertical-align: middle;
+  position: fixed;
+  margin: 2px 4px;
 }
 .calendar th:first-child, .calendar td:first-child{ color: red;}	
 
@@ -168,12 +182,11 @@ table th, td {
 }
 
 /* calender-all */
-.calendar_wrap .calendar-all {
-  margin: 5px;
+.calendar-wrap .calendar-all {
+  margin: 0.6em;
   float: left;
-  width: 30%;
-  height: auto;
-  font-size: 0.7rem;
+  font-size: 0.1em;
+  inline-size: auto;
 }
 .calendar-all caption{ 
   font-size: 1em;
@@ -184,10 +197,10 @@ table th, td {
 }
 .calendar-all th, .calendar-all td{ 
   height: auto;
-  width: 9%;
+  width: 1.5em;
   border: 0px;
   text-align: center;
-  padding: 3px 1px !important;
+  padding: 0px !important;
 }
 .calendar-all:hover {
   background: antiquewhite;
@@ -196,6 +209,9 @@ table th, td {
   background: #26a96a;
   color: #111;
   border-radius: 50%;
+}
+a .calendar-all {
+  color: #000;
 }
 
 /* mybook content의 more 버튼 누르면 나타날 것들 */
@@ -229,4 +245,13 @@ table th, td {
 /* percent */
 .percent {
   background: #484848;
+}
+
+
+/* search */
+ul {
+  border: 0;
+}
+.button-li {
+  border: 0;
 }
