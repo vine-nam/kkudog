@@ -2,7 +2,6 @@
 꾸준한 독서 `꾸독`입니다:)
 
 ## lib
----
 - css
   - materialize
   - font-awesome
@@ -13,7 +12,6 @@
   - router.js
 
 ## 코드
----
 - www/js/api/key.js
 ```c
   var key = {
@@ -28,7 +26,6 @@
   ```
 
 ## 참고
----
 - 사이트
   - [Apache Cordova Tutorial](https://ccoenraets.github.io/cordova-tutorial/)
 
