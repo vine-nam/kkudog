@@ -7,9 +7,10 @@ var ChangeTdItems = function() {
     date = date;
     tditems = {};
     bookitems = bookitems;
+    var j=0;
     for (var i=0; i<Object.keys(bookitems).length; i++) {
       if(date == bookitems[i].date.split("일")[0].split(" ")[1]) {
-        tditems[i] = bookitems[i];
+        tditems[j++] = bookitems[i];
       }
     }
     md = false;
@@ -17,6 +18,9 @@ var ChangeTdItems = function() {
     $(".date").text(" / "+date);
     mybookMonthContentsView.setMybook(tditems);
     return md;
+  }
+  this.getTdItems = function() {
+    return tditems;
   }
 }
 
@@ -229,9 +233,20 @@ var CalendarMonthHomeView = function (year, month) {
   }
 
   this.update = function () {
-    var writeView = new WriteView(bookitems[index]);
-    writeView.setWrite(bookitems[index], true);
+    var writeView;
+    if(md) {
+      writeView = new WriteView(bookitems[index]);
+      writeView.setWrite(bookitems[index], true);
+    } else {
+      var tditems = {};
+      tditems = changeTdItems.getTdItems();
+      writeView = new WriteView(tditems[index]);
+      writeView.setWrite(tditems[index], true);
+    }
     $('body', this.$el).html(writeView.$el);
+    $(document).ready(function() {
+      Materialize.updateTextFields();
+    });
   }
 
   //writeTable 연결헤서 한 번에 지울 수 있게 하기~~??

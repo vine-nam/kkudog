@@ -277,10 +277,12 @@
         </ul>
       </nav>
     </header>
-    <div class="calendar content"></div> 
-    <ul class="book-list collection with-header">     
-      <div class="contents"></div>
-    </ul>
+    <div class="content">
+      <div class="calendar month-cal"></div> 
+      <ul class="book-list collection with-header">
+        <div class="contents"></div>
+      </ul>
+    </div>
   </script>
 
   <script id="mybook-tpl" type="text/template">
@@ -324,26 +326,28 @@
         </ul>
       </nav>
     </header>
-    <ul class="book-list collection with-header">
-      <li class="valign-wrapper collection-header">
-        <img class="responsive-img z-depth-2"
-        src="{{#if image}}{{image}}"+
-          "{{else}}img/image-not-found.png{{/if}}">
-        <span>
-          <i class="material-icons more header-more right">more_vert</i>
-          <ul class="hidden header-more-ul z-depth-3">
-            <li class="delete">삭제</li>
-          </ul>
-        </span>
-        <span>
-          {{{title}}}
-          {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
-          {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
-          {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
-        </span>
-      </li>
-      <div class="contents"></div>
-    </ul>
+    <div class="content"> 
+      <ul class="book-list collection with-header">
+        <li class="valign-wrapper collection-header">
+          <img class="responsive-img z-depth-2"
+          src="{{#if image}}{{image}}"+
+            "{{else}}img/image-not-found.png{{/if}}">
+          <span>
+            <i class="material-icons more header-more right">more_vert</i>
+            <ul class="hidden header-more-ul z-depth-3">
+              <li class="delete">삭제</li>
+            </ul>
+          </span>
+          <span>
+            {{{title}}}
+            {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
+            {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
+            {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
+          </span>
+        </li>
+        <div class="contents"></div>
+      </ul>
+    </div>
   </script>
 
   <script id="mybook-contents-tpl" type="text/template">
@@ -399,7 +403,7 @@
         </ul>
       </nav>
     </header>
-    <div class="row">
+    <div class="row content">
       <form class="write col s12" id="target" action="#write" method="post">
         <div class="row">
           <div class="input-field col s12"> 

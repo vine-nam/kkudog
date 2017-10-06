@@ -1,7 +1,6 @@
 var WriteView = function (item) {
   
   var items = {};
-  // var isUpdate;
   var s_val, e_val, result;
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
 
@@ -9,8 +8,8 @@ var WriteView = function (item) {
     this.$el = $('<div/>');
     this.$el.on('click', '.back', this.back);
     this.$el.on('submit', '#target', this.submit);
-    this.$el.on('keyup', '#s_page', this.s_page);
-    this.$el.on('keyup', '#e_page', this.e_page);
+    this.$el.on('keyup keydown autoresize', '#s_page', this.s_page);
+    this.$el.on('keyup keydown autoresize', '#e_page', this.e_page);
     items = item;
     this.render();
   };
@@ -35,7 +34,6 @@ var WriteView = function (item) {
     ];
 
     var executeQuery;
-    alert("isUpdate"+items.isUpdate);
     if(items.isUpdate) {
       executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, page=?, contents=? WHERE rowid=?";
       data.shift();
@@ -65,12 +63,8 @@ var WriteView = function (item) {
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;
       $("#page").val(result);
-      $(".page").addClass("active");
     } else {
       $("#page").val("");
-      if($(".page").hasClass("active")) {
-        $(".page").removeClass("active");
-      }
     }
   }
 
@@ -79,12 +73,8 @@ var WriteView = function (item) {
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;
       $("#page").val(result);
-      $(".page").addClass("active");
     } else {
       $("#page").val("");
-      if($(".page").hasClass("active")) {
-        $(".page").removeClass("active");
-      }
     }
   }
 
@@ -98,26 +88,12 @@ var WriteView = function (item) {
       location.href="#write";
     }
   }
-  this.setCalWrite = function(data) {
-    items.data.s_page = items.s_page;
-    items.data.s_page = items.e_page;
-    items.data.page = items.page;
-    items.data.s_page = items.contents;
-    items.isUpdate = true;
-  }
 
   this.render = function () {
-    if(!items.isUpdate) {
-      items.data = "";
-    }
+    // if(!items.isUpdate) {
+    //   items.data = "";
+    // }
     this.$el.html(this.template(items));
-
-    if($("#s_page").val()) 
-      $("#s_page").addClass("active");
-    if($("#e_page").val()) 
-      $("#e_page").addClass("active");
-    if($("#page").val()) 
-      $("#page").addClass("active");
 
     return this;
   };
