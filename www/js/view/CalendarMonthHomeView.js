@@ -125,7 +125,7 @@ var CalendarMonthHomeView = function (year, month) {
         dbPage.getData(items).then(function (results) {
           items.c_page = results;
           calendarView.setCal(items);
-          calendarView.render();
+          calendarView.render(false);
         });
         $(".year").text(items.year);
         $(".month").text(items.month);
@@ -141,7 +141,7 @@ var CalendarMonthHomeView = function (year, month) {
           dbPage.getData(items).then(function (results) {
             items.c_page = results;
             calendarView.setCal(items);
-            calendarView.render();
+            calendarView.render(false);
           });
           $(".year").text(items.year);
           $(".month").text(items.month);
@@ -164,7 +164,7 @@ var CalendarMonthHomeView = function (year, month) {
         dbPage.getData(items).then(function (results) {
           items.c_page = results;
           calendarView.setCal(items);
-          calendarView.render();
+          calendarView.render(false);
         });
         $(".year").text(items.year);
         $(".month").text(items.month);
@@ -180,7 +180,7 @@ var CalendarMonthHomeView = function (year, month) {
           dbPage.getData(items).then(function (results) {
             items.c_page = results;
             calendarView.setCal(items);
-            calendarView.render();
+            calendarView.render(false);
           });
           $(".year").text(items.year);
           $(".month").text(items.month);
@@ -216,7 +216,7 @@ var CalendarMonthHomeView = function (year, month) {
     dbPage.getData(items).then(function (results) {
       items.c_page = results;
       calendarView.setCal(items);
-      calendarView.render();
+      calendarView.render(false);
     });
 
     this.render();
@@ -271,8 +271,7 @@ var CalendarMonthHomeView = function (year, month) {
   this.render = function () {
     date = {
       year: year,
-      month: month,
-      cm: true
+      month: month
     };
     this.$el.html(this.template(date));
     $('.calendar', this.$el).html(calendarView.$el);

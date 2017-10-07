@@ -1,3 +1,4 @@
+/* header & content & footer 배치 */
 header {
   position: absolute;
   z-index: 1;
@@ -24,6 +25,11 @@ header ~ .content {
   padding-bottom: 48px;
 }
 
+.hrader-text {
+  font-size: x-large;
+}
+
+
 /* mybook, search에 책 정보 */
 .book-list {
   /* z-index: -1; */
@@ -47,6 +53,7 @@ header ~ .content {
   margin: 5px 0;
 }
 
+/* search */
 .search-book-list a {
   color: #000;  
 }
@@ -118,16 +125,22 @@ ul {
 }
 
 /* home의 캐릭터 이미지 관려 */
-#character {
-  margin: 20px auto;
-  text-align: center;
+.character {
+  margin: 20px auto 0;
 }
-#character td {
-  padding: 0 20px;
+.character-data {
+  text-align: right;
 }
-#character img {
-  width: 80px;
-  margin-right: 10px;
+.character img {
+  width: 90px;
+}
+#gauge {
+  color: orange; 
+  margin-right: 6px;
+}
+.page-data {
+  display: grid;
+  text-align: left;
 }
 
 /* calender */
@@ -141,10 +154,8 @@ table th, td {
 .calendar {
   padding-bottom: 0;
 }
-.calendar-wrap{ 
-  /* width: 100%;
-  text-align: center; */
-  /* padding: 0.3em; */
+.home-table .calendar-wrap{ 
+  margin-bottom: 15px;
 }
 .calendar-wrap table {
   margin: auto;
@@ -153,6 +164,9 @@ table th, td {
   font-size: 1.5em;
   color: orange;
   padding: 10px;
+}
+.calendar caption i {
+  vertical-align: sub;
 }
 .calendar th, .calendar td{
   border: 1px solid #666;
@@ -189,11 +203,6 @@ table th, td {
 }
 .calendar th:first-child, .calendar td:first-child{ color: red;}	
 
-#prev, #next{
-  display: inline-block;
-  text-decoration: none;
-  padding: 5px;
-}
 
 /* calender-all */
 .calendar-wrap .calendar-all {

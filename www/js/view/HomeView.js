@@ -4,14 +4,8 @@ var HomeView = function (page, isLoading) {
   var dbPage;
   var year;
   var month;
-  var dbPage;
-
-  var character = {
-    0: "똘똘이.png",
-    1: "똘똘이2.png",
-    2: "똘똘이3.png",
-    3: "똘똘이4.png"
-  }
+  var dbTodayPage;
+  var characterView;
 
   this.initialize = function () {
     calendarView = new CalendarView();
@@ -19,43 +13,29 @@ var HomeView = function (page, isLoading) {
     year = cal.getYear();
     month = cal.getMonth();
     dbPage = new DBPage();
+    dbTodayPage = new DBTodayPage();
+    characterView = new CharacterView();
     items = {};
 
     this.$el = $('<div/>');
 
-    this.$el.on('click', 'td', function(event) {
-      event.preventDefault();
-      var target = $( event.target );
-      var date;
-      if (!target.is("div")) {
-        if(target.is("td")) {
-          date = target.children("div").text();
-        } else {
-          date = target.parent().children("div").text();
-        } 
-      } else {
-        date = target.text();
-      }
-
-    });
-
-    this.$el.on('click', '#prev', function (event) {
+    this.$el.on('click', '.prev', function (event) {
       event.preventDefault();
       items = cal.getCal(year, --month);
       dbPage.getData(items).then(function (results) {
         items.c_page = results;
         calendarView.setCal(items);
-        calendarView.render();
+        calendarView.render(true);
       });
     });
 
-    this.$el.on('click', '#next', function (event) {
+    this.$el.on('click', '.next', function (event) {
       event.preventDefault();
       items = cal.getCal(year, ++month);
       dbPage.getData(items).then(function (results) {
         items.c_page = results;
         calendarView.setCal(items);
-        calendarView.render();
+        calendarView.render(true);
       });
     });
 
@@ -63,20 +43,35 @@ var HomeView = function (page, isLoading) {
     dbPage.getData(items).then(function (results) {
       items.c_page = results;
       calendarView.setCal(items);
-      calendarView.render();
+      calendarView.render(true);
+    });
+
+    dbTodayPage.getData().then(function (results) {
+      characterView.setData(results);
+      characterView.render();
+    });
+    dbTodayPage.getAllData().then(function (results) {
+      characterView.setAllData(results);
+      characterView.render();
     });
 
     // 테스트 코드
-    items.c_page = [,,,,,,1,2,3,4];
+    items.c_page = [,,1,2,3,4];
     calendarView.setCal(items);
-    calendarView.render();
+    calendarView.render(true);
+    var today = new Date().getDate();
+    // if($("td div").text()===today) {
+      $("td div").css(
+        "border", "2px solid red")
+    // }
 
     this.render();
   };
   
   this.render = function () {
-    this.$el.html(this.template(character));
+    this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);
+    $('.character', this.$el).html(characterView.$el);
     return this;
   };
 

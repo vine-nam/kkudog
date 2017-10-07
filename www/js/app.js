@@ -3,6 +3,7 @@ $(document).on('deviceready', function () {
   navigator.splashscreen.hide();
 
   HomeView.prototype.template = Handlebars.compile($("#home-tpl").html());
+  CharacterView.prototype.template = Handlebars.compile($("#character-tpl").html());
   CalendarView.prototype.template = Handlebars.compile($("#calendar-tpl").html());
   CalendarAllHomeView.prototype.template = Handlebars.compile($("#calendar-all-home-tpl").html());
   CalendarAllView.prototype.template = Handlebars.compile($("#calendar-all-tpl").html());

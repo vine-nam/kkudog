@@ -41,7 +41,7 @@ var DBPage = function () {
       '%' + this.month(items.month) + '%' + items.year + '%'
     ];
     database.transaction(function (transaction) {
-      transaction.executeSql("SELECT rowid, page, date FROM WriteTable WHERE date LIKE ?", query, function (tx, results) {
+      transaction.executeSql("SELECT page, date FROM WriteTable WHERE date LIKE ?", query, function (tx, results) {
         results = results.rows;
         var data = [];
         var c_page = [];
@@ -152,7 +152,8 @@ var CalendarView = function () {
     items = data;
   }
 
-  this.render = function () {
+  this.render = function (cm) {
+    items.cm = cm;
     this.$el.html(this.template(items));
     return this;
   };

@@ -16,6 +16,7 @@
 
 <body>
   <script src="js/view/HomeView.js"></script>
+  <script src="js/view/CharacterView.js"></script>
   <script src="js/view/CalendarView.js"></script>
   <script src="js/view/CalendarAllHomeView.js"></script>
   <script src="js/view/CalendarAllView.js"></script>
@@ -46,29 +47,30 @@
           </ul>
         </div>
       </nav>
-      <!-- <a class="icon icon-bars pull-left"></a>
-      <a class="icon icon-search pull-right search-key" href="#search"></a>
-      <h1 class="title">Title</h1> -->
     </header>
     <div class="home-table content">
-      <table id="character">
-        <tr>
-          <td class="centered">
-            <img src="img/{{0}}">
-          </td>
-          <td>
-            <p>완독: 3권</p>
-            <p>전체 읽은 페이지: 50쪽</p>
-            <p>오늘 읽은 페이지: 10쪽</p>
-            <span class="icon fa fa-heart" aria-hidden="true"></span>
-            <span class="icon fa fa-heart" aria-hidden="true"></span>
-            <span class="icon fa fa-heart" aria-hidden="true"></span>
-          </td>
-        </tr>
-      </table>
+      <div class="character"></div>
       <div class="calendar"></div>
     </div>
     <footer></footer>
+  </script>
+
+  <script id="character-tpl" type="text/template">
+    <div class="row">
+      <div class="col s5 character-data">
+        <div id="gauge">
+          <i class="material-icons">{{gauge.[1]}}</i>
+          <i class="material-icons">{{gauge.[1]}}</i>
+          <i class="material-icons">{{gauge.[0]}}</i>
+        </div> 
+        <img src="img/character/{{character}}">
+      </div>
+      <div class="col s7 page-data">
+        <p>완독: 3권</p>
+        <p>전체 읽은 페이지: {{AllPage}}쪽</p>
+        <p>오늘 읽은 페이지: {{todayPage}}쪽</p>
+      </div>
+    </div>
   </script>
 
   <script id="calendar-tpl" type="text/template">
@@ -76,8 +78,10 @@
       <table>
         {{#if cm}}
           <caption>
+            <i class="material-icons prev">keyboard_arrow_left</i>
             <span class="year">{{year}}</span>년
             <span class="month">{{month}}</span>월
+            <i class="material-icons next">keyboard_arrow_right</i>
           </caption>
         {{/if}}
         <tr>
@@ -144,28 +148,24 @@
           <td><div>{{{c_date.[41]}}}</div>{{#if c_page.[41]}}<p>{{c_page.[41]}}</p>{{/if}}</td>
        </tr>
       </table>
-      {{#if cm}}
-        <a href="#" id="prev">이전달</a>
-        <a href="#" id="next">다음달</a>
-      {{/if}}
     </div>
   </script>
 
   <script id="calendar-all-home-tpl" type="text/template">
     <header>
       <nav>
-        <ul>
-          <li class="brand-logo left">
-            <span class="year">{{this}}</span>
-          </li>
-          <li class="right">
+        <ul class="left">
+          <li>
             <a>
-              <i class="material-icons next">keyboard_arrow_up</i>
+              <i class="material-icons prev">keyboard_arrow_left</i>
             </a>
           </li>
-          <li class="right">
+          <li class="hrader-text">
+            <span class="year">{{this}}</span>
+          </li>
+          <li>
             <a>
-              <i class="material-icons prev">keyboard_arrow_down</i>
+              <i class="material-icons next">keyboard_arrow_right</i>
             </a>
           </li>
         </ul>
@@ -256,23 +256,23 @@
     <header>
       <nav>
         <ul>
-          <li class="brand-logo left">
+          <li class="left">
+            <a>
+              <i class="material-icons prev">keyboard_arrow_left</i>
+            </a>
+          </li>
+          <li class="hrader-text left">
             <span class="year">{{year}}</span>
             / <span class="month">{{month}}</span>
             <span class="date"></span>
           </li>
+          <li class="left">
+            <a>
+              <i class="material-icons next">keyboard_arrow_right</i>
+            </a>
+          </li>
           <li class="right">
             <a class="change-md">일</a>
-          </li>
-          <li class="right">
-            <a>
-              <i class="material-icons next">keyboard_arrow_up</i>
-            </a>
-          </li>
-          <li class="right">
-            <a>
-              <i class="material-icons prev">keyboard_arrow_down</i>
-            </a>
           </li>
         </ul>
       </nav>
