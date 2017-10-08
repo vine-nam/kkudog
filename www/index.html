@@ -59,11 +59,11 @@
     <div class="row">
       <div class="col s5 character-data">
         <div id="gauge">
-          <i class="material-icons">{{gauge.[1]}}</i>
-          <i class="material-icons">{{gauge.[1]}}</i>
           <i class="material-icons">{{gauge.[0]}}</i>
+          <i class="material-icons">{{gauge.[1]}}</i>
+          <i class="material-icons">{{gauge.[2]}}</i>
         </div> 
-        <img src="img/character/{{character}}">
+        <img src="img/character/{{character}}.jpg">
       </div>
       <div class="col s7 page-data">
         <p>완독: 3권</p>
@@ -160,7 +160,7 @@
               <i class="material-icons prev">keyboard_arrow_left</i>
             </a>
           </li>
-          <li class="hrader-text">
+          <li class="header-text">
             <span class="year">{{this}}</span>
           </li>
           <li>
@@ -261,7 +261,7 @@
               <i class="material-icons prev">keyboard_arrow_left</i>
             </a>
           </li>
-          <li class="hrader-text left">
+          <li class="header-text left">
             <span class="year">{{year}}</span>
             / <span class="month">{{month}}</span>
             <span class="date"></span>
@@ -301,9 +301,9 @@
       <li>
         <a href="#mybook/{{@index}}">
           <img class="z-depth-3" src="{{image}}">
-          <!-- <div class="percent" style="width: {{percent}}%">
-            {{percent}}%
-          </div> -->
+          <div class="percent">
+            {{#if percent}}{{percent}}%{{/if}}
+          </div>
         </a>
       </li>
       {{/each}}
@@ -313,7 +313,7 @@
   <script id="mybook-info-tpl" type="text/template">
     <header>
       <nav>
-        <a class="brand-logo center">{{{title}}}</a>
+        <a class="brand-logo center title">{{{title}}}</a>
         <ul>
           <li>
             <a class="back"><i class="material-icons">arrow_back</i></a>
@@ -343,6 +343,7 @@
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
             {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
+            {{#if percent}}{{percent}}%{{/if}}
           </span>
         </li>
         <div class="contents"></div>
@@ -395,7 +396,7 @@
   <script id="write-tpl" type="text/template">
     <header>
       <nav>
-        <a class="brand-logo center">{{{title}}}</a>
+        <a class="brand-logo center title">{{{title}}}</a>
         <ul>
           <li>
             <a class="back"><i class="material-icons">arrow_back</i></a>

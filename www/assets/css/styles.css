@@ -24,9 +24,14 @@ header ~ .content {
   overflow: auto;
   padding-bottom: 48px;
 }
-
-.hrader-text {
+.header-text {
   font-size: x-large;
+}
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 60%;
 }
 
 
@@ -238,6 +243,10 @@ a .calendar-all {
   color: #000;
 }
 
+.today-td {
+  border: 2px solid red !important;
+}
+
 /* mybook content의 more 버튼 누르면 나타날 것들 */
 .hidden {
   display: none;
@@ -268,7 +277,12 @@ a .calendar-all {
 
 /* percent */
 .percent {
-  background: #484848;
+  position: relative;
+  font-size: x-large;
+  right: 1px;
+  top: -39px;
+  margin: auto;
+  text-align: right;
 }
 
 

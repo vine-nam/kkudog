@@ -6,15 +6,17 @@ var HomeView = function (page, isLoading) {
   var month;
   var dbTodayPage;
   var characterView;
+  var tdData;
 
   this.initialize = function () {
     calendarView = new CalendarView();
+    characterView = new CharacterView();
     cal = new calendar();
     year = cal.getYear();
     month = cal.getMonth();
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
-    characterView = new CharacterView();
+    tdData = new TdData();
     items = {};
 
     this.$el = $('<div/>');
@@ -39,11 +41,18 @@ var HomeView = function (page, isLoading) {
       });
     });
 
+    this.$el.on('load', function() {
+      console.log("난 아직 여기 있는 걸...");
+    })
+
     items = cal.getCal(year, month);
     dbPage.getData(items).then(function (results) {
       items.c_page = results;
       calendarView.setCal(items);
       calendarView.render(true);
+
+      var gData = tdData.getData();
+      characterView.setTdData(gData);
     });
 
     dbTodayPage.getData().then(function (results) {
@@ -56,14 +65,9 @@ var HomeView = function (page, isLoading) {
     });
 
     // 테스트 코드
-    items.c_page = [,,1,2,3,4];
-    calendarView.setCal(items);
-    calendarView.render(true);
-    var today = new Date().getDate();
-    // if($("td div").text()===today) {
-      $("td div").css(
-        "border", "2px solid red")
-    // }
+    // items.c_page = [,,1,2,3,4];
+    // calendarView.setCal(items);
+    // calendarView.render(true);
 
     this.render();
   };

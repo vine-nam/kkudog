@@ -80,22 +80,15 @@ var DBTodayPage = function () {
 
 var CharacterView = function () {
   var homeDate = {};
-  var gauge = {
-    0: "favorite_border", 
-    1: "favorite"
-  }
-  var character = {
-    0: ["똘똘이.png", "똘똘이2.png", "똘똘이3.png", "똘똘이4.png"],
-    1: ["cactus.jpg", "cactus2.jpg", "cactus3.jpg", "cactus4.jpg"],
-    2: ["rabbit.jpg", "rabbit2.jpg", "rabbit3.jpg", "rabbit4.jpg"]
-  }
+  var gauge = ["favorite", "favorite_border"];
+  var character = ["cactus", "rabbit"];
 
   homeDate.character = "";
   homeDate.gauge = [];
   homeDate.todayPage = 0;
   homeDate.AllPage = 0;
 
-  var gData = [1,1,0];
+  var gData = [1,1,1];
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -106,11 +99,15 @@ var CharacterView = function () {
 
   this.gaugeData = function() {
     for (var i in gData) {
-      homeDate.gauge[i] = gauge[i];
+      homeDate.gauge[i] = gauge[gData[i]];
     }
   }
   this.characterData = function() {
-    homeDate.character = character[1][0];
+    var c = 0;
+    for (var i in gData) {
+      c = c + gData[i];
+    }
+    homeDate.character = character[0]+c;
   }
 
   this.setData = function (todayPage) {
@@ -120,6 +117,15 @@ var CharacterView = function () {
     homeDate.AllPage = AllPage;
   }
 
+  this.setTdData = function(data) {
+    gData = data;
+    gData.sort();
+    console.log(gData);
+    this.gaugeData();
+    this.characterData();
+    this.render();
+  }
+
   this.render = function () {
     this.$el.html(this.template(homeDate));
     return this;
@@ -127,3 +133,24 @@ var CharacterView = function () {
 
   this.initialize();
 } 
+
+var TdData = function() {
+  this.getData = function() {
+    var date = new Date();
+    var today = date.getDate();
+    var startDay = new Date(date.getFullYear(), date.getMonth(), 0).getDay();
+    if(startDay===6) {
+      startDay = -1;
+    }
+    var day = today+startDay;
+    var td = $('td');
+    $(td[day]).addClass("today-td");
+    var gData = [1,1,1];
+    for(var i=0; i<3; i++) {
+      if($(td[day-i]).children("p").text()) {
+        gData[i] = 0;
+      }
+    }
+    return gData;
+  }
+}

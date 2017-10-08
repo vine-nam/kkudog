@@ -19,10 +19,8 @@ $(document).on('deviceready', function () {
   WriteView.prototype.template = Handlebars.compile($("#write-tpl").html());
   FooterBarView.prototype.template = Handlebars.compile($("#footer-bar-tpl").html());
 
-  // sqlite_db();
-
-  var apiService = new api();
   var mybookView;
+  var searchView;
   var items = [];//search-page-item
   var items_mb = [];//mybook-page-item
   var index;
@@ -32,13 +30,13 @@ $(document).on('deviceready', function () {
 
   router.addRoute('', function () {
     items = [];
-    page = 1;
     $('body').html(new HomeView(page, isLoading).render().$el);
     $('footer').html(new FooterBarView("home").render().$el);
     $(".button-collapse").sideNav();
   });
 
   router.addRoute('calendar', function () {
+    items = [];
     $('body').html(new CalendarAllHomeView().render().$el);
     $('footer').html(new FooterBarView("calendar").render().$el);
   });
@@ -50,38 +48,20 @@ $(document).on('deviceready', function () {
     $('body').html(new CalendarMonthHomeView(year, ++month).render().$el);
   });
 
-  //api옮기기...
   router.addRoute('search', function () {
-    // alert(location.href);
-    $('body').html(new SearchView().render().$el);
-    if(items!==null){
-      $('.content').html(new SearchListView(items).render().$el);
-    }
-    $("#target").submit(function (event) {
-      event.preventDefault();
-      var query = decodeURI($(this).serialize().split('=')[1]);
-      // 띄어 쓰기 된 검색어 처리
-      // api SearchListView에 넣은거
-      // $('.content').html(new SearchListView(query).render().$el);
-
-      // api 폴더 분리 한거
-      // alert( "Handler for .submit() called." + query);
-      // items = $.Deferred();
-
-      items = apiService.requestBook(query);
-      $('.content').html(new SearchListView(items).render().$el);
-   
-      $('.collapsible').collapsible();
-    });
+    searchView = new SearchView(items);
+    $('body').html(searchView.render().$el);
     $('footer').html(new FooterBarView("search").render().$el);
   });
 
   router.addRoute('search/:index', function (index) {
+    items = searchView.getItems();
     index = parseInt(index);
     $('body').html(new SearchBookInfoView(items[index]).render().$el);
   });
   
   router.addRoute('mybook', function () {
+    items = [];
     mybookView = new MybookView();
     $('body').html(mybookView.render().$el);
     $('footer').html(new FooterBarView("mybook").render().$el);
