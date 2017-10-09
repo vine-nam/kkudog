@@ -81,7 +81,8 @@ var DBTodayPage = function () {
 var CharacterView = function () {
   var homeDate = {};
   var gauge = ["favorite", "favorite_border"];
-  var character = ["cactus", "rabbit"];
+  var character = "cactus";
+  var c = 0;
 
   homeDate.character = "";
   homeDate.gauge = [];
@@ -103,11 +104,12 @@ var CharacterView = function () {
     }
   }
   this.characterData = function() {
-    var c = 0;
+    c = 0;
     for (var i in gData) {
       c = c + gData[i];
     }
-    homeDate.character = character[0]+c;
+    // homeDate.character = character[0]+c;
+    homeDate.character = character+c;
   }
 
   this.setData = function (todayPage) {
@@ -120,9 +122,13 @@ var CharacterView = function () {
   this.setTdData = function(data) {
     gData = data;
     gData.sort();
-    console.log(gData);
     this.gaugeData();
     this.characterData();
+    this.render();
+  }
+  this.setCharacterData = function(c_data) {
+    character = c_data;
+    homeDate.character = character+c;
     this.render();
   }
 

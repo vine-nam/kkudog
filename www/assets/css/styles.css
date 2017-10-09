@@ -148,6 +148,52 @@ ul {
   text-align: left;
 }
 
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+}
+.character-list-view {
+  padding: 25px;
+  padding-top: 63px;
+}
+.view-wrap {
+  height: 90%;
+  background: white;
+  overflow: auto;
+}
+.character-list-view .contents ul{
+  margin: auto;
+  text-align: center;
+}
+.character-list-view .contents li{
+  margin: 10px 5%;
+  display: inline-block;
+  width: 120px;
+  text-align: center;
+}
+.character-list-view .contents img{
+  width: 85px;
+  margin-bottom: 6px;
+}
+.character-list-view .contents a{
+  width: 100%;
+}
+.in-use {
+  background: orange;
+}
+.in-use:hover {
+  background: #ffb300;
+}
+
+
 /* calender */
 /* table 초기화? */
 .home-table table {

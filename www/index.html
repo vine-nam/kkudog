@@ -17,6 +17,7 @@
 <body>
   <script src="js/view/HomeView.js"></script>
   <script src="js/view/CharacterView.js"></script>
+  <script src="js/view/CharacterListView.js"></script>
   <script src="js/view/CalendarView.js"></script>
   <script src="js/view/CalendarAllHomeView.js"></script>
   <script src="js/view/CalendarAllView.js"></script>
@@ -37,22 +38,54 @@
   <script id="home-tpl" type="text/template">
     <header>
       <nav>
-        <div class="nav-wrapper">
-          <a href="#" class="brand-logo">꾸독</a>
-          <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-          <ul class="side-nav" id="mobile-demo">
-            <li><a href="#">Sass</a></li>
-            <li><a href="#">Components</a></li>
-            <li><a href="#">JavaScript</a></li>
-          </ul>
-        </div>
+        <ul>
+          <li>
+            <a href="#" class="brand-logo">꾸독</a>
+          </li>
+          <li class="right">
+            <a class="character-list">
+              <i class="material-icons">insert_emoticon</i>
+            </a>
+          </li>
+        </ul>
       </nav>
     </header>
     <div class="home-table content">
       <div class="character"></div>
       <div class="calendar"></div>
+      <div class="character-list-view" id="overlay">
+        <div class="z-depth-4 view-wrap"></div>
+      </div>
     </div>
     <footer></footer>
+  </script>
+
+  <script id="character-list-tpl" type="text/template">
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <a class="header-text">캐릭터</a>
+          </li>
+          <li class="right">
+            <a class="close">
+              <i class="material-icons">close</i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="contents">
+      <ul>
+        {{#each this}}
+        <li>
+          <img src="img/character/{{name}}0.jpg">
+          <a class="waves-effect waves-light btn {{#if state}}in-use{{else}}using{{/if}}">사용 {{#if state}}중{{else}}하기{{/if}}</a>
+          <p class="index">{{@index}}</p>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
   </script>
 
   <script id="character-tpl" type="text/template">

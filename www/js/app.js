@@ -4,6 +4,7 @@ $(document).on('deviceready', function () {
 
   HomeView.prototype.template = Handlebars.compile($("#home-tpl").html());
   CharacterView.prototype.template = Handlebars.compile($("#character-tpl").html());
+  CharacterListView.prototype.template = Handlebars.compile($("#character-list-tpl").html());
   CalendarView.prototype.template = Handlebars.compile($("#calendar-tpl").html());
   CalendarAllHomeView.prototype.template = Handlebars.compile($("#calendar-all-home-tpl").html());
   CalendarAllView.prototype.template = Handlebars.compile($("#calendar-all-tpl").html());
@@ -32,7 +33,6 @@ $(document).on('deviceready', function () {
     items = [];
     $('body').html(new HomeView(page, isLoading).render().$el);
     $('footer').html(new FooterBarView("home").render().$el);
-    $(".button-collapse").sideNav();
   });
 
   router.addRoute('calendar', function () {

@@ -6,11 +6,28 @@ var HomeView = function (page, isLoading) {
   var month;
   var dbTodayPage;
   var characterView;
+  var characterListView;
   var tdData;
+  var character = [
+    {
+      "name": "cactus",
+      "state" : false
+    }, 
+    {
+      "name": "rabbit",
+      "state" : false
+    }, 
+    {
+      "name": "똘똘이",
+      "state" : false
+    }
+  ];
+  var myIndex;
 
   this.initialize = function () {
     calendarView = new CalendarView();
     characterView = new CharacterView();
+    characterListView = new CharacterListView();
     cal = new calendar();
     year = cal.getYear();
     month = cal.getMonth();
@@ -21,6 +38,25 @@ var HomeView = function (page, isLoading) {
 
     this.$el = $('<div/>');
 
+    this.$el.on('click', '.character-list', function() {
+      event.preventDefault();
+      $('#overlay').css("display", "block");
+    });
+    this.$el.on('click', '.close', function() {
+      event.preventDefault();
+      $('#overlay').css("display", "none");
+      characterView.setCharacterData(character[myIndex].name);
+    });
+    this.$el.on('click', '.using', function() {
+      event.preventDefault();
+      var index = $(this).siblings('.index').text();
+      localStorage.setItem("myCharacter", index);
+      character[myIndex].state = false;
+      character[index].state = true;
+      myIndex = index;
+      characterListView.setData(character);
+    });
+    
     this.$el.on('click', '.prev', function (event) {
       event.preventDefault();
       items = cal.getCal(year, --month);
@@ -41,9 +77,16 @@ var HomeView = function (page, isLoading) {
       });
     });
 
-    this.$el.on('load', function() {
-      console.log("난 아직 여기 있는 걸...");
-    })
+
+    myIndex = localStorage.getItem("myCharacter");
+    if(!myIndex) {
+      localStorage.setItem("myCharacter", 0);
+      myIndex = 0;
+    }
+    character[myIndex].state=true;
+    characterListView.setData(character);
+    characterView.setCharacterData(character[myIndex].name);
+
 
     items = cal.getCal(year, month);
     dbPage.getData(items).then(function (results) {
@@ -65,9 +108,11 @@ var HomeView = function (page, isLoading) {
     });
 
     // 테스트 코드
-    // items.c_page = [,,1,2,3,4];
+    // items.c_page = [,,1,2,3,4,5,6];
     // calendarView.setCal(items);
     // calendarView.render(true);
+    // var gData = tdData.getData();
+    // characterView.setTdData(gData);
 
     this.render();
   };
@@ -76,6 +121,7 @@ var HomeView = function (page, isLoading) {
     this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);
     $('.character', this.$el).html(characterView.$el);
+    $('.view-wrap', this.$el).html(characterListView.$el);
     return this;
   };
 
