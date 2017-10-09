@@ -141,16 +141,32 @@ var CharacterView = function () {
 } 
 
 var TdData = function() {
-  this.getData = function() {
-    var date = new Date();
-    var today = date.getDate();
-    var startDay = new Date(date.getFullYear(), date.getMonth(), 0).getDay();
+  var td;
+  var day;
+  var date, today, year, month;
+
+  this.getYear = function() {
+    return year;
+  }
+  this.getMonth = function() {
+    return month+1;
+  }
+  this.getTodayTd = function() {
+    date = new Date();
+    today = date.getDate();
+    year = date.getFullYear();
+    month = date.getMonth();
+    var startDay = new Date(year, month, 0).getDay();
     if(startDay===6) {
       startDay = -1;
     }
-    var day = today+startDay;
-    var td = $('td');
+    day = today+startDay;
+  }
+  this.setTodayTd = function() {
+    td = $('td');
     $(td[day]).addClass("today-td");
+  }
+  this.getData = function() {
     var gData = [1,1,1];
     for(var i=0; i<3; i++) {
       if($(td[day-i]).children("p").text()) {

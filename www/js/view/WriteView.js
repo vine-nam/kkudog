@@ -59,7 +59,7 @@ var WriteView = function (item) {
   };
 
   this.s_page = function() {
-    s_val = $("#s_page").val();
+    s_val = Number($("#s_page").val());
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;
       $("#page").val(result);
@@ -69,7 +69,7 @@ var WriteView = function (item) {
   }
 
   this.e_page = function() {
-    e_val = $("#e_page").val();
+    e_val = Number($("#e_page").val());
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;
       $("#page").val(result);
@@ -90,9 +90,9 @@ var WriteView = function (item) {
   }
 
   this.render = function () {
-    // if(!items.isUpdate) {
-    //   items.data = "";
-    // }
+    if(!items.isUpdate) {
+      items.data = "";
+    }
     this.$el.html(this.template(items));
 
     return this;

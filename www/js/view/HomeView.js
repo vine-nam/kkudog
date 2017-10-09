@@ -64,6 +64,10 @@ var HomeView = function (page, isLoading) {
         items.c_page = results;
         calendarView.setCal(items);
         calendarView.render(true);
+        
+        if(year===tdData.getYear()&&month===tdData.getMonth()) {
+          tdData.setTodayTd();
+        }
       });
     });
 
@@ -74,6 +78,10 @@ var HomeView = function (page, isLoading) {
         items.c_page = results;
         calendarView.setCal(items);
         calendarView.render(true);
+        
+        if(year===tdData.getYear()&&month===tdData.getMonth()) {
+          tdData.setTodayTd();
+        }
       });
     });
 
@@ -94,6 +102,8 @@ var HomeView = function (page, isLoading) {
       calendarView.setCal(items);
       calendarView.render(true);
 
+      tdData.getTodayTd();
+      tdData.setTodayTd();
       var gData = tdData.getData();
       characterView.setTdData(gData);
     });
