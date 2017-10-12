@@ -501,16 +501,9 @@
       <li class="collection-item">
         <a href="#search/{{@index}}" class="navigate-right">
         <div class="valign-wrapper collection-header">
-          <!-- <img class="responsive-img z-depth-2"
-            src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
-              "{{else}}img/image-not-found.png{{/if}}"> -->
             <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
             "{{else}}img/image-not-found.png{{/if}}">
           <span>
-            <!-- {{{volumeInfo.title}}}
-            {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
-            {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
-            {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}} -->
             {{{title}}}
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
@@ -536,15 +529,9 @@
     <div class="content">
       <ul class="book-list collection with-header">
         <li class="valign-wrapper collection-header">
-          <!-- <img class="responsive-img z-depth-2"  src="{{#if volumeInfo.imageLinks}}{{volumeInfo.imageLinks.smallThumbnail}}"+
-          "{{else}}img/image-not-found.png{{/if}}">  -->
           <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
           "{{else}}img/image-not-found.png{{/if}}">
           <span>
-            <!-- {{{volumeInfo.title}}}
-            {{#if volumeInfo.authors}}<p>{{{volumeInfo.authors}}} (지음)</p>{{/if}}
-            {{#if volumeInfo.publisher}}<p>{{volumeInfo.publisher}} (출판)</p>{{/if}}
-            {{#if volumeInfo.pageCount}}<p>{{volumeInfo.pageCount}} (쪽)</p>{{/if}} -->
             {{{title}}}
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
