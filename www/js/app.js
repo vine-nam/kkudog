@@ -28,11 +28,14 @@ $(document).on('deviceready', function () {
   var page = 1;
   var isLoading = false;
   var year, month;
+  var dbUserData = new DBUserData();
 
   router.addRoute('', function () {
     items = [];
-    $('body').html(new HomeView(page, isLoading).render().$el);
-    $('footer').html(new FooterBarView("home").render().$el);
+    dbUserData.getData().then(function (results) {
+      $('body').html(new HomeView(results, dbUserData).render().$el);
+      $('footer').html(new FooterBarView("home").render().$el);
+    });
   });
 
   router.addRoute('calendar', function () {

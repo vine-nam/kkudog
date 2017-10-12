@@ -67,8 +67,8 @@ var sqlite_db = function () {
   function createUserTable() {
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS UserTable ('
-        + 'userIndex INTEGER NOT NULL, gaugeSum INTEGER NOT NULL, '//책 isbn
-        + 'alldayRead INTEGER NOT NULL, todayRead INTEGER NOT NULL, '
+        + 'character INTEGER NOT NULL, gaugeCount INTEGER NOT NULL, '//책 isbn
+        + 'todayPage INTEGER NOT NULL, AllPage INTEGER NOT NULL, '
         + 'startDay TEXT NOT NULL);';
       // transaction.executeSql('DROP TABLE IF EXISTS UserTable', [],
       //   function (tx, result) {//Success

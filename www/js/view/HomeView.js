@@ -1,5 +1,5 @@
-var HomeView = function (page, isLoading) {
-  var items;
+var HomeView = function (data, dbfun) {
+  var items = {};
   var calendarView;
   var cal;
   var year;
@@ -10,7 +10,7 @@ var HomeView = function (page, isLoading) {
   var characterListView;
   var tdData;
   var dbUserData;
-  var userData;
+  var userData = {};
   var characterData;
   var character;
   var userindex;
@@ -26,10 +26,10 @@ var HomeView = function (page, isLoading) {
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
     tdData = new TdData();
-    dbUserData = new DBUserData();
-    items = {};
-    userData = {};
+    dbUserData = dbfun;
+    userData = data;
     character = characterData.getCharacter();
+    userindex = userData.character;
 
     this.$el = $('<div/>');
 
@@ -41,12 +41,12 @@ var HomeView = function (page, isLoading) {
       event.preventDefault();
       $('#overlay').css("display", "none");
       characterView.setCharacterData(character[userindex].name);
-      dbUserData.updateData("userIndex", userindex);
+      dbUserData.updateData("character", userindex);
     });
     this.$el.on('click', '.using', function() {
       event.preventDefault();
       var index = $(this).siblings('.index').text();
-      userData.userIndex = index;
+      userData.character = index;
       character[userindex].state = false;
       character[index].state = true;
       userindex = index;
@@ -79,22 +79,15 @@ var HomeView = function (page, isLoading) {
         }
       });
     });
-
-    dbUserData.getData().then(function (results) {
-      userData = results;
-      userindex = userData.userIndex;
-      
-      characterData.mission(userData.todayRead, userindex, 1);
-      characterData.mission(userData.alldayRead, userindex, 2);
-      characterData.mission(userData.alldayRead, userindex, 3);
-      characterData.setUseCharacter(userindex);
-      character = characterData.getCharacter();        
-      characterView.setData(userData.todayRead);
-      characterView.setAllData(userData.alldayRead);      
-      characterView.setCharacterData(character[userindex].name);
-      
-      characterListView.setData(character);
-    });
+    
+    characterData.mission(userData.todayPage, userindex, 1);
+    characterData.mission(userData.AllPage, userindex, 2);
+    characterData.mission(userData.AllPage, userindex, 3);
+    characterData.setUseCharacter(userindex);
+    character = characterData.getCharacter();
+    characterView.setUserData(userData, character[userindex].name);
+    
+    characterListView.setData(character);
 
     items = cal.getCal(year, month);
     dbPage.getData(items).then(function (results) {
@@ -102,48 +95,42 @@ var HomeView = function (page, isLoading) {
       calendarView.setCal(items);
       calendarView.render(true);
 
+      var gcount = 3;
+      if(userData.gaugeCount<gcount) {
+        gcount = characterView.startDayData();
+        userData.gaugeCount = gcount;
+        dbUserData.updateData("gaugeCount", gcount);
+      }
       tdData.getTodayTd();
       tdData.setTodayTd();
-      var gData = tdData.getData();
+      var gData = tdData.getData(gcount);
       characterView.setTdData(gData);
     });
 
     dbTodayPage.getData().then(function (results) {
-      if(userData.todayRead !== results) {
-        userData.todayRead = results;
-        dbUserData.updateData("todayRead", results);
+      if(userData.todayPage !== results) {
+        userData.todayPage = results;
+        dbUserData.updateData("todayPage", results);
         characterView.setData(results);
-
-        var index1 = characterData.mission(userData.todayRead, userindex, 1);
-        if( userindex !== index1 ) {
-          userindex = index1;
-          dbUserData.updateData("userIndex", userindex);
-          characterView.setCharacterData(character[userindex].name);
-        } else {
-          characterView.render();
-        }
-                
-        characterListView.setData(character);
       }
     });
     dbTodayPage.getAllData().then(function (results) {
-      if(userData.alldayRead !== results) {
-        userData.alldayRead = results;
-        dbUserData.updateData("alldayRead", results); 
+      if(userData.AllPage !== results) {
+        userData.AllPage = results;
+        dbUserData.updateData("AllPage", results); 
         characterView.setAllData(results);
 
-        var index1 = characterData.mission(userData.alldayRead, userindex, 2);
-        var index2 = characterData.mission(userData.alldayRead, userindex, 3);
-        if( userindex !== index1 ) {
-          userindex = index1;
-          dbUserData.updateData("userIndex", userindex);
+        var index;
+        if(!character[1].mstate) {
+          index = characterData.mission(userData.AllPage, userindex, 1);
+        } else if(!character[2].mstate) {
+          index = characterData.mission(userData.AllPage, userindex, 2);
+        } else if(!character[3].mstate) {
+          index = characterData.mission(userData.AllPage, userindex, 3);
+        }
+        if(userindex!==index) {
+          dbUserData.updateData("character", userindex);
           characterView.setCharacterData(character[userindex].name);
-        } else if( userindex !== index2 ) {
-          userindex = index2;
-          dbUserData.updateData("userIndex", userindex);
-          characterView.setCharacterData(character[userindex].name);
-        } else {
-          characterView.render();
         }
 
         characterListView.setData(character);

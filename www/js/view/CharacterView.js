@@ -33,11 +33,11 @@ var DBTodayPage = function () {
         break;
     }
   };
-  this.getData = function() {
+  this.getData = function () {
     var deferred = $.Deferred();
     today = new Date();
     var year = today.getFullYear();
-    var month = today.getMonth()+1;
+    var month = today.getMonth() + 1;
     var date = today.getDate();
     var query = [
       '%' + this.month(month) + '%' + date + '%' + year + '%'
@@ -57,7 +57,7 @@ var DBTodayPage = function () {
     });
     return deferred.promise();
   };
-  this.getAllData = function() {
+  this.getAllData = function () {
     var deferred = $.Deferred();
     database.transaction(function (transaction) {
       transaction.executeSql("SELECT page FROM WriteTable", [], function (tx, results) {
@@ -79,16 +79,16 @@ var DBTodayPage = function () {
 }
 
 var CharacterView = function () {
-  var homeDate = {};
+  var items = {};
   var gauge = ["favorite", "favorite_border"];
   var character = "default";
   var gData = [0,0,0];
   var c = 0;
 
-  homeDate.character = "";
-  homeDate.gauge = [];
-  homeDate.todayPage = 0;
-  homeDate.AllPage = 0;
+  items.character = "";
+  items.gauge = [];
+  items.todayPage = 0;
+  items.AllPage = 0;
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -97,83 +97,116 @@ var CharacterView = function () {
     this.render();
   };
 
-  this.setUserData = function(data) {
-    homeDate = data;
+  this.setUserData = function (data, c_data) {
+    items.character = data.character;
+    items.gaugeCount = data.gaugeCount;
+    items.todayPage = data.todayPage;
+    items.AllPage = data.AllPage;
+    items.startDay = data.startDay;
+    character = c_data;
+    this.gaugeData();
+    this.characterData();
+    this.render();
   }
-  this.gaugeData = function() {
+  this.gaugeData = function () {
     for (var i in gData) {
-      homeDate.gauge[i] = gauge[gData[i]];
+      items.gauge[i] = gauge[gData[i]];
     }
   }
-  this.characterData = function() {
-    if(character==="default") {
-      homeDate.character = character;
+  this.characterData = function () {
+    if (character === "default") {
+      items.character = character;
     } else {
       c = 0;
       for (var i in gData) {
         c = c + gData[i];
       }
-      homeDate.character = character+c;
+      items.character = character + c;
     }
+  }
+  this.startDayData = function () {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var today = date.getDate();
+
+    var sdate = new Date(items.startDay);
+    var syear = sdate.getFullYear();
+    var smonth = sdate.getMonth();
+    var stoday = sdate.getDate();
+
+    if(year===syear) {
+      if(month===smonth) {
+        if(today===stoday) {
+          items.gaugeCount = 0;
+        } else if(today===(stoday+1)) {
+          items.gaugeCount = 1;
+        } else if(today===(stoday+2)) {
+          items.gaugeCount = 2;
+        }
+      }
+    }
+    alert(items.gaugeCount);
+    return items.gaugeCount;
   }
 
   this.setData = function (todayPage) {
-    homeDate.todayPage = todayPage;
+    items.todayPage = todayPage;
   }
   this.setAllData = function (AllPage) {
-    homeDate.AllPage = AllPage;
+    items.AllPage = AllPage;
   }
 
-  this.setTdData = function(data) {
+  this.setTdData = function (data) {
     gData = data;
     gData.sort();
     this.gaugeData();
     this.characterData();
     this.render();
   }
-  this.setCharacterData = function(c_data) {
-    homeDate.character = c_data+c;
+  this.setCharacterData = function (c_data) {
+    items.character = c_data + c;
     this.render();
   }
 
   this.render = function () {
-    this.$el.html(this.template(homeDate));
+    this.$el.html(this.template(items));
     return this;
   };
 
   this.initialize();
-} 
+}
 
-var TdData = function() {
+var TdData = function () {
   var td;
   var day;
   var date, today, year, month;
 
-  this.getYear = function() {
+  this.getYear = function () {
     return year;
   }
-  this.getMonth = function() {
-    return month+1;
+  this.getMonth = function () {
+    return month + 1;
   }
-  this.getTodayTd = function() {
+  this.getTodayTd = function () {
     date = new Date();
-    today = date.getDate();
     year = date.getFullYear();
     month = date.getMonth();
+    today = date.getDate();
     var startDay = new Date(year, month, 0).getDay();
-    if(startDay===6) {
+    if (startDay === 6) {
       startDay = -1;
     }
-    day = today+startDay;
+    day = today + startDay;
   }
-  this.setTodayTd = function() {
+  this.setTodayTd = function () {
     td = $('td');
     $(td[day]).addClass("today-td");
   }
-  this.getData = function() {
-    var gData = [0,0,0];
-    for(var i=0; i<3; i++) {
-      if(!$(td[day-i]).children("p").text()) {
+  this.getData = function (len) {
+    var gData = [0, 0, 0];
+    for (var i = 0; i < len; i++) {
+      if (!$(td[day - i]).children("p").text()) {
         gData[i] = 1;
       }
     }

@@ -9,7 +9,7 @@ var CharacterData = function () {
     {
       "name": "cactus",
       "state": false,
-      "mission": "하루 50쪽 이상 읽으세요",
+      "mission": "총 50쪽 이상 읽으세요",
       "mamount": 50,
       "mstate": false,
       "mpercent": ""
