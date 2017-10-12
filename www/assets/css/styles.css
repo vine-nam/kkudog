@@ -165,8 +165,11 @@ ul {
   padding-top: 63px;
 }
 .view-wrap {
-  height: 90%;
   background: white;
+  margin-bottom: 100px;
+}
+.character-list-view .contents {  
+  height: -webkit-fill-available;
   overflow: auto;
 }
 .character-list-view .contents ul{
@@ -175,16 +178,24 @@ ul {
 }
 .character-list-view .contents li{
   margin: 10px 5%;
-  display: inline-block;
-  width: 120px;
-  text-align: center;
+  height: 100%;
+  text-align: left;
 }
 .character-list-view .contents img{
   width: 85px;
-  margin-bottom: 6px;
+  margin-left: 10px;
+}
+.character-list-view .contents p{
+  text-align: left;
 }
 .character-list-view .contents a{
-  width: 100%;
+  width: 120px;
+  float: right;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+.character-list-view .contents i {
+  margin-right: 0px;
 }
 .in-use {
   background: orange;

@@ -8,7 +8,9 @@ www/assets/materialize/
 www/assets/css/styles.1.css
 www/js/data/database.js
 www/js/api/key.js
+www/js/api/index-g.js
 www/img/book-img.png
 www/img/logo.png
 *.log
 *.db
+*.jpg

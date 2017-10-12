@@ -15,14 +15,11 @@ var SearchBookInfoView = function (items) {
   }
 
   this.addBook = function (event) {
-    //db부르기
-    var itemsInfo = items.volumeInfo;
-    // alert(itemsInfo.industryIdentifiers[0].identifier);
     var data = [
-      itemsInfo.industryIdentifiers[0].identifier,
-      itemsInfo.title,
-      itemsInfo.authors,
-      itemsInfo.imageLinks.smallThumbnail
+      items.isbn,
+      items.title,
+      items.author,
+      items.image
     ];
     database.transaction(function (transaction) {
       var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?)";

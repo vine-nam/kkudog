@@ -11,6 +11,7 @@ var WriteView = function (item) {
     this.$el.on('keyup keydown autoresize', '#s_page', this.s_page);
     this.$el.on('keyup keydown autoresize', '#e_page', this.e_page);
     items = item;
+
     this.render();
   };
 
@@ -60,6 +61,7 @@ var WriteView = function (item) {
 
   this.s_page = function() {
     s_val = Number($("#s_page").val());
+    e_val = Number($("#e_page").val());
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;
       $("#page").val(result);
@@ -69,6 +71,7 @@ var WriteView = function (item) {
   }
 
   this.e_page = function() {
+    s_val = Number($("#s_page").val());
     e_val = Number($("#e_page").val());
     if(s_val>0 && e_val>0 && s_val<=e_val) {
       result = e_val - s_val + 1;

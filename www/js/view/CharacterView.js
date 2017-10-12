@@ -81,15 +81,14 @@ var DBTodayPage = function () {
 var CharacterView = function () {
   var homeDate = {};
   var gauge = ["favorite", "favorite_border"];
-  var character = "cactus";
+  var character = "default";
+  var gData = [0,0,0];
   var c = 0;
 
   homeDate.character = "";
   homeDate.gauge = [];
   homeDate.todayPage = 0;
   homeDate.AllPage = 0;
-
-  var gData = [1,1,1];
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -98,18 +97,24 @@ var CharacterView = function () {
     this.render();
   };
 
+  this.setUserData = function(data) {
+    homeDate = data;
+  }
   this.gaugeData = function() {
     for (var i in gData) {
       homeDate.gauge[i] = gauge[gData[i]];
     }
   }
   this.characterData = function() {
-    c = 0;
-    for (var i in gData) {
-      c = c + gData[i];
+    if(character==="default") {
+      homeDate.character = character;
+    } else {
+      c = 0;
+      for (var i in gData) {
+        c = c + gData[i];
+      }
+      homeDate.character = character+c;
     }
-    // homeDate.character = character[0]+c;
-    homeDate.character = character+c;
   }
 
   this.setData = function (todayPage) {
@@ -127,8 +132,7 @@ var CharacterView = function () {
     this.render();
   }
   this.setCharacterData = function(c_data) {
-    character = c_data;
-    homeDate.character = character+c;
+    homeDate.character = c_data+c;
     this.render();
   }
 
@@ -167,10 +171,10 @@ var TdData = function() {
     $(td[day]).addClass("today-td");
   }
   this.getData = function() {
-    var gData = [1,1,1];
+    var gData = [0,0,0];
     for(var i=0; i<3; i++) {
-      if($(td[day-i]).children("p").text()) {
-        gData[i] = 0;
+      if(!$(td[day-i]).children("p").text()) {
+        gData[i] = 1;
       }
     }
     return gData;

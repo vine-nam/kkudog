@@ -6,11 +6,12 @@ var sqlite_db = function () {
     database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
     createMybookTable();
     createWriteTable();
+    createUserTable();
   }
-  
+
   function createMybookTable() {
     database.transaction(function (transaction) {
-     var executeQuery = 'CREATE TABLE IF NOT EXISTS MybookTable ('
+      var executeQuery = 'CREATE TABLE IF NOT EXISTS MybookTable ('
         + 'isbn TEXT PRIMARY KEY NOT NULL, '
         + 'title TEXT NOT NULL, author TEXT, image TEXT '
         // +'date, page1, page2, content'
@@ -36,8 +37,6 @@ var sqlite_db = function () {
     });
   }
 
-//디비 설계가 필요행~~~
-//page도 넣기~~~~~~~~`
   function createWriteTable() {
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS WriteTable ('
@@ -65,45 +64,53 @@ var sqlite_db = function () {
     });
   }
 
-  function inputData(data) {
-    alert("inputData");
-    // alert(data);
+  function createUserTable() {
     database.transaction(function (transaction) {
-      var data = ["112", "11", "1", "1111"];
-      var executeQuery = "INSERT INTO BookInfoTable VALUES (?,?,?,?)";
-      transaction.executeSql(executeQuery, data
-        , function (tx, result) {
-          alert('Inserted');
+      var executeQuery = 'CREATE TABLE IF NOT EXISTS UserTable ('
+        + 'userIndex INTEGER NOT NULL, gaugeSum INTEGER NOT NULL, '//책 isbn
+        + 'alldayRead INTEGER NOT NULL, todayRead INTEGER NOT NULL, '
+        + 'startDay TEXT NOT NULL);';
+      // transaction.executeSql('DROP TABLE IF EXISTS UserTable', [],
+      //   function (tx, result) {//Success
+      //     alert("Table DROP UserTable successfully");
+      //   },
+      //   function (error) {// Error
+      //     alert("Error occurred while DROP the table.");
+      //   }
+      // );
+      transaction.executeSql(executeQuery, [],
+        function (tx, result) {//Success
+          // alert("Table created UserTable successfully");
+          inputUserData();
         },
-        function (error) {
-          alert('Error occurred');
+        function (error) {// Error
+          alert("Error occurred while creating the table.");
         });
     }, function (error) {
-      navigator.notification.alert('SELECT count error: ' + error.message);
+      navigator.notification.alert('CREATE error: ' + error.message);
     });
   }
 
-  function showData() {
+  function inputUserData() {
     database.transaction(function (transaction) {
-      transaction.executeSql('SELECT * FROM BookInfoTable', [], function (tx, results) {
-        alert("축!하!");
-        //   var len = results.rows.length, i;
-        //   for (i = 0; i < len; i++) {
-        //     alert(results.rows.item(i).isbn);
-        //   }
-        data = results;
+      transaction.executeSql("SELECT * FROM UserTable", [], function (tx, results) {
+        if (!results.rows.length) {
+          var data = [0, 0, 0, 0, new Date()];
+          var executeQuery = "INSERT INTO UserTable VALUES (?,?,?,?,?)";
+          transaction.executeSql(executeQuery, data
+            , function (tx, result) {
+              // alert('Inserted');
+            },
+            function (error) {
+              alert('Error occurred');
+            });
+        }
       }, null);
-    });
+
+    }, null);
   }
 
   document.addEventListener('deviceready', function () {
-    // $('.icon-gear').click(function() {
-    //   // var a = showData();
-    //   var a = showData();
-    //   console.log(a);
-    // });
-    // $('.add-book').click(inputData);
-  
     initDatabase();
   });
 

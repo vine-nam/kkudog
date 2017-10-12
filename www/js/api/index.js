@@ -1,19 +1,18 @@
 var API = function () {
 
-    this.requestBook = function(query, page) {
+    this.requestBook = function(query, start) {
         var items = null;
         var deferred = $.Deferred();
         $.ajax({
             type: "GET",
-            url: "https://www.googleapis.com/books/v1/volumes",
+            url: "https://openapi.naver.com/v1/search/book",
             data: {
-                q: query,
-                startIndex : Number(page)
+                query: query
             },
             headers: {
-                'key': key.google.key
+                'X-Naver-Client-Id': key.naver.id,
+                'X-Naver-Client-Secret': key.naver.secret
             },
-            // async: false, //ajax 비동기
             success: function(data) {  
                 items = data.items;
                 deferred.resolve(items);
