@@ -146,15 +146,16 @@ var CharacterView = function () {
         }
       }
     }
-    alert(items.gaugeCount);
     return items.gaugeCount;
   }
 
   this.setData = function (todayPage) {
     items.todayPage = todayPage;
+    this.render();
   }
   this.setAllData = function (AllPage) {
     items.AllPage = AllPage;
+    this.render();
   }
 
   this.setTdData = function (data) {

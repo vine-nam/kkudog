@@ -129,6 +129,7 @@ var HomeView = function (data, dbfun) {
           index = characterData.mission(userData.AllPage, userindex, 3);
         }
         if(userindex!==index) {
+          userindex = index;
           dbUserData.updateData("character", userindex);
           characterView.setCharacterData(character[userindex].name);
         }
