@@ -431,16 +431,24 @@
   <script id="write-tpl" type="text/template">
     <header>
       <nav>
-        <a class="brand-logo center title">{{{title}}}</a>
         <ul>
           <li>
             <a class="back"><i class="material-icons">arrow_back</i></a>
+          </li>
+          <li class="title header-text">
+            {{{title}}}
+          </li>
+          <li class="right">
+            <a class="photo"><i class="material-icons">photo</i></a>
+          </li>
+          <li class="right">
+            <a class="photo_camera"><i class="material-icons">photo_camera</i></a>
           </li>
         </ul>
       </nav>
     </header>
     <div class="row content">
-      <form class="write col s12" id="target" action="#write" method="post">
+      <form enctype="multipart/form-data" class="write col s12" id="target" action="#write" method="post">
         <div class="row">
           <div class="input-field col s12"> 
             읽은 페이지
@@ -471,6 +479,10 @@
             <!-- <label for="textarea">책 내용</label> -->
           </div>
         </div>
+        <div class="row">
+          <div class="input-field col s12 media-object">
+          </div>
+        </div>
         <button class="btn waves-effect waves-light" type="submit" name="action">등록하기</button>
       </form>
     </div>
@@ -486,6 +498,7 @@
               <input id="search" type="search" name="search" required>
               <label class="label-icon" for="search"><i class="material-icons">search</i></label>
               <i class="material-icons close">close</i>
+              <i class="material-icons fa fa-barcode barcode"></i>
             </div>
           </form>
         </div>
