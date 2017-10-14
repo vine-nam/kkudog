@@ -59,11 +59,15 @@ var MybookInfoView = function (items) {
           // page = results.rows.item(i).page;
           contents = results.rows.item(i).contents;
           date = results.rows.item(i).date;
-
+          photos = results.rows.item(i).photos;
+  
           var dt = new Date(date);
           month = dt.getMonth() + 1;
           day = dt.getDate();
           date = month + "월 " + day + "일";
+
+          var pt = photos.split("//imagefile//");
+          pt.shift();
 
           data[i] = {
             rowid: rowid,
@@ -71,7 +75,8 @@ var MybookInfoView = function (items) {
             e_page: e_page,
             // page: page,
             contents: contents,
-            date: date
+            date: date,
+            photos: pt
           };
         }
         // items.data = data;
@@ -112,13 +117,19 @@ var MybookInfoView = function (items) {
         page = results.rows.item(0).page;
         contents = results.rows.item(0).contents;
         date = results.rows.item(0).date;
+        photos = results.rows.item(0).photos;
+
+        var pt = photos.split("//imagefile//");
+        pt.shift();
+
         items = { //rowid 있음 주의 **
           rowid: rowid, 
           isbn: isbn, 
           s_page: s_page, 
           e_page: e_page, 
           page: page, 
-          contents: contents
+          contents: contents,
+          photos: pt
         };
        
         writeView.setWrite(items);
@@ -129,7 +140,6 @@ var MybookInfoView = function (items) {
     });
   }
 
-  //writeTable 연결헤서 한 번에 지울 수 있게 하기~~??
   this.delete = function () {
     if (rowid === "") {
       var executeQuery = "DELETE FROM WriteTable WHERE isbn=?";

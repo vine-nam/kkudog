@@ -55,7 +55,7 @@ var DBPage = function () {
 
         for (i = 0; i < len; i++) {
 
-          page = results.item(i).page
+          page = Number(results.item(i).page);
           date = results.item(i).date;
 
           dt = new Date(date);

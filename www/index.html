@@ -400,6 +400,9 @@
         </span>
         <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
         <pre>{{{ contents }}}</pre>
+        {{#each photos}}
+          <img class="imagefile" type="image" src="{{this}}"/>
+        {{/each}}
       </li>
     {{/each}}
   </script>
@@ -481,6 +484,12 @@
         </div>
         <div class="row">
           <div class="input-field col s12 media-object">
+            {{#each data.photos}}
+              <div class="photos">
+                <i class="material-icons delete">close</i>
+                <img class="imagefile" type="image" src="{{this}}"/>
+              </div>
+            {{/each}}
           </div>
         </div>
         <button class="btn waves-effect waves-light" type="submit" name="action">등록하기</button>

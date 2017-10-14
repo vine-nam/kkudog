@@ -3,6 +3,7 @@ var WriteView = function (item) {
   var items = {};
   var s_val, e_val, result;
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
+  var fileindex=0;
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -10,36 +11,55 @@ var WriteView = function (item) {
     this.$el.on('submit', '#target', this.submit);
     this.$el.on('keyup keydown autoresize', '#s_page', this.s_page);
     this.$el.on('keyup keydown autoresize', '#e_page', this.e_page);
-    this.$el.on('click', '.photo_camera', this.photo_camera);
+    this.$el.on('click', '.photo_camera', [1] , this.photo_camera);
+    this.$el.on('click', '.photo', [2] , this.photo_camera);
+    this.$el.on('click', '.delete', this.delete);
     items = item;
 
     this.render();
   };
 
-  this.photo_camera = function () {
+  this.delete = function(event) {
     event.preventDefault();
+
+    var target = $( event.target );
+    if(target.is('i')) {
+      target.parent().remove();
+    }
+  }
+
+  this.photo_camera = function (event) {
+    event.preventDefault();
+
+    var type = Number(event.data);
 
     if (!navigator.camera) {
       alert("Camera API not supported", "Error");
       return;
     }
+
     var options = {
       quality: 50,
       destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: 1,// 0:Photo Library, 1=Camera, 2=Saved Album
+      sourceType: type,// 0:Photo Library, 1=Camera, 2=Saved Album
       encodingType: 0,// 0=JPG 1=PNG
       saveToPhotoAlbum: true
     };
 
     navigator.camera.getPicture(
       function (imgData) {
-        var i=0;
-        var mediaObject = "<img src='data:image/jpeg;base64,"+imgData+"'/>";
-        mediaObject += "<input type='file' name='file"+i+"' value='"+imgData+"'>";
+        var mediaObject = '<div class="photos">'
+          + '<i class="material-icons delete">close</i>'
+          + '<img class="imagefile" type="image" src="data:image/jpeg;base64,'
+          + imgData
+          + '"/>'
+          + '</div>';
+        // var mediaObject = "<input type='image' src='data:image/jpeg;base64,"+imgData+"'>";
         $('.media-object', this.$el).append(mediaObject);
+        fileindex++;
       },
       function () {
-        alert('Error taking picture', 'Error');
+        // alert('Error taking picture', 'Error');
       },
       options);
 
@@ -55,29 +75,32 @@ var WriteView = function (item) {
     event.preventDefault();
 
     var query = $(this).serialize().split("&");
-    var formData = new FormData($(this)[0]);
-    console.log(query);
-    console.log(JSON.stringify(formData));
+    var file = [];
+    var imagefile = $('.imagefile');
+    for(var i=0; i<imagefile.length; i++) {
+      file += "//imagefile//";
+      file += imagefile[i].src;
+    }
     var data = [
       items.isbn,//db에 저장된걸 가져오는 거라서 그냥 isbn임★★
       query[0].split("=")[1],
       query[1].split("=")[1],
       query[2].split("=")[1],
       decodeURIComponent(query[3].split("=")[1]),
+      file,
       new Date()
-
       // new Date(2017, (query[0].split("=")[1])/12, query[1].split("=")[1])
     ];
 
     var executeQuery;
     if (items.isUpdate) {
-      executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, page=?, contents=? WHERE rowid=?";
+      executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, page=?, contents=?, photos=? WHERE rowid=?";
       data.shift();
       data.pop();
       data.push(items.data.rowid);
       items.isUpdate = false;
     } else {
-      executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?,?)";
+      executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?,?,?)";
     }
 
     database.transaction(function (transaction) {

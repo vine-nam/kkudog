@@ -42,7 +42,7 @@ var sqlite_db = function () {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS WriteTable ('
         + 'isbn TEXT NOT NULL, '//책 isbn
         + 's_page INTEGER NOT NULL, e_page INTEGER NOT NULL, page INTEGER NOT NULL, '
-        + 'contents TEXT NOT NULL, date TEXT NOT NULL'
+        + 'contents TEXT NOT NULL, photos TEXT NOT NULL, date TEXT NOT NULL'
         + ');';
       // transaction.executeSql('DROP TABLE IF EXISTS WriteTable', [],
       //   function (tx, result) {//Success

@@ -49,7 +49,7 @@ var DBTodayPage = function () {
         var todayPage = 0;
 
         for (i = 0; i < len; i++) {
-          todayPage += results.item(i).page;
+          todayPage += Number(results.item(i).page);
         }
 
         deferred.resolve(todayPage);

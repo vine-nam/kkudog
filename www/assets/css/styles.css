@@ -95,19 +95,28 @@ header ~ .content {
 }
 
 /* write에 버튼의 크기를 늘리자 */
-.write {
-  position: absolute;
-  z-index: -1;
-}
 .write button {
   width: 100%;
 }
-.write img {
+.write .photos {
   border: 0;
   width: 100%;
   padding: 5px;
   float: left;
   max-width: 400px;
+}
+.photos img {
+  margin-top: -33px;
+  width: 100%;
+}
+.photos i {
+  color: #fff;
+  text-align: right;
+  display: block;
+  position: sticky;
+  padding: 5px;
+  cursor: pointer;
+  margin-left: 88%;
 }
 
 .table-view img {
@@ -340,11 +349,11 @@ a .calendar-all {
 /* mybook info의 헤더? 부분 */
 .header-more {
   position: absolute;
-  top: 10px;
+  top: 70px;
   right: 20px;
 }
 .header-more-ul {
-  top: 10px;
+  top: 70px;
 }  
 
 

@@ -73,12 +73,12 @@ var CalendarAllHomeView = function () {
     });
 
     //테스트 코드
-    for (var i = 0; i < 12; i++) {
-      items[i] = cal.getCal(year, i+1);
-      items[i].c_page = [,,,1,2,3,4,5,,,,4,5,6];
-    }
-    calendarAllView.setCal(items);
-    calendarAllView.render();
+    // for (var i = 0; i < 12; i++) {
+    //   items[i] = cal.getCal(year, i+1);
+    //   items[i].c_page = [,,,1,2,3,4,5,,,,4,5,6];
+    // }
+    // calendarAllView.setCal(items);
+    // calendarAllView.render();
 
     this.render();
   };
