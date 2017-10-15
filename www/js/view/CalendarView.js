@@ -99,6 +99,10 @@ var DBPage = function () {
           page = results.rows.item(i).page;
           contents = results.rows.item(i).contents;
           date = results.rows.item(i).date;
+          photos = results.rows.item(i).photos;
+  
+          var pt = photos.split("//imagefile//");
+          pt.shift();
 
           var dt = new Date(date);
           month = dt.getMonth() + 1;
@@ -114,7 +118,8 @@ var DBPage = function () {
             e_page: e_page,
             page: page,
             contents: contents,
-            date: date
+            date: date,
+            photos: pt
           };
         }
         // // items.data = data;

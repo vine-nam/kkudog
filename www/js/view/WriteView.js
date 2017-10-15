@@ -3,7 +3,6 @@ var WriteView = function (item) {
   var items = {};
   var s_val, e_val, result;
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
-  var fileindex=0;
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -43,7 +42,8 @@ var WriteView = function (item) {
       destinationType: Camera.DestinationType.DATA_URL,
       sourceType: type,// 0:Photo Library, 1=Camera, 2=Saved Album
       encodingType: 0,// 0=JPG 1=PNG
-      saveToPhotoAlbum: true
+      // saveToPhotoAlbum: true,
+      allowEdit: true
     };
 
     navigator.camera.getPicture(
@@ -54,9 +54,7 @@ var WriteView = function (item) {
           + imgData
           + '"/>'
           + '</div>';
-        // var mediaObject = "<input type='image' src='data:image/jpeg;base64,"+imgData+"'>";
         $('.media-object', this.$el).append(mediaObject);
-        fileindex++;
       },
       function () {
         // alert('Error taking picture', 'Error');

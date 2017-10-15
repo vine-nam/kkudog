@@ -40,25 +40,38 @@ header ~ .content {
 
 /* mybook, search에 책 정보 */
 .book-list {
-  /* z-index: -1; */
   position: static;
 }
 .book-list span p {
   font-size: 14px;
   margin: 0 25px 0 0;
 }
-.book-list img {
+.book-list .collection-header img {
   width: 20%;
   max-width: 85px !important;
   margin-right: 22px;
 }
 /* calendar month img */
-.book-list  .month-img {
-  float: left;
-  width: 14%;
+.book-list .row {
+  margin: 0;
+}
+.book-list .row li {
+  padding: 0.75rem 0.75rem;
+}
+.book-list .row li span:nth-child(1) {
+  padding: 0;
+}
+.book-list .month-img {
+  width: 100%;
+  max-width: 100px;
 }
 .book-list pre {
   margin: 5px 0;
+}
+
+.mybook-photos img {
+  width: 100%;
+  max-width: 300px;
 }
 
 /* search */
@@ -327,6 +340,10 @@ a .calendar-all {
 
 .today-td {
   border: 2px solid red !important;
+}
+
+.change-md {
+  font-size: large;
 }
 
 /* mybook content의 more 버튼 누르면 나타날 것들 */

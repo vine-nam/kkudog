@@ -314,9 +314,8 @@
     </header>
     <div class="content">
       <div class="calendar month-cal"></div> 
-      <ul class="book-list collection with-header">
-        <div class="contents"></div>
-      </ul>
+      <div class="contents book-list">
+      </div>
     </div>
   </script>
 
@@ -400,35 +399,47 @@
         </span>
         <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
         <pre>{{{ contents }}}</pre>
-        {{#each photos}}
-          <img class="imagefile" type="image" src="{{this}}"/>
-        {{/each}}
+        <div class="mybook-photos">
+          {{#each photos}}
+            <img class="imagefile" type="image" src="{{this}}"/>
+          {{/each}}
+        </div>
       </li>
     {{/each}}
   </script>
 
   <script id="mybook-month-contents-tpl" type="text/template">
-    {{#each this}}
-      <li class="collection-item">
-        <img class="responsive-img month-img z-depth-2"
-          src="{{#if image}}{{image}}"+
-            "{{else}}img/image-not-found.png{{/if}}">
-        <span>
-          <i class="material-icons more right">more_vert</i>
-          <ul class="hidden z-depth-3">
-            <li class="update">수정</li>
-            <li class="delete">삭제</li>
-          </ul>
-          <p class="rowid">{{rowid}}</p>
-          <p class="index">{{@index}}</p>
-        </span>
-        <span class="info">
-          <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
-          <p>{{{title}}}</p>
-          <pre>{{{ contents }}}</pre>
-        <span>
-      </li>
-    {{/each}}
+    <ul class="row">
+      {{#each this}}
+        <li class="col s12">
+          <span class="col s2">
+            <img class="responsive-img month-img z-depth-2"
+              src="{{#if image}}{{image}}"+
+                "{{else}}img/image-not-found.png{{/if}}">
+          </span>
+          <span class="info col s10">
+            <span>
+              <i class="material-icons more right">more_vert</i>
+              <ul class="hidden z-depth-3">
+                <li class="update">수정</li>
+                <li class="delete">삭제</li>
+              </ul>
+              <p class="rowid">{{rowid}}</p>
+              <p class="index">{{@index}}</p>
+            </span>
+            <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
+            <p>{{{title}}}</p>
+            <pre>{{{ contents }}}</pre>
+            <div class="mybook-photos">
+              {{#each photos}}
+                <img class="imagefile" type="image" src="{{this}}"/>
+              {{/each}}
+            </div>
+          <span>
+        </li>
+        <hr>
+      {{/each}}
+    </ul>
   </script>
 
   <script id="write-tpl" type="text/template">

@@ -11,6 +11,14 @@
   - jquery.js
   - router.js
 
+## plugin
+- barcode scanner
+  - https://plugins.telerik.com/cordova/plugin/barcodescanner
+- camera
+  - https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-camera/
+- sqlite storage
+  - https://github.com/litehelpers/Cordova-sqlite-storage
+
 ## 코드
 - www/js/api/key.js
 ```c

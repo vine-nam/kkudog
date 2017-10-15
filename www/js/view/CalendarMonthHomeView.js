@@ -35,14 +35,14 @@ var CalendarMonthHomeView = function (year, month) {
   var date = {};
   var year;
   var month;
-  var dbPageAll;
+  var dbPage;
   var items = {};
   var bookitems = {};
   var date;
   // var tditems = {};
   var md = true;//true: 월, false: 일
   //C/:index 테스트 코드
-  // /*
+  /*
   data = [
     {
       rowid: 1,
@@ -81,7 +81,7 @@ var CalendarMonthHomeView = function (year, month) {
     dbPage = new DBPage();
 
     //C/:index 테스트 코드
-    mybookMonthContentsView.setMybook(data);
+    // mybookMonthContentsView.setMybook(data);
 
     this.$el = $('<div/>');
 
@@ -249,7 +249,6 @@ var CalendarMonthHomeView = function (year, month) {
     });
   }
 
-  //writeTable 연결헤서 한 번에 지울 수 있게 하기~~??
   this.delete = function () {
     var executeQuery = "DELETE FROM WriteTable WHERE rowid=?";
     query = [rowid];

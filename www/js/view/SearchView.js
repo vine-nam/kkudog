@@ -71,7 +71,7 @@ var SearchView = function (data) {
         alert("Scanning failed: " + error);
       },
       {
-        preferFrontCamera: true, // iOS and Android
+        preferFrontCamera: false, // iOS and Android
         showFlipCameraButton: true, // iOS and Android
         showTorchButton: true, // iOS and Android
         torchOn: true, // Android, launch with the torch switched on (if available)

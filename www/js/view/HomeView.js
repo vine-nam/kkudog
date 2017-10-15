@@ -80,7 +80,7 @@ var HomeView = function (data, dbfun) {
       });
     });
     
-    characterData.mission(userData.todayPage, userindex, 1);
+    characterData.mission(userData.AllPage, userindex, 1);
     characterData.mission(userData.AllPage, userindex, 2);
     characterData.mission(userData.AllPage, userindex, 3);
     characterData.setUseCharacter(userindex);
