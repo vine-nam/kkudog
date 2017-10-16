@@ -18,6 +18,8 @@
   - https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-camera/
 - sqlite storage
   - https://github.com/litehelpers/Cordova-sqlite-storage
+- status bar
+  - https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-statusbar/
 
 ## 코드
 - www/js/api/key.js

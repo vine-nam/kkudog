@@ -88,7 +88,7 @@ var DBPage = function () {
         data = [];
         var month, day;
         var len = results.rows.length, i;
-        var isbn, s_page, e_page, contents, date;
+        var isbn, s_page, e_page, contents, date, photos;
         for (i = 0; i < len; i++) {
           rowid = results.rows.item(i).rowid;
           isbn = results.rows.item(i).isbn;
@@ -108,7 +108,7 @@ var DBPage = function () {
           month = dt.getMonth() + 1;
           day = dt.getDate();
           date = month + "월 " + day + "일";
-          // alert(dt);
+          
           data[i] = {
             rowid: rowid,
             isbn: isbn,
@@ -122,7 +122,6 @@ var DBPage = function () {
             photos: pt
           };
         }
-        // // items.data = data;
 
         deferred.resolve(data);
       }, function(error) {

@@ -397,13 +397,15 @@
           <p class="rowid">{{rowid}}</p>
           <p class="index">{{@index}}</p>
         </span>
-        <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
-        <pre>{{{ contents }}}</pre>
-        <div class="mybook-photos">
-          {{#each photos}}
-            <img class="imagefile" type="image" src="{{this}}"/>
-          {{/each}}
-        </div>
+        <span>
+          <p>{{ date }} | pp.{{ s_page }}-{{ e_page }}</p>
+          <pre>{{{ contents }}}</pre>
+          <div class="mybook-photos">
+            {{#each photos}}
+              <img class="imagefile" type="image" src="{{this}}"/>
+            {{/each}}
+          </div>
+        </span>
       </li>
     {{/each}}
   </script>
@@ -524,19 +526,35 @@
         </div>
       </nav>
     </header>
-    <div class="content"></div>
+    <div class="content book-list">
+      <ul class="row search-book-list" data-collapsible="accordion">
+      </ul>
+      <div class="spinner-wrapper">
+        <div class="spinner preloader-wrapper active">
+          <div class="spinner-layer spinner-green-only">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <footer></footer>
   </script>
 
   <script id="search-list-tpl" type="text/template">
-    <ul class="collection search-book-list book-list" data-collapsible="accordion">
       {{#each this}}
-      <li class="collection-item">
-        <a href="#search/{{@index}}" class="navigate-right">
-        <div class="valign-wrapper collection-header">
+        <li class="col s12">
+          <a href="#search/{{@index}}" class="navigate-right">
+          <span class="col s2">
             <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
             "{{else}}img/image-not-found.png{{/if}}">
-          <span>
+          </span>
+          <span class="col s10">
             {{{title}}}
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
@@ -544,8 +562,8 @@
         </div>
         </a>
       </li>
+      <hr>
       {{/each}}
-    </ul>
   </script>
 
   <script id="search-book-info-tpl" type="text/template">

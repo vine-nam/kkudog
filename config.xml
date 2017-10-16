@@ -41,6 +41,7 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="SplashMaintainAspectRatio" value="false" />
     <preference name="android-build-tool" value="gradle" />
+    <preference name="StatusBarBackgroundColor" value="#DF696E" />
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-dialogs" spec="^1.3.3" />
@@ -49,4 +50,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="com.phonegap.plugins.barcodescanner" spec="C:\Users\vine\Desktop\CODING\PROJECT\books\BarcodeScanner-6.0.5" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
 </widget>

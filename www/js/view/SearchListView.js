@@ -1,6 +1,5 @@
 var SearchListView = function () {
 
-  // var search;
   var items = [];
 
   this.initialize = function () {

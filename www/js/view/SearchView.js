@@ -1,4 +1,4 @@
-var SearchView = function (data) {
+var SearchView = function (data, qdata, pdata) {
 
   var searchListView;
   var api;
@@ -10,40 +10,40 @@ var SearchView = function (data) {
     searchListView = new SearchListView();
     api = new API();
     items = data;
-    page = 1;
+    query = qdata;
+    page = pdata;
     this.$el = $('<div/>');
     this.$el.css("height", "100%");
     this.$el.on('submit', '#target', this.findbook);
     this.$el.on('click', '.close', this.clear);
     this.$el.on('click', '.barcode', this.barcode);
     this.$el.on('click', this.check);
+    
+    $('.spinner-wrapper', this.$el).css('display', 'none');
 
-    //스크롤 안 먹어.....
-    this.$el.on('scroll', function () {
-      alert("솜");
+    var w = $(window, this.$el);
+    var d = $(document, this.$el);
+
+    w.scroll(function () {
+      if (w.scrollTop() === d.height() - w.height()) {
+        $('.spinner-wrapper').css('display', 'block');
+
+        setTimeout(function () {
+          page += 10;
+          api.requestBook(query, page).then(function (results) {
+
+            for (var i in results) {
+              items[page + i] = results[i];
+            }
+
+            searchListView.setData(items);
+            searchListView.render();
+
+            $('.spinner-wrapper').css('display', 'none');
+          })
+        }, 1200);
+      }
     });
-
-    // $(window).scroll(function() {
-    //   if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-    //     console.log(page+=10);
-    //     api.requestBook(query, page).then(function(results) {
-    //       // for(var i=0; i<results.length; i++) {
-    //       //   items.push(results[i]);
-    //       // }
-    // for (var i in results) {
-    //   items[page+i] = results[i];
-    // }
-    //       console.log(results);
-    //       searchListView.setData(items);
-    //       // searchListView.render();
-    //       $('.content', this.$el).append(searchListView.render().$el);
-    //     });
-    //     // $('.content', this.$el).html(searchListView.render().$el);
-    //     // $('.content').append(searchListView.render());
-    //     console.log(items);
-
-    //   }
-    // });
 
     this.render();
   };
@@ -94,24 +94,41 @@ var SearchView = function (data) {
 
   this.findbook = function (event) {
     event.preventDefault();
+
+    items = [];
     page = 1;
-    query = decodeURI($(this).serialize().split('=')[1]);
-    api.requestBook(query, page).then(function (results) {
-      items = results;
-      searchListView.setData(items);
-      searchListView.render();
-    });
-    $('.collapsible').collapsible();
+    query = decodeURIComponent($(this).serialize().split('=')[1]);
+    searchListView.setData(items);
+    searchListView.render();
+    $('.spinner-wrapper').css('display', 'block');
+
+    setTimeout(function () {
+      api.requestBook(query, page).then(function (results) {
+        items = results;
+        searchListView.setData(items);
+        searchListView.render();
+
+        $('.spinner-wrapper').css('display', 'none');
+      });
+      $('.collapsible').collapsible();
+    }, 1200);
   }
 
   this.getItems = function () {
     return items;
   }
 
+  this.getQuery = function () {
+    return query;
+  }
+  this.getPage = function () {
+    return page;
+  }
+
   this.render = function () {
     this.$el.html(this.template());
     searchListView.setData(items);
-    $('.content', this.$el).html(searchListView.render().$el);
+    $('ul.search-book-list', this.$el).html(searchListView.render().$el);
     return this;
   };
 

@@ -29,6 +29,7 @@ $(document).on('deviceready', function () {
   var isLoading = false;
   var year, month;
   var dbUserData = new DBUserData();
+  var query;
 
   router.addRoute('', function () {
     items = [];
@@ -52,13 +53,19 @@ $(document).on('deviceready', function () {
   });
 
   router.addRoute('search', function () {
-    searchView = new SearchView(items);
+    if(items === []) {
+      query = '';
+      page = 1;
+    }
+    searchView = new SearchView(items, query, page);
     $('body').html(searchView.render().$el);
     $('footer').html(new FooterBarView("search").render().$el);
   });
 
   router.addRoute('search/:index', function (index) {
     items = searchView.getItems();
+    query = searchView.getQuery();
+    page = searchView.getPage();
     index = parseInt(index);
     $('body').html(new SearchBookInfoView(items[index]).render().$el);
   });
@@ -98,7 +105,7 @@ $(document).on('deviceready', function () {
       data = items_mb[index];
     }
     $('body').html(new WriteView(data).render().$el);
-    //건들지 마세요....
+    //textarea 자동 크기 조절이 안되서 임시 방편으로 관련 코드 글거옮
     $(document).ready(function() {
       Materialize.updateTextFields();
       var hiddenDiv = $('.hiddendiv').first();

@@ -110,7 +110,7 @@ var MybookInfoView = function (items) {
       transaction.executeSql('SELECT * FROM WriteTable WHERE rowid=?', [rowid], function (tx, results) {
 
         items = [];
-        var isbn, s_page, e_page, contents;
+        var isbn, s_page, e_page, contents, photos;
         isbn = results.rows.item(0).isbn;
         s_page = results.rows.item(0).s_page;
         e_page = results.rows.item(0).e_page;
