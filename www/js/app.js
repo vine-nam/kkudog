@@ -193,5 +193,4 @@ $(document).on('deviceready', function () {
 
   router.start();
 
-// }());
 });

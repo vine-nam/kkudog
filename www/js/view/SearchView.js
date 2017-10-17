@@ -13,7 +13,6 @@ var SearchView = function (data, qdata, pdata) {
     query = qdata;
     page = pdata;
     this.$el = $('<div/>');
-    this.$el.css("height", "100%");
     this.$el.on('submit', '#target', this.findbook);
     this.$el.on('click', '.close', this.clear);
     this.$el.on('click', '.barcode', this.barcode);
@@ -50,7 +49,6 @@ var SearchView = function (data, qdata, pdata) {
   };
 
   this.check = function (event) {
-    event.preventDefault();
     if ($('label.label-icon').hasClass('active')) {
       $('.barcode').css("display", "none");
       $('.close').css("display", "block");
