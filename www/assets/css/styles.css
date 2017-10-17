@@ -108,6 +108,13 @@ header ~ .content {
   display: none;
 }
 
+.errorM {
+  text-align: center;
+  margin: 12px;
+  display: none;
+  font-size: large;
+}
+
 
 /* p태그 폰트 사이지가 작은 것 같소 */
 .calendar p {

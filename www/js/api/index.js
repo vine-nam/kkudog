@@ -18,8 +18,9 @@ var API = function () {
                 items = data.items;
                 deferred.resolve(items);
             },
-            error: function (error) {
-                alert("I'M ERROR" + JSON.stringify(error));
+            error: function (jqXHR, textStatus) {
+                console.log(textStatus);
+                deferred.resolve(textStatus);
             }
         });
         return deferred.promise();

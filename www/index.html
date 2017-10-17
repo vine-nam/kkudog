@@ -542,14 +542,17 @@
           </div>
         </div>
       </div>
+      <div class="errorM"> 
+        <p>결과가 없습니다.</p>
+      </div>
     </div>
     <footer></footer>
   </script>
 
   <script id="search-list-tpl" type="text/template">
-      {{#each this}}
-        <li class="col s12">
-          <a href="#search/{{@index}}" class="navigate-right">
+    {{#each this}}
+      <li class="col s12">
+        <a href="#search/{{@index}}" class="navigate-right">
           <span class="col s2">
             <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
             "{{else}}img/image-not-found.png{{/if}}">
@@ -559,11 +562,10 @@
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
           </span>
-        </div>
         </a>
       </li>
       <hr>
-      {{/each}}
+    {{/each}}
   </script>
 
   <script id="search-book-info-tpl" type="text/template">

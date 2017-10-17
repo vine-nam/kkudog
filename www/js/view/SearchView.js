@@ -19,6 +19,7 @@ var SearchView = function (data, qdata, pdata) {
     this.$el.on('click', '.barcode', this.barcode);
     this.$el.on('click', this.check);
     
+    $('.errorM').css('display', 'none');
     $('.spinner-wrapper', this.$el).css('display', 'none');
 
     var w = $(window, this.$el);
@@ -48,8 +49,9 @@ var SearchView = function (data, qdata, pdata) {
     this.render();
   };
 
-  this.check = function () {
-    if ($('label').hasClass('active')) {
+  this.check = function (event) {
+    event.preventDefault();
+    if ($('label.label-icon').hasClass('active')) {
       $('.barcode').css("display", "none");
       $('.close').css("display", "block");
     } else {
@@ -61,10 +63,17 @@ var SearchView = function (data, qdata, pdata) {
   this.barcode = function () {
     cordova.plugins.barcodeScanner.scan(
       function (result) {
+        $('.errorM').css('display', 'none');
+        $('.spinner-wrapper').css('display', 'block');
         api.requestBook(result.text).then(function (results) {
-          items = results;
-          searchListView.setData(items);
-          searchListView.render();
+          if(typeof results === "object") {
+            items = results;
+            searchListView.setData(items);
+            searchListView.render();
+          } else {
+            $('.errorM').css('display', 'block');
+          }
+          $('.spinner-wrapper').css('display', 'none');
         });
       },
       function (error) {
@@ -100,17 +109,21 @@ var SearchView = function (data, qdata, pdata) {
     query = decodeURIComponent($(this).serialize().split('=')[1]);
     searchListView.setData(items);
     searchListView.render();
+    $('.errorM').css('display', 'none');
     $('.spinner-wrapper').css('display', 'block');
 
     setTimeout(function () {
       api.requestBook(query, page).then(function (results) {
-        items = results;
-        searchListView.setData(items);
-        searchListView.render();
+        if(typeof results === "object") {
+          items = results;
+          searchListView.setData(items);
+          searchListView.render();
+        } else {
+          $('.errorM').css('display', 'block');
+        }
 
         $('.spinner-wrapper').css('display', 'none');
       });
-      $('.collapsible').collapsible();
     }, 1200);
   }
 
