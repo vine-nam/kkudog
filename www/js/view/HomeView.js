@@ -1,4 +1,4 @@
-var HomeView = function (data, dbfun) {
+var HomeView = function () {
   var items = {};
   var calendarView;
   var cal;
@@ -13,7 +13,7 @@ var HomeView = function (data, dbfun) {
   var userData = {};
   var characterData;
   var character;
-  var userindex;
+  var userindex2;
 
   this.initialize = function () {
     calendarView = new CalendarView();
@@ -26,23 +26,12 @@ var HomeView = function (data, dbfun) {
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
     tdData = new TdData();
-    dbUserData = dbfun;
-    userData = data;
-    character = characterData.getCharacter();
-    userindex = userData.character;
+    dbUserData = new DBUserData();
 
     this.$el = $('<div/>');
 
-    this.$el.on('click', '.character-list', function() {
-      event.preventDefault();
-      $('#overlay').css("display", "block");
-    });
-    this.$el.on('click', '.close', function() {
-      event.preventDefault();
-      $('#overlay').css("display", "none");
-      characterView.setCharacterData(character[userindex].name);
-      dbUserData.updateData("character", userindex);
-    });
+    this.$el.on('click', '.character-list', this.overlay);
+    this.$el.on('click', '.close', this.overlayClose);
     this.$el.on('click', '.using', function() {
       event.preventDefault();
       var index = $(this).siblings('.index').text();
@@ -52,7 +41,7 @@ var HomeView = function (data, dbfun) {
       userindex = index;
       characterListView.setData(character);
     });
-    
+
     this.$el.on('click', '.prev', function (event) {
       event.preventDefault();
       items = cal.getCal(year, --month);
@@ -80,72 +69,108 @@ var HomeView = function (data, dbfun) {
       });
     });
     
-    characterData.mission(userData.AllPage, userindex, 1);
-    characterData.mission(userData.AllPage, userindex, 2);
-    characterData.mission(userData.AllPage, userindex, 3);
-    characterData.setUseCharacter(userindex);
-    character = characterData.getCharacter();
-    characterView.setUserData(userData, character[userindex].name);
-    
-    characterListView.setData(character);
 
+    //캐릭터
+    $.when(dbUserData.getData(), characterData.getCharacter())
+      .done(function( userResults, characterResults ) {
+        userData = userResults;
+        userindex = userData.character;
+        character = characterResults;
+
+        characterView.setUserData(userData, character[userindex].name);
+        characterListView.setData(character);
+      })
+      .fail(function() {
+        console.log('character rejected');
+      });
+    
+    $.when(dbTodayPage.getData(), dbTodayPage.getAllData())
+      .done(function(todayResults, AllResults) {
+        var results, index;
+
+        if(userData.todayPage !== todayResults) {
+          results = todayResults;
+          userData.todayPage = results;
+          dbUserData.updateData("todayPage", results);
+          characterView.setData(results);
+        }
+        if(userData.AllPage !== AllResults) {
+          results = AllResults;
+          userData.AllPage = results;
+          dbUserData.updateData("AllPage", results); 
+          characterView.setAllData(results); 
+        }
+
+        results = AllResults;
+        for(var i=0; i<3; i++) {
+          var mamount = character[i].mamount;
+          var mstate = character[i].mstate;
+          if(!mstate) {
+            if (mamount >= results) {
+              mstate = 1;
+            } else {
+              mstate = 0;
+              if (userindex === i) {
+                userindex = 0;
+              }
+            }
+            characterData.updateData("mstate", mstate, character[i].name);
+            characterData.updateData("mamount2", results, character[userindex].name);
+          }
+        }
+
+        if(userindex!==index) {
+          characterData.updateData("state", 0, character[userindex].name);//false
+          characterData.updateData("state", 1, character[index].name);//true
+          userindex = index;
+        }
+
+        characterListView.setData(character);
+        characterView.render();
+      })
+      .fail(function() {
+        console.log('page rejected');
+      });
+
+    //달력
     items = cal.getCal(year, month);
     dbPage.getData(items).then(function (results) {
       items.c_page = results;
       calendarView.setCal(items);
       calendarView.render(true);
 
-      var gcount = 3;
-      if(userData.gaugeCount<gcount) {
-        gcount = characterView.startDayData();
-        userData.gaugeCount = gcount;
-        dbUserData.updateData("gaugeCount", gcount);
-      }
+      //달력에 오늘이라고 표시
       tdData.getTodayTd();
       tdData.setTodayTd();
+      
+      //캐릭터 gague
+      var gcount = characterView.startDayData();
+      if(userData.dayCount !== gcount) {
+        userData.dayCount = gcount;
+        dbUserData.updateData("dayCount", gcount);
+      }
+      gcount = gcount>3 ? 3 : gcount-1;
       var gData = tdData.getData(gcount);
       characterView.setTdData(gData);
+      characterView.render();
     });
-
-    dbTodayPage.getData().then(function (results) {
-      if(userData.todayPage !== results) {
-        userData.todayPage = results;
-        dbUserData.updateData("todayPage", results);
-        characterView.setData(results);
-      }
-    });
-    dbTodayPage.getAllData().then(function (results) {
-      if(userData.AllPage !== results) {
-        userData.AllPage = results;
-        dbUserData.updateData("AllPage", results); 
-        characterView.setAllData(results);
-
-        var index;
-        if(!character[1].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 1);
-        } else if(!character[2].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 2);
-        } else if(!character[3].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 3);
-        }
-        if(userindex!==index) {
-          userindex = index;
-          dbUserData.updateData("character", userindex);
-          characterView.setCharacterData(character[userindex].name);
-        }
-
-        characterListView.setData(character);
-      }
-    });
-
-    // 테스트 코드
-    // items.c_page = [,,1,2,13,14,15,16];
-    // calendarView.setCal(items);
-    // calendarView.render(true);
 
     this.render();
   };
   
+  this.overlay = function () {
+    event.preventDefault();
+    $('#overlay').css("display", "block");
+    userindex2 = userindex;
+  };
+
+  this.overlayClose = function () {
+    event.preventDefault();
+    $('#overlay').css("display", "none");
+    characterData.updateData("state", 0, character[userindex2].name);//false
+    characterData.updateData("state", 1, character[userindex].name);//true
+  };
+
   this.render = function () {
     this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);
