@@ -18,6 +18,7 @@ $(document).on('deviceready', function () {
   SearchListView.prototype.template = Handlebars.compile($("#search-list-tpl").html());
   SearchBookInfoView.prototype.template = Handlebars.compile($("#search-book-info-tpl").html());
   WriteView.prototype.template = Handlebars.compile($("#write-tpl").html());
+  SettingView.prototype.template = Handlebars.compile($("#setting-tpl").html());
   FooterBarView.prototype.template = Handlebars.compile($("#footer-bar-tpl").html());
 
   var mybookView;
@@ -189,6 +190,10 @@ $(document).on('deviceready', function () {
         textareaAutoResize($(this));
       });
     });
+  });
+
+  router.addRoute('setting', function () {
+    $('body').html(new SettingView().render().$el);
   });
 
   router.start();

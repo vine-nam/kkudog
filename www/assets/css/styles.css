@@ -416,3 +416,10 @@ ul {
 .button-li {
   border: 0;
 }
+
+/* setting */
+.alam {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

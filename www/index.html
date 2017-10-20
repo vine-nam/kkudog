@@ -31,6 +31,7 @@
   <script src="js/view/SearchListView.js"></script>
   <script src="js/view/SearchBookInfoView.js"></script>
   <script src="js/view/WriteView.js"></script>
+  <script src="js/view/SettingView.js"></script>
   <script src="js/view/FooterBarView.js"></script>
 
   <script src="lib/handlebars.js"></script>
@@ -601,6 +602,44 @@
     </div>
   </script>
 
+  <script id="setting-tpl" type="text/template">
+    <header>
+      <nav>
+        <a class="brand-logo center">설정</a>
+        <ul>
+          <li>
+            <a class="back"><i class="material-icons">arrow_back</i></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="content">
+      <ul class="row">
+        <li class="alam col s12">
+          <p>알림</p>
+          <div class="switch">
+            <label>
+              Off
+              <input type="checkbox">
+              <span class="lever"></span>
+              On
+            </label>
+          </div>
+        </li>
+        <hr>
+        <li class="col s12">
+          <p>백업하기</p>
+          <span>Last upload:-</span>
+        </li>
+        <hr>
+        <li class="col s12">
+          <p>가져오기</p>
+        </li>
+        <hr>
+      </ul>
+    </div>
+  </script>
+
 
   <script id="footer-bar-tpl" type="text/template">
     <nav class="nav-extended">
@@ -619,7 +658,7 @@
             </a>
           </li>
           <li class="tab">
-            <a class="{{#if search}}active{{/if}}" href="#search"><i  class="material-icons">search</i>
+            <a class="{{#if search}}active{{/if}}" href="#search"><i class="material-icons">search</i>
             </a>
           </li>
           <li class="tab">
