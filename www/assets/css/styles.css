@@ -195,19 +195,23 @@ ul {
 .character {
   margin: 20px auto 0;
 }
-.character-data {
-  text-align: right;
+.character-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .character img {
   width: 90px;
 }
 #gauge {
   color: orange; 
-  margin-right: 6px;
 }
 .page-data {
-  display: grid;
-  text-align: left;
+  margin: 0 20px;
+}
+.page-data span {
+  color: orange;
+  font-size: 1.7em;
 }
 
 #overlay {

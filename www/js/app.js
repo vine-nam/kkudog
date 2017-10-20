@@ -29,15 +29,12 @@ $(document).on('deviceready', function () {
   var page = 1;
   var isLoading = false;
   var year, month;
-  var dbUserData = new DBUserData();
   var query;
 
   router.addRoute('', function () {
     items = [];
-    dbUserData.getData().then(function (results) {
-      $('body').html(new HomeView(results, dbUserData).render().$el);
-      $('footer').html(new FooterBarView("home").render().$el);
-    });
+    $('body').html(new HomeView().render().$el);
+    $('footer').html(new FooterBarView("home").render().$el);
   });
 
   router.addRoute('calendar', function () {

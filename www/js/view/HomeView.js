@@ -1,4 +1,4 @@
-var HomeView = function (data, dbfun) {
+var HomeView = function () {
   var items = {};
   var calendarView;
   var cal;
@@ -26,8 +26,7 @@ var HomeView = function (data, dbfun) {
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
     tdData = new TdData();
-    dbUserData = dbfun;
-    userData = data;
+    dbUserData = new DBUserData()
     character = characterData.getCharacter();
     userindex = userData.character;
 
@@ -66,6 +65,7 @@ var HomeView = function (data, dbfun) {
         }
       });
     });
+
     this.$el.on('click', '.next', function (event) {
       event.preventDefault();
       items = cal.getCal(year, ++month);
@@ -79,15 +79,24 @@ var HomeView = function (data, dbfun) {
         }
       });
     });
-    
-    characterData.mission(userData.AllPage, userindex, 1);
-    characterData.mission(userData.AllPage, userindex, 2);
-    characterData.mission(userData.AllPage, userindex, 3);
-    characterData.setUseCharacter(userindex);
-    character = characterData.getCharacter();
-    characterView.setUserData(userData, character[userindex].name);
-    
-    characterListView.setData(character);
+    //캐릭터
+    $.when(dbUserData.getData(), characterData.getCharacter())
+      .done(function( userResults, characterResults ) {
+        userData = userResults;
+        userindex = userData.character;
+        character = characterResults;
+ 
+        characterData.mission(userData.AllPage, userindex, 1);
+        characterData.mission(userData.AllPage, userindex, 2);
+        characterData.mission(userData.AllPage, userindex, 3);
+        characterData.setUseCharacter(userindex);
+
+        characterView.setUserData(userData, character[userindex].name);
+        characterListView.setData(character);
+      })
+      .fail(function() {
+        console.log('character rejected');
+      });
 
     items = cal.getCal(year, month);
     dbPage.getData(items).then(function (results) {
@@ -95,14 +104,16 @@ var HomeView = function (data, dbfun) {
       calendarView.setCal(items);
       calendarView.render(true);
 
-      var gcount = 3;
-      if(userData.gaugeCount<gcount) {
-        gcount = characterView.startDayData();
-        userData.gaugeCount = gcount;
-        dbUserData.updateData("gaugeCount", gcount);
+      var gcount = characterView.startDayData();
+      if(userData.dayCount !== gcount) {
+        userData.dayCount = gcount;
+        dbUserData.updateData("dayCount", gcount);
       }
+      gcount = gcount>3 ? 3 : gcount-1;
+      
       tdData.getTodayTd();
       tdData.setTodayTd();
+
       var gData = tdData.getData(gcount);
       characterView.setTdData(gData);
     });
@@ -137,11 +148,6 @@ var HomeView = function (data, dbfun) {
         characterListView.setData(character);
       }
     });
-
-    // 테스트 코드
-    // items.c_page = [,,1,2,13,14,15,16];
-    // calendarView.setCal(items);
-    // calendarView.render(true);
 
     this.render();
   };
