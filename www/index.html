@@ -82,7 +82,7 @@
         <li>
           <img src="img/character/{{name}}{{#if mstate}}0{{else}}lock{{/if}}.jpg">
           <p>{{mission}}</p>
-          <a class="waves-effect waves-light btn {{#if state}}in-use{{else}}using{{/if}} {{#if mstate}}{{else}}disabled{{/if}}">{{#if mstate}}사용 {{#if state}}중{{else}}하기{{/if}}{{else}}<i class="material-icons left">lock</i>{{mpercent}}{{/if}}</a>
+          <a class="waves-effect waves-light btn {{#if state}}in-use{{else}}using{{/if}} {{#if mstate}}{{else}}disabled{{/if}}">{{#if mstate}}사용 {{#if state}}중{{else}}하기{{/if}}{{else}}<i class="material-icons left">lock</i>{{mamount2}}/{{mamount}}{{/if}}</a>
           <p class="index">{{@index}}</p>
         </li>
         <hr/>
@@ -105,7 +105,11 @@
         <li><div>시작일: </div><span>{{dayCount}}</span></li>
         <li><div>전체 읽은 페이지: </div><span>{{AllPage}}</span></li>
         <li><div>오늘 읽은 페이지: </div><span>{{todayPage}}</span></li>
+<<<<<<< HEAD
       </ul>
+=======
+      </div>
+>>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
     </div>
   </script>
 
