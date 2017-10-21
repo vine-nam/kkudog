@@ -13,7 +13,7 @@ var HomeView = function () {
   var userData = {};
   var characterData;
   var character;
-  var userindex2;
+  var userindex;
 
   this.initialize = function () {
     calendarView = new CalendarView();
@@ -26,18 +26,22 @@ var HomeView = function () {
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
     tdData = new TdData();
-<<<<<<< HEAD
     dbUserData = new DBUserData()
     character = characterData.getCharacter();
     userindex = userData.character;
-=======
-    dbUserData = new DBUserData();
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
 
     this.$el = $('<div/>');
 
-    this.$el.on('click', '.character-list', this.overlay);
-    this.$el.on('click', '.close', this.overlayClose);
+    this.$el.on('click', '.character-list', function () {
+      event.preventDefault();
+      $('#overlay').css("display", "block");
+    });
+    this.$el.on('click', '.close', function () {
+      event.preventDefault();
+      $('#overlay').css("display", "none");
+      characterView.setCharacterData(character[userindex].name);
+      dbUserData.updateData("character", userindex);
+    });
     this.$el.on('click', '.using', function() {
       event.preventDefault();
       var index = $(this).siblings('.index').text();
@@ -75,25 +79,18 @@ var HomeView = function () {
         }
       });
     });
-<<<<<<< HEAD
-=======
-    
 
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
     //캐릭터
     $.when(dbUserData.getData(), characterData.getCharacter())
       .done(function( userResults, characterResults ) {
         userData = userResults;
         userindex = userData.character;
         character = characterResults;
-<<<<<<< HEAD
  
         characterData.mission(userData.AllPage, userindex, 1);
         characterData.mission(userData.AllPage, userindex, 2);
         characterData.mission(userData.AllPage, userindex, 3);
         characterData.setUseCharacter(userindex);
-=======
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
 
         characterView.setUserData(userData, character[userindex].name);
         characterListView.setData(character);
@@ -101,57 +98,6 @@ var HomeView = function () {
       .fail(function() {
         console.log('character rejected');
       });
-<<<<<<< HEAD
-=======
-    
-    $.when(dbTodayPage.getData(), dbTodayPage.getAllData())
-      .done(function(todayResults, AllResults) {
-        var results, index;
-
-        if(userData.todayPage !== todayResults) {
-          results = todayResults;
-          userData.todayPage = results;
-          dbUserData.updateData("todayPage", results);
-          characterView.setData(results);
-        }
-        if(userData.AllPage !== AllResults) {
-          results = AllResults;
-          userData.AllPage = results;
-          dbUserData.updateData("AllPage", results); 
-          characterView.setAllData(results); 
-        }
-
-        results = AllResults;
-        for(var i=0; i<3; i++) {
-          var mamount = character[i].mamount;
-          var mstate = character[i].mstate;
-          if(!mstate) {
-            if (mamount >= results) {
-              mstate = 1;
-            } else {
-              mstate = 0;
-              if (userindex === i) {
-                userindex = 0;
-              }
-            }
-            characterData.updateData("mstate", mstate, character[i].name);
-            characterData.updateData("mamount2", results, character[userindex].name);
-          }
-        }
-
-        if(userindex!==index) {
-          characterData.updateData("state", 0, character[userindex].name);//false
-          characterData.updateData("state", 1, character[index].name);//true
-          userindex = index;
-        }
-
-        characterListView.setData(character);
-        characterView.render();
-      })
-      .fail(function() {
-        console.log('page rejected');
-      });
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
 
     //달력
     items = cal.getCal(year, month);
@@ -160,7 +106,6 @@ var HomeView = function () {
       calendarView.setCal(items);
       calendarView.render(true);
 
-<<<<<<< HEAD
       var gcount = characterView.startDayData();
       if(userData.dayCount !== gcount) {
         userData.dayCount = gcount;
@@ -171,25 +116,11 @@ var HomeView = function () {
       tdData.getTodayTd();
       tdData.setTodayTd();
 
-=======
-      //달력에 오늘이라고 표시
-      tdData.getTodayTd();
-      tdData.setTodayTd();
-      
-      //캐릭터 gague
-      var gcount = characterView.startDayData();
-      if(userData.dayCount !== gcount) {
-        userData.dayCount = gcount;
-        dbUserData.updateData("dayCount", gcount);
-      }
-      gcount = gcount>3 ? 3 : gcount-1;
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
       var gData = tdData.getData(gcount);
       characterView.setTdData(gData);
       characterView.render();
     });
 
-<<<<<<< HEAD
     dbTodayPage.getData().then(function (results) {
       if(userData.todayPage !== results) {
         userData.todayPage = results;
@@ -197,6 +128,7 @@ var HomeView = function () {
         characterView.setData(results);
       }
     });
+    
     dbTodayPage.getAllData().then(function (results) {
       if(userData.AllPage !== results) {
         userData.AllPage = results;
@@ -221,24 +153,9 @@ var HomeView = function () {
       }
     });
 
-=======
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
     this.render();
   };
   
-  this.overlay = function () {
-    event.preventDefault();
-    $('#overlay').css("display", "block");
-    userindex2 = userindex;
-  };
-
-  this.overlayClose = function () {
-    event.preventDefault();
-    $('#overlay').css("display", "none");
-    characterData.updateData("state", 0, character[userindex2].name);//false
-    characterData.updateData("state", 1, character[userindex].name);//true
-  };
-
   this.render = function () {
     this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);
