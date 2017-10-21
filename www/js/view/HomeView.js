@@ -32,8 +32,16 @@ var HomeView = function () {
 
     this.$el = $('<div/>');
 
-    this.$el.on('click', '.character-list', this.overlay);
-    this.$el.on('click', '.close', this.overlayClose);
+    this.$el.on('click', '.character-list', function () {
+      event.preventDefault();
+      $('#overlay').css("display", "block");
+    });
+    this.$el.on('click', '.close', function () {
+      event.preventDefault();
+      $('#overlay').css("display", "none");
+      characterView.setCharacterData(character[userindex].name);
+      dbUserData.updateData("character", userindex);
+    });
     this.$el.on('click', '.using', function() {
       event.preventDefault();
       var index = $(this).siblings('.index').text();
@@ -71,6 +79,7 @@ var HomeView = function () {
         }
       });
     });
+
     //캐릭터
     $.when(dbUserData.getData(), characterData.getCharacter())
       .done(function( userResults, characterResults ) {
@@ -119,6 +128,7 @@ var HomeView = function () {
         characterView.setData(results);
       }
     });
+    
     dbTodayPage.getAllData().then(function (results) {
       if(userData.AllPage !== results) {
         userData.AllPage = results;
@@ -146,19 +156,6 @@ var HomeView = function () {
     this.render();
   };
   
-  this.overlay = function () {
-    event.preventDefault();
-    $('#overlay').css("display", "block");
-    userindex2 = userindex;
-  };
-
-  this.overlayClose = function () {
-    event.preventDefault();
-    $('#overlay').css("display", "none");
-    characterData.updateData("state", 0, character[userindex2].name);//false
-    characterData.updateData("state", 1, character[userindex].name);//true
-  };
-
   this.render = function () {
     this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);
