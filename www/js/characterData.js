@@ -1,49 +1,60 @@
 var CharacterData = function () {
-  var database;
-
-
-  this.initialize = function () {
-    database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
-  };
+  var character = [
+    {
+      "name": "똘똘이",
+      "state": false,
+      "mission": "기본",
+      "mstate": true
+    },
+    {
+      "name": "cactus",
+      "state": false,
+      "mission": "총 50쪽 이상 읽으세요",
+      "mamount": 50,
+      "mstate": false,
+      "mpercent": ""
+    },
+    {
+      "name": "rabbit",
+      "state": false,
+      "mission": "총 100쪽 이상 읽으세요",
+      "mamount": 100,
+      "mstate": false,
+      "mpercent": ""
+    },
+    {
+      "name": "Blowfish",
+      "state": false,
+      "mission": "총 500쪽 이상 읽으세요",
+      "mamount": 500,
+      "mstate": false,
+      "mpercent": ""
+    }
+  ];
 
   this.getCharacter = function () {
-    var deferred = $.Deferred();
-    database.transaction(function (transaction) {
-      transaction.executeSql("SELECT * FROM CharacterTable", [], function (tx, results) {
-        var len = results.rows.length, i;
-        for (i = 0; i < len; i++) {
-          character[i] = {
-            "name": results.rows.item(i).name,
-            "state": results.rows.item(i).state,
-            "mission": results.rows.item(i).mission,
-            "mstate": results.rows.item(i).mstate,
-            "mamount": results.rows.item(i).mamount,
-            "mpercent": results.rows.item(i).mpercent,
-            "mpercent2": results.rows.item(i).mpercent2,
-          }
-        }
-        deferred.resolve(character);
-      }, null);
-    });
-    return deferred.promise();
+    return character;
+  }
+  this.setUseCharacter = function (index) {
+    character[index].state = true;
   }
 
-  this.updateData = function (column, value, name) {
-    var executeQuery = "UPDATE CharacterTable SET "+column+"=? WHERE name=?";
-    database.transaction(function (transaction) {
-      transaction.executeSql(executeQuery, [value, name], function (tx, results) {
-      }, function (tx, result) {
-        alert('Updated');
-      },
-        function (error) {
-          alert('Error occurred');
-        });
-    }, function (error) {
-      navigator.notification.alert('UPDATE error: ' + error.message);
-    });
+  this.mission = function (data1, userindex, i) {
+    var data2 = character[i].mamount;
+
+    if (data1 >= data2) {
+      character[i].mstate = true;
+    } else {
+      character[i].mstate = false;
+      if (userindex === i) {
+        userindex = 0;
+      }
+      character[i].mpercent = data1 + "/" + character[i].mamount;
+    }
+
+    return userindex;
   }
 
-  this.initialize();
 }
 
 var DBUserData = function () {

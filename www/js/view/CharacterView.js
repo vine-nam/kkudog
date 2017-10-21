@@ -108,11 +108,6 @@ var CharacterView = function () {
     this.characterData();
     this.render();
   }
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
   this.gaugeData = function () {
     for (var i in gData) {
       items.gauge[i] = gauge[gData[i]];
@@ -135,10 +130,6 @@ var CharacterView = function () {
     var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
     var firstDate = new Date();
     var secondDate = new Date(items.startDay);
-<<<<<<< HEAD
-=======
-    
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
     var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
     return diffDays+1;
   }
@@ -156,11 +147,7 @@ var CharacterView = function () {
     this.gaugeData();
     this.characterData();
   }
-<<<<<<< HEAD
   
-=======
-
->>>>>>> 640934ffa1c5972bc465b1e9d6596336da343296
   this.setCharacterData = function (c_data) {
     items.character = c_data + c;
     this.render();
