@@ -1,6 +1,5 @@
 $(document).on('deviceready', function () {
   sqlite_db();
-  navigator.splashscreen.hide();
 
   HomeView.prototype.template = Handlebars.compile($("#home-tpl").html());
   CharacterView.prototype.template = Handlebars.compile($("#character-tpl").html());
@@ -30,6 +29,10 @@ $(document).on('deviceready', function () {
   var isLoading = false;
   var year, month;
   var query;
+
+  if(localStorage.getItem('alarm') === null) {
+    localStorage.setItem('alarm', 1);
+  }
 
   router.addRoute('', function () {
     items = [];
@@ -78,22 +81,6 @@ $(document).on('deviceready', function () {
   router.addRoute('mybook/:index', function (i) {
     index = parseInt(i);
     items_mb = mybookView.getItems();
-    
-    // test serve
-    // items_mb = [{
-    //   title: "aa",
-    //   image: "../../img/image-not-found.png",
-    //   publisher: "내가 지음",
-    //   page: 200,
-    //   isbn: "123"
-    // },
-    // {
-    //   title: "aa",
-    //   image: "../../img/book-img.png",
-    //   publisher: "혜진 선생님(찡긋)",
-    //   page: 300,
-    //   isbn: "123"
-    // }];
     $('body').html(new MybookInfoView(items_mb[index]).render().$el);
   });
   

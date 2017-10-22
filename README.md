@@ -20,6 +20,8 @@
   - https://github.com/litehelpers/Cordova-sqlite-storage
 - status bar
   - https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-statusbar/
+- local notification
+  - https://github.com/katzer/cordova-plugin-local-notifications
 
 ## 코드
 - www/js/api/key.js

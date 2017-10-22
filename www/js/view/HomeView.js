@@ -127,6 +127,26 @@ var HomeView = function () {
         dbUserData.updateData("todayPage", results);
         characterView.setData(results);
       }
+      //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
+      if(Number(localStorage.getItem('alarm')) === 1 ) {
+        if(!results) {
+          var now = new Date().getTime(),
+            _3_day_from_now = new Date(now + 5*1000);
+            //지금은 테스트 중
+            //나중에 3일로 바꾸기
+            //60 * 60 * 24 * 3 * 1000
+      
+          cordova.plugins.notification.local.schedule({
+            text: "3일 동안의 기록이 없습니다.?",
+            at: _3_day_from_now,
+            led: "00FF00",
+            sound: null,
+            icon: "res://icon/andoird/32x32.png",
+            smallIcon: "res://icon/andoird/128x128.png"
+            //icon 어떻게 하는거야??????
+          });
+        }
+      }
     });
     
     dbTodayPage.getAllData().then(function (results) {

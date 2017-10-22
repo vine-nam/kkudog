@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Security-Policy" content="default-src * gap: ws: https://ssl.gstatic.com;style-src * 'unsafe-inline' 'self' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;img-src * data: 'unsafe-inline' 'self' content:;">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
-  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">   
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="assets/materialize/css/materialize.min.css"  media="screen,projection"/>
+  <link href="assets/materialize/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="assets/css/styles.css" rel="stylesheet">
   <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <title>꾸독</title>
@@ -615,12 +615,12 @@
     </header>
     <div class="content">
       <ul class="row">
-        <li class="alam col s12">
+        <li class="alarm col s12">
           <p>알림</p>
           <div class="switch">
             <label>
               Off
-              <input type="checkbox">
+              <input id="checkbox" type="checkbox" {{#if this}}checked{{/if}}>
               <span class="lever"></span>
               On
             </label>
@@ -637,6 +637,7 @@
         </li>
         <hr>
       </ul>
+      </section>
     </div>
   </script>
 
