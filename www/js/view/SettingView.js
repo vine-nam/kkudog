@@ -6,7 +6,7 @@ var SettingView = function () {
   this.initialize = function () {
     this.$el = $('<div/>');
     this.$el.on('click', '.back', this.back);
-    this.$el.on('click change', '.lever', this.ln);
+    this.$el.on('click change', '.lever', this.alarm);
 
     this.checkbox();
     this.render();
@@ -16,7 +16,7 @@ var SettingView = function () {
     items = Number(localStorage.getItem('alarm')) === 1 ? 1 : 0;
   }
 
-  this.ln = function () {
+  this.alarm = function () {
     items = items === 1 ? 0 : 1;
     localStorage.setItem('alarm', items);
     if(items === 0) {
@@ -24,10 +24,6 @@ var SettingView = function () {
         console.log("done");
       }, this);
     }
-  }
-
-  this.alarm = function () {
-
   }
 
   this.back = function () {
