@@ -1,6 +1,12 @@
 $(document).on('deviceready', function () {
-  sqlite_db();
+  navigator.splashscreen.show();
+  sqlite_db().then(function () {
+    HandlebarsCompile();
+    App();
+  });
+});
 
+function HandlebarsCompile() { 
   HomeView.prototype.template = Handlebars.compile($("#home-tpl").html());
   CharacterView.prototype.template = Handlebars.compile($("#character-tpl").html());
   CharacterListView.prototype.template = Handlebars.compile($("#character-list-tpl").html());
@@ -19,6 +25,9 @@ $(document).on('deviceready', function () {
   WriteView.prototype.template = Handlebars.compile($("#write-tpl").html());
   SettingView.prototype.template = Handlebars.compile($("#setting-tpl").html());
   FooterBarView.prototype.template = Handlebars.compile($("#footer-bar-tpl").html());
+};
+
+function App() {
 
   var mybookView;
   var searchView;
@@ -182,4 +191,4 @@ $(document).on('deviceready', function () {
 
   router.start();
 
-});
+};

@@ -106,8 +106,8 @@ var CharacterView = function () {
     character = c_data;
     this.gaugeData();
     this.characterData();
-    this.render();
   }
+
   this.gaugeData = function () {
     for (var i in gData) {
       items.gauge[i] = gauge[gData[i]];
@@ -128,8 +128,8 @@ var CharacterView = function () {
 
   this.startDayData = function () {
     var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-    var firstDate = new Date();
-    var secondDate = new Date(items.startDay);
+    var firstDate = new Date(String(new Date()).substr(0, 15));
+    var secondDate = new Date(items.startDay.substr(0, 15));
     var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
     return diffDays+1;
   }
@@ -137,8 +137,13 @@ var CharacterView = function () {
   this.setData = function (todayPage) {
     items.todayPage = todayPage;
   }
+  
   this.setAllData = function (AllPage) {
     items.AllPage = AllPage;
+  }
+
+  this.setDayCount = function (dayCount) {
+    items.dayCount = dayCount;
   }
 
   this.setTdData = function (data) {
@@ -150,7 +155,6 @@ var CharacterView = function () {
   
   this.setCharacterData = function (c_data) {
     items.character = c_data + c;
-    this.render();
   }
 
   this.render = function () {

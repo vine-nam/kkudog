@@ -82,7 +82,7 @@
         <li>
           <img src="img/character/{{name}}{{#if mstate}}0{{else}}lock{{/if}}.jpg">
           <p>{{mission}}</p>
-          <a class="waves-effect waves-light btn {{#if state}}in-use{{else}}using{{/if}} {{#if mstate}}{{else}}disabled{{/if}}">{{#if mstate}}사용 {{#if state}}중{{else}}하기{{/if}}{{else}}<i class="material-icons left">lock</i>{{mamount2}}/{{mamount}}{{/if}}</a>
+          <a class="waves-effect waves-light btn {{#if state}}in-use{{else}}using{{/if}} {{#if mstate}}{{else}}disabled{{/if}}">{{#if mstate}}사용 {{#if state}}중{{else}}하기{{/if}}{{else}}<i class="material-icons left">lock</i>{{mpercent}}{{/if}}</a>
           <p class="index">{{@index}}</p>
         </li>
         <hr/>
@@ -92,19 +92,21 @@
   </script>
 
   <script id="character-tpl" type="text/template">
-    <div class="character-wrapper">
-      <div class="character-data">
-        <div id="gauge">
+    <div class="row">
+      <ul class="col s6 character-data">
+        <li id="gauge">
           <i class="material-icons">{{gauge.[0]}}</i>
           <i class="material-icons">{{gauge.[1]}}</i>
           <i class="material-icons">{{gauge.[2]}}</i>
-        </div> 
-        <img src="img/character/{{character}}.jpg">
-      </div>
-      <ul class="page-data">
-        <li><div>시작일: </div><span>{{dayCount}}</span></li>
-        <li><div>전체 읽은 페이지: </div><span>{{AllPage}}</span></li>
-        <li><div>오늘 읽은 페이지: </div><span>{{todayPage}}</span></li>
+        </li>
+        <li> 
+          <img src="img/character/{{character}}.jpg">
+        </li>
+      </ul>
+      <ul class="col s6 page-data">
+        <li><div>시작일</div><span>{{dayCount}}</span></li>
+        <li><div>전체 읽은 페이지</div><span>{{AllPage}}</span></li>
+        <li><div>오늘 읽은 페이지</div><span>{{todayPage}}</span></li>
       </ul>
     </div>
   </script>
@@ -682,20 +684,6 @@
   <script src="js/app.js"></script>
   <script src="assets/materialize/js/materialize.js"></script>
   <script src="cordova.js"></script>
-  <script type="text/javascript">
-    // $(function () {
-    //   // 이 이벤트가 발생했다는 것은 cordova의 초기화가 모두 완료되었다는 의미.
-    //   $(document).on('deviceready', function () {
-    //     sqlite_db();
-    //     //  sqlite_db().initDatabase();
-    //     // cordova의 초기화 완료 후 1초의 시간을 더 딜레이 시키고 인트로화면이 사라지게 한다.
-    //     // --> 인트로 화면이 너무 빨리 사라지는 것을 방지하기 위해서 1초의 딜레이를 적용함.
-    //     //setTimeout(function () {
-    //     navigator.splashscreen.hide();
-    //     //}, 1000);
-    //   });
-    // });
-  </script>
 </body>
 
 </html>

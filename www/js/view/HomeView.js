@@ -14,6 +14,7 @@ var HomeView = function () {
   var characterData;
   var character;
   var userindex;
+  var gcount;
 
   this.initialize = function () {
     calendarView = new CalendarView();
@@ -28,28 +29,25 @@ var HomeView = function () {
     tdData = new TdData();
     dbUserData = new DBUserData()
     character = characterData.getCharacter();
-    userindex = userData.character;
 
     this.$el = $('<div/>');
 
     this.$el.on('click', '.character-list', function () {
       event.preventDefault();
       $('#overlay').css("display", "block");
+      characterListUpdate();
     });
     this.$el.on('click', '.close', function () {
       event.preventDefault();
       $('#overlay').css("display", "none");
       characterView.setCharacterData(character[userindex].name);
+      characterView.render();
       dbUserData.updateData("character", userindex);
     });
-    this.$el.on('click', '.using', function() {
+    this.$el.on('click', '.using', function () {
       event.preventDefault();
       var index = $(this).siblings('.index').text();
-      userData.character = index;
-      character[userindex].state = false;
-      character[index].state = true;
-      userindex = index;
-      characterListView.setData(character);
+      characterState(index);
     });
 
     this.$el.on('click', '.prev', function (event) {
@@ -59,8 +57,8 @@ var HomeView = function () {
         items.c_page = results;
         calendarView.setCal(items);
         calendarView.render(true);
-        
-        if(year===tdData.getYear()&&month===tdData.getMonth()) {
+
+        if (year === tdData.getYear() && month === tdData.getMonth()) {
           tdData.setTodayTd();
         }
       });
@@ -73,31 +71,59 @@ var HomeView = function () {
         items.c_page = results;
         calendarView.setCal(items);
         calendarView.render(true);
-        
-        if(year===tdData.getYear()&&month===tdData.getMonth()) {
+
+        if (year === tdData.getYear() && month === tdData.getMonth()) {
           tdData.setTodayTd();
         }
       });
     });
 
-    //캐릭터
-    $.when(dbUserData.getData(), characterData.getCharacter())
-      .done(function( userResults, characterResults ) {
-        userData = userResults;
-        userindex = userData.character;
-        character = characterResults;
- 
-        characterData.mission(userData.AllPage, userindex, 1);
-        characterData.mission(userData.AllPage, userindex, 2);
-        characterData.mission(userData.AllPage, userindex, 3);
-        characterData.setUseCharacter(userindex);
+    function alarmSet() {
+      //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
+      if (Number(localStorage.getItem('alarm')) === 1) {
+        var now = new Date().getTime(),
+          _3_day_from_now = new Date(now + 5 * 1000);
+        //지금은 테스트 중
+        //나중에 3일로 바꾸기
+        //60 * 60 * 24 * 3 * 1000
 
-        characterView.setUserData(userData, character[userindex].name);
-        characterListView.setData(character);
-      })
-      .fail(function() {
-        console.log('character rejected');
-      });
+        cordova.plugins.notification.local.schedule({
+          text: "3일 동안의 기록이 없습니다.?",
+          at: _3_day_from_now,
+          led: "00FF00",
+          sound: null,
+          icon: "file://www/img/icon/andoird/32x32.png",
+          smallIcon: "file://www/img/icon/andoird/128x128.png"
+          //icon 어떻게 하는거야??????
+        });
+      }
+    }
+
+    function characterState(index) {
+      userData.character = index;
+      character[userindex].state = false;
+      character[index].state = true;
+      userindex = index;
+      characterListView.setData(character);
+    }
+
+    function characterListUpdate() {
+      var index;
+
+      character[userindex].state = true;
+
+      for(var i=3; i>0; i--) {
+        index = characterData.mission(userData.AllPage, userindex, i);
+        if (userindex !== index) {
+          characterState(index);
+          dbUserData.updateData("character", userindex);
+          characterView.setCharacterData(character[userindex].name);
+          characterView.render();
+        }
+      }
+
+      characterListView.setData(character);
+    }
 
     //달력
     items = cal.getCal(year, month);
@@ -106,76 +132,49 @@ var HomeView = function () {
       calendarView.setCal(items);
       calendarView.render(true);
 
-      var gcount = characterView.startDayData();
-      if(userData.dayCount !== gcount) {
-        userData.dayCount = gcount;
-        dbUserData.updateData("dayCount", gcount);
-      }
-      gcount = gcount>3 ? 3 : gcount-1;
-      
       tdData.getTodayTd();
       tdData.setTodayTd();
-
-      var gData = tdData.getData(gcount);
-      characterView.setTdData(gData);
-      characterView.render();
     });
 
-    dbTodayPage.getData().then(function (results) {
-      if(userData.todayPage !== results) {
-        userData.todayPage = results;
-        dbUserData.updateData("todayPage", results);
-        characterView.setData(results);
-      }
-      //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
-      if(Number(localStorage.getItem('alarm')) === 1 ) {
-        if(!results) {
-          var now = new Date().getTime(),
-            _3_day_from_now = new Date(now + 5*1000);
-            //지금은 테스트 중
-            //나중에 3일로 바꾸기
-            //60 * 60 * 24 * 3 * 1000
-      
-          cordova.plugins.notification.local.schedule({
-            text: "3일 동안의 기록이 없습니다.?",
-            at: _3_day_from_now,
-            led: "00FF00",
-            sound: null,
-            icon: "res://icon/andoird/32x32.png",
-            smallIcon: "res://icon/andoird/128x128.png"
-            //icon 어떻게 하는거야??????
-          });
-        }
-      }
-    });
-    
-    dbTodayPage.getAllData().then(function (results) {
-      if(userData.AllPage !== results) {
-        userData.AllPage = results;
-        dbUserData.updateData("AllPage", results); 
-        characterView.setAllData(results);
+    //캐릭터
+    $.when(dbUserData.getData(), characterData.getCharacter(), dbTodayPage.getData(), dbTodayPage.getAllData())
+      .done(function (userResults, characterResults, TResult, AResult) {
+        userData = userResults;
+        userindex = userData.character;
+        character = characterResults;
 
-        var index;
-        if(!character[1].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 1);
-        } else if(!character[2].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 2);
-        } else if(!character[3].mstate) {
-          index = characterData.mission(userData.AllPage, userindex, 3);
-        }
-        if(userindex!==index) {
-          userindex = index;
-          dbUserData.updateData("character", userindex);
-          characterView.setCharacterData(character[userindex].name);
+        if (userData.todayPage !== TResult || userData.AllPage !== AResult) {
+          userData.todayPage = TResult;
+          userData.AllPage = AResult;
+          dbUserData.updateData("todayPage", TResult);
+          dbUserData.updateData("AllPage", AResult);
+          characterView.setData(TResult);
+          characterView.setAllData(AResult);
         }
 
-        characterListView.setData(character);
-      }
-    });
+        characterView.setUserData(userData, character[userindex].name);
+        gcount = characterView.startDayData();
+        if (userData.dayCount !== gcount) {
+          userData.dayCount = gcount;
+          characterView.setDayCount(gcount);
+          dbUserData.updateData("dayCount", gcount);
+        }
+        gcount = gcount >= 3 ? 3 : gcount - 1;
+        var gData = tdData.getData(gcount);
+        characterView.setTdData(gData);
+
+        characterView.render();
+        characterListUpdate();
+        navigator.splashscreen.hide();
+      })
+      .fail(function () {
+        console.log('character rejected');
+      });
+
 
     this.render();
   };
-  
+
   this.render = function () {
     this.$el.html(this.template());
     $('.calendar', this.$el).html(calendarView.$el);

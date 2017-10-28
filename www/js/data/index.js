@@ -1,87 +1,68 @@
 var sqlite_db = function () {
 
   var database = null;
+  var deferred = $.Deferred();
 
   function initDatabase() {
     database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
-    createMybookTable();
-    createWriteTable();
-    createUserTable();
+    $.when(createMybookTable(), createWriteTable(), createUserTable())
+      .done(function () {
+        deferred.resolve();
+      }
+    )
   }
 
   function createMybookTable() {
+    var deferred = $.Deferred();
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS MybookTable ('
         + 'isbn TEXT PRIMARY KEY NOT NULL, '
         + 'title TEXT NOT NULL, author TEXT, image TEXT '
-        // +'date, page1, page2, content'
-        //글 저장소 분리 할 것!!
         + ');';
-      // transaction.executeSql('DROP TABLE IF EXISTS MybookTable', [],
-      //   function (tx, result) {//Success
-      //     alert("Table DROP WriteTable successfully");
-      //   },
-      //   function (error) {// Error
-      //     alert("Error occurred while DROP the table.");
-      //   }
-      // );
       transaction.executeSql(executeQuery, [],
         function (tx, result) {//Success
-          // alert("Table created MybookTable successfully");
         },
         function (error) {// Error
           alert("Error occurred while creating the table.");
         });
+        deferred.resolve();
     }, function (error) {
       navigator.notification.alert('CREATE error: ' + error.message);
     });
+    return deferred.promise();
   }
 
   function createWriteTable() {
+    var deferred = $.Deferred();
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS WriteTable ('
         + 'isbn TEXT NOT NULL, '//책 isbn
         + 's_page INTEGER NOT NULL, e_page INTEGER NOT NULL, page INTEGER NOT NULL, '
         + 'contents TEXT NOT NULL, photos TEXT NOT NULL, date TEXT NOT NULL'
         + ');';
-      // transaction.executeSql('DROP TABLE IF EXISTS WriteTable', [],
-      //   function (tx, result) {//Success
-      //     alert("Table DROP WriteTable successfully");
-      //   },
-      //   function (error) {// Error
-      //     alert("Error occurred while DROP the table.");
-      //   }
-      // );
       transaction.executeSql(executeQuery, [],
         function (tx, result) {//Success
-          // alert("Table created WriteTable successfully");
         },
         function (error) {// Error
           alert("Error occurred while creating the table.");
         });
+        deferred.resolve();
     }, function (error) {
       navigator.notification.alert('CREATE error: ' + error.message);
     });
+    return deferred.promise();
   }
 
   function createUserTable() {
+    var deferred = $.Deferred();
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS UserTable ('
         + 'character INTEGER NOT NULL, dayCount INTEGER NOT NULL, '//책 isbn
         + 'todayPage INTEGER NOT NULL, AllPage INTEGER NOT NULL, '
         + 'startDay TEXT NOT NULL);';
-      // transaction.executeSql('DROP TABLE IF EXISTS UserTable', [],
-      //   function (tx, result) {//Success
-      //     alert("Table DROP UserTable successfully");
-      //   },
-      //   function (error) {// Error
-      //     alert("Error occurred while DROP the table.");
-      //   }
-      // );
       transaction.executeSql(executeQuery, [],
         function (tx, result) {//Success
-          // alert("Table created UserTable successfully");
-          inputUserData();
+          inputUserData(deferred);
         },
         function (error) {// Error
           alert("Error occurred while creating the table.");
@@ -89,9 +70,10 @@ var sqlite_db = function () {
     }, function (error) {
       navigator.notification.alert('CREATE error: ' + error.message);
     });
+    return deferred.promise();
   }
 
-  function inputUserData() {
+  function inputUserData(deferred) {
     database.transaction(function (transaction) {
       transaction.executeSql("SELECT * FROM UserTable", [], function (tx, results) {
         if (!results.rows.length) {
@@ -99,22 +81,18 @@ var sqlite_db = function () {
           var executeQuery = "INSERT INTO UserTable VALUES (?,?,?,?,?)";
           transaction.executeSql(executeQuery, data
             , function (tx, result) {
-              // alert('Inserted');
             },
             function (error) {
               alert('Error occurred');
             });
         }
+        deferred.resolve();
       }, null);
 
     }, null);
   }
 
-  document.addEventListener('deviceready', function () {
-    initDatabase();
-  });
+  initDatabase();
+  return deferred.promise();
 
-  return {
-    database: database
-  }
 };
