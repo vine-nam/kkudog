@@ -52,21 +52,15 @@ var HomeView = function () {
 
     this.$el.on('click', '.prev', function (event) {
       event.preventDefault();
-      items = cal.getCal(year, --month);
-      dbPage.getData(items).then(function (results) {
-        items.c_page = results;
-        calendarView.setCal(items);
-        calendarView.render(true);
-
-        if (year === tdData.getYear() && month === tdData.getMonth()) {
-          tdData.setTodayTd();
-        }
-      });
+      calMonth(year, --month);
     });
-
     this.$el.on('click', '.next', function (event) {
       event.preventDefault();
-      items = cal.getCal(year, ++month);
+      calMonth(year, ++month);
+    });
+
+    function calMonth(year, month) {
+      items = cal.getCal(year, month);
       dbPage.getData(items).then(function (results) {
         items.c_page = results;
         calendarView.setCal(items);
@@ -76,19 +70,16 @@ var HomeView = function () {
           tdData.setTodayTd();
         }
       });
-    });
+    }
 
-    function alarmSet() {
+    function alarmSet(dcount) {
       //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
       if (Number(localStorage.getItem('alarm')) === 1) {
         var now = new Date().getTime(),
-          _3_day_from_now = new Date(now + 5 * 1000);
-        //지금은 테스트 중
-        //나중에 3일로 바꾸기
-        //60 * 60 * 24 * 3 * 1000
+          _3_day_from_now = new Date(now + 60*60*24*dcount*1000);
 
         cordova.plugins.notification.local.schedule({
-          text: "3일 동안의 기록이 없습니다.?",
+          text: "3일 동안의 기록이 없습니다.",
           at: _3_day_from_now,
           led: "00FF00",
           sound: null,
@@ -161,8 +152,19 @@ var HomeView = function () {
         }
         gcount = gcount >= 3 ? 3 : gcount - 1;
         var gData = tdData.getData(gcount);
-        characterView.setTdData(gData);
 
+        var dcount=3;
+        for (var i in gData) {
+          if(gData[i] === 1) {
+            dcount--;
+          } else {
+            alarmSet(dcount);
+            break;
+          }
+        }
+
+//???왜 characterView에서 sort한 gData가 이곳 gData에도 sort를 하는 거지???
+        characterView.setTdData(gData);
         characterView.render();
         characterListUpdate();
         navigator.splashscreen.hide();
