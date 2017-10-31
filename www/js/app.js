@@ -4,9 +4,39 @@ $(document).on('deviceready', function () {
     HandlebarsCompile();
     App();
   });
+  onBackKeyDown();
 });
 
-function HandlebarsCompile() { 
+function onBackKeyDown(e) {
+  var exitApp = false;
+  var intval = setInterval(function () { exitApp = false; }, 500);
+  document.addEventListener("backbutton", function (e) {
+    e.preventDefault();
+    if (exitApp) {
+      navigator.notification.confirm(
+        '정말로 종료하시겠습니까',
+        exitAppFunc,
+        '종료',
+        ['확인', '취소']
+      );
+    }
+    else {
+      exitApp = true;
+      history.back(1);
+    }
+  }, false);
+
+  function exitAppFunc(result) {
+    if (result === 1) {
+      clearInterval(intval);
+      (navigator.app && navigator.app.exitApp()) || (device && device.exitApp());
+    } else {
+      exitApp = false;
+    }
+  }
+}
+
+function HandlebarsCompile() {
   HomeView.prototype.template = Handlebars.compile($("#home-tpl").html());
   CharacterView.prototype.template = Handlebars.compile($("#character-tpl").html());
   CharacterListView.prototype.template = Handlebars.compile($("#character-list-tpl").html());
@@ -39,7 +69,7 @@ function App() {
   var year, month;
   var query;
 
-  if(localStorage.getItem('alarm') === null) {
+  if (localStorage.getItem('alarm') === null) {
     localStorage.setItem('alarm', 1);
   }
 
@@ -57,13 +87,13 @@ function App() {
 
   router.addRoute('calendar/:index', function (i) {
     var temp = $('.year').html();
-    temp===''||temp===undefined ? year : year = $('.year').html();
+    temp === '' || temp === undefined ? year : year = $('.year').html();
     month = parseInt(i);
     $('body').html(new CalendarMonthHomeView(year, ++month).render().$el);
   });
 
   router.addRoute('search', function () {
-    if(items === []) {
+    if (items === []) {
       query = '';
       page = 1;
     }
@@ -79,7 +109,7 @@ function App() {
     index = parseInt(index);
     $('body').html(new SearchBookInfoView(items[index]).render().$el);
   });
-  
+
   router.addRoute('mybook', function () {
     items = [];
     mybookView = new MybookView();
@@ -92,31 +122,31 @@ function App() {
     items_mb = mybookView.getItems();
     $('body').html(new MybookInfoView(items_mb[index]).render().$el);
   });
-  
+
   router.addRoute('write', function () {
     var data;
-    if(items_mb[index]) {
+    if (items_mb[index]) {
       data = items_mb[index];
     }
     $('body').html(new WriteView(data).render().$el);
     //textarea 자동 크기 조절이 안되서 임시 방편으로 관련 코드 글거옮
-    $(document).ready(function() {
+    $(document).ready(function () {
       Materialize.updateTextFields();
       var hiddenDiv = $('.hiddendiv').first();
       if (!hiddenDiv.length) {
         hiddenDiv = $('<div class="hiddendiv common"></div>');
         $('body').append(hiddenDiv);
       }
-      
+
       var text_area_selector = '.materialize-textarea';
-  
+
       function textareaAutoResize($textarea) {
         // Set font properties of hiddenDiv
         var fontFamily = $textarea.css('font-family');
         var fontSize = $textarea.css('font-size');
         var lineHeight = $textarea.css('line-height');
         var padding = $textarea.css('padding');
-  
+
         if (fontSize) {
           hiddenDiv.css('font-size', fontSize);
         }
@@ -129,29 +159,29 @@ function App() {
         if (padding) {
           hiddenDiv.css('padding', padding);
         }
-  
+
         // Set original-height, if none
         if (!$textarea.data('original-height')) {
           $textarea.data('original-height', $textarea.height());
         }
-  
+
         if ($textarea.attr('wrap') === 'off') {
           hiddenDiv.css('overflow-wrap', 'normal').css('white-space', 'pre');
         }
-  
+
         hiddenDiv.text($textarea.val() + '\n');
         var content = hiddenDiv.html().replace(/\n/g, '<br>');
         hiddenDiv.html(content);
-  
+
         // When textarea is hidden, width goes crazy.
         // Approximate with half of window size
-  
+
         if ($textarea.is(':visible')) {
           hiddenDiv.css('width', $textarea.width());
         } else {
           hiddenDiv.css('width', $(window).width() / 2);
         }
-  
+
         /**
          * Resize if the new height is greater than the
          * original height of the textarea
@@ -168,7 +198,7 @@ function App() {
         }
         $textarea.data('previous-length', $textarea.val().length);
       }
-  
+
       $(text_area_selector).each(function () {
         var $textarea = $(this);
         /**
@@ -178,7 +208,7 @@ function App() {
         $textarea.data('original-height', $textarea.height());
         $textarea.data('previous-length', $textarea.val().length);
       });
-  
+
       $('body').on('keyup keydown autoresize', text_area_selector, function () {
         textareaAutoResize($(this));
       });

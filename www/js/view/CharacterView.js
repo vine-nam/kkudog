@@ -87,6 +87,7 @@ var CharacterView = function () {
 
   items.character = "";
   items.gauge = [];
+  items.dayCount = 0;
   items.todayPage = 0;
   items.AllPage = 0;
 

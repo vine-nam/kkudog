@@ -104,7 +104,8 @@ var WriteView = function (item) {
     database.transaction(function (transaction) {
       transaction.executeSql(executeQuery, data
         , function (tx, result) {
-          alert('Inserted');
+          // alert('Inserted');
+          window.plugins.toast.showShortBottom("저장되었습니다.");
           history.back();
         },
         function (error) {

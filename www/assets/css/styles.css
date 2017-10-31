@@ -53,6 +53,7 @@ header ~ .content {
 .book-list .collection-header img {
   width: 20%;
   max-width: 85px !important;
+  min-width: 70px !important;
   margin-right: 22px;
 }
 /* calendar month img */
@@ -390,7 +391,7 @@ a .calendar-all {
 }
 .show li {
   cursor: pointer;
-  padding: 7px 23px;
+  padding: 8px 26px;
 }
 .show li:hover {
   background: #f5f5f5;

@@ -83,8 +83,8 @@ var HomeView = function () {
           at: _3_day_from_now,
           led: "00FF00",
           sound: null,
-          icon: "file://www/img/icon/andoird/32x32.png",
-          smallIcon: "file://www/img/icon/andoird/128x128.png"
+          icon: "file:///img/icon/128x128.png",
+          smallIcon: "file:///img/icon/32x32.png"
           //icon 어떻게 하는거야??????
         });
       }
@@ -155,13 +155,9 @@ var HomeView = function () {
 
         var dcount=3;
         for (var i in gData) {
-          if(gData[i] === 1) {
-            dcount--;
-          } else {
-            alarmSet(dcount);
-            break;
-          }
-        }
+          if(gData[i] === 1) { dcount--; } 
+          else { break; }
+        } alarmSet(dcount);
 
 //???왜 characterView에서 sort한 gData가 이곳 gData에도 sort를 하는 거지???
         characterView.setTdData(gData);

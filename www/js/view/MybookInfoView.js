@@ -7,29 +7,12 @@ var MybookInfoView = function (items) {
   var mybookcontentsView;
   var rowid;
   var index;
-  //test serve
-  // data = [
-  //   {
-  //     rowid: 1,
-  //     s_page: 1,
-  //     e_page: 3,
-  //     contents: "블라브라라ㅏㅏㄴㅇㅁ",
-  //     date: "9월1일"
-  //   },
-  //   {
-  //     rowid: 2,
-  //     s_page: 4,
-  //     e_page: 13,
-  //     contents: "이제 나도 그 별에서 함께 살게 되겠지.",
-  //     date: "7월 29일"
-  //   }
-  // ];
 
   this.initialize = function () {
     this.$el = $('<div/>');
     this.$el.on('click', '.back', this.back);
-    this.$el.on('click', function(e) {
-      if(!$(e.target).hasClass("more")) {
+    this.$el.on('click', function (e) {
+      if (!$(e.target).hasClass("more")) {
         if ($("ul").hasClass("show")) {
           $("ul").removeClass("show");
         }
@@ -40,9 +23,6 @@ var MybookInfoView = function (items) {
     this.$el.on('click', '.delete', this.delete);
 
     mybookcontentsView = new MybookContentsView();
-
-    //test serve
-    // mybookcontentsView.setMybook(data);
 
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT rowid, * FROM WriteTable WHERE isbn=? ORDER BY rowid DESC', [items.isbn], function (tx, results) {
@@ -60,7 +40,7 @@ var MybookInfoView = function (items) {
           contents = results.rows.item(i).contents;
           date = results.rows.item(i).date;
           photos = results.rows.item(i).photos;
-  
+
           var dt = new Date(date);
           month = dt.getMonth() + 1;
           day = dt.getDate();
@@ -82,7 +62,7 @@ var MybookInfoView = function (items) {
         // items.data = data;
         mybookcontentsView.setMybook(data);
 
-      }, function(error) {
+      }, function (error) {
         navigator.notification.alert('error: ' + error.message);
       });
     });
@@ -123,15 +103,15 @@ var MybookInfoView = function (items) {
         pt.shift();
 
         items = { //rowid 있음 주의 **
-          rowid: rowid, 
-          isbn: isbn, 
-          s_page: s_page, 
-          e_page: e_page, 
-          page: page, 
+          rowid: rowid,
+          isbn: isbn,
+          s_page: s_page,
+          e_page: e_page,
+          page: page,
           contents: contents,
           photos: pt
         };
-       
+
         writeView.setWrite(items);
 
       }, function (error) {
@@ -141,49 +121,62 @@ var MybookInfoView = function (items) {
   }
 
   this.delete = function () {
-    if (rowid === "") {
-      var executeQuery = "DELETE FROM WriteTable WHERE isbn=?";
-      query = [items.isbn];//다른곳은 data라 했지만 이미 data라는 변수를 쓰고 있으므로 query라 하겠다....
-      
-      database.transaction(function (transaction) {
-        transaction.executeSql(executeQuery, query,
-          function (tx, result) { 
-            alert('WriteTable Delete successfully'); 
-            
-            executeQuery = "DELETE FROM MybookTable WHERE isbn=?";
-            database.transaction(function (transaction) {
-              transaction.executeSql(executeQuery, query,
-                function (tx, result) { 
-                  alert('MybookTable Delete successfully');
-                  history.back(); 
-                },
-                function (error) { 
-                  alert('MybookTable Something went Wrong'); 
+    navigator.notification.confirm(
+      '삭제하기',
+      deleteItem,
+      '정말로 삭제하시겠습니까',
+      ['확인', '취소']
+    );
+
+    function deleteItem(result) {
+      if (result === 1) {
+        if (rowid === "") {
+          var executeQuery = "DELETE FROM WriteTable WHERE isbn=?";
+          query = [items.isbn];//다른곳은 data라 했지만 이미 data라는 변수를 쓰고 있으므로 query라 하겠다....
+
+          database.transaction(function (transaction) {
+            transaction.executeSql(executeQuery, query,
+              function (tx, result) {
+                // alert('WriteTable Delete successfully');
+
+                executeQuery = "DELETE FROM MybookTable WHERE isbn=?";
+                database.transaction(function (transaction) {
+                  transaction.executeSql(executeQuery, query,
+                    function (tx, result) {
+                      // alert('MybookTable Delete successfully');
+                      window.plugins.toast.showShortBottom("삭제되었습니다.");
+                      history.back();
+                    },
+                    function (error) {
+                      alert('MybookTable Something went Wrong');
+                    });
                 });
-            });
-            
-          },
-          function (error) { 
-            alert('WriteTable Something went Wrong'); 
-          });
-      });
-      
-    } else {
-      var executeQuery = "DELETE FROM WriteTable WHERE rowid=?";
-      query = [rowid];
 
-      database.transaction(function (transaction) {
-        transaction.executeSql(executeQuery, query,
-          function (tx, result) { 
-            alert('Delete successfully'); 
-
-            data.splice(index, 1); 
-            mybookcontentsView.setMybook(data);
-          },
-          function (error) { 
-            alert('Something went Wrong'); 
+              },
+              function (error) {
+                alert('WriteTable Something went Wrong');
+              });
           });
-      });
+
+        } else {
+          var executeQuery = "DELETE FROM WriteTable WHERE rowid=?";
+          query = [rowid];
+
+          database.transaction(function (transaction) {
+            transaction.executeSql(executeQuery, query,
+              function (tx, result) {
+                // alert('Delete successfully');
+                window.plugins.toast.showShortBottom("삭제되었습니다.");
+
+                data.splice(index, 1);
+                mybookcontentsView.setMybook(data);
+              },
+              function (error) {
+                alert('Something went Wrong');
+              });
+          });
+        }
+      }
     }
   }
 

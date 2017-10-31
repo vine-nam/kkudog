@@ -25,13 +25,22 @@ var SearchBookInfoView = function (items) {
       var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?)";
       transaction.executeSql(executeQuery, data
         , function (tx, result) {
-          alert('Inserted');
+          // alert('Inserted');
+          navigator.notification.confirm(
+            '책장으로 이동하기',
+            loca,
+            '책 추가가 완료되었습니다.',
+            ['확인', '취소']
+          );
         },
         function (error) {
-          alert('Error occurred');
+          // alert('Error occurred');
+          console.log(JSON.stringify(error));
         });
     }, null);
   }
+
+  function loca(result) {if(result === 1) {location.href="#mybook";}}
 
   this.render = function () {
     this.$el.html(this.template(items));
