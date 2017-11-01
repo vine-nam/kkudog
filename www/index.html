@@ -339,7 +339,7 @@
         <a href="#mybook/{{@index}}">
           <img class="z-depth-3" src="{{image}}">
           <div class="percent">
-            {{#if percent}}{{percent}}%{{/if}}
+            {{page}}
           </div>
         </a>
       </li>
@@ -375,11 +375,14 @@
               <li class="delete">삭제</li>
             </ul>
           </span>
-          <span>
+          <span class="booklist-info">
             {{{title}}}
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
             {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
+            <div class="progress">
+              <div class="determinate" style="width: {#if percent}}{{percent}}%{{/if}}"></div>
+            </div>
             {{#if percent}}{{percent}}%{{/if}}
           </span>
         </li>
@@ -530,7 +533,7 @@
       </nav>
     </header>
     <div class="content book-list">
-      <ul class="row search-book-list" data-collapsible="accordion">
+      <ul class="row search-book-list">
       </ul>
       <div class="spinner-wrapper">
         <div class="spinner preloader-wrapper active">
@@ -549,55 +552,68 @@
         <p>결과가 없습니다.</p>
       </div>
     </div>
+    <div class="search-book-info-view" id="overlay">
+      <div class="z-depth-4 view-wrap"></div>
+    </div>
     <footer></footer>
   </script>
 
   <script id="search-list-tpl" type="text/template">
     {{#each this}}
       <li class="col s12">
-        <a href="#search/{{@index}}">
-          <span class="col s2">
-            <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
-            "{{else}}img/image-not-found.png{{/if}}">
-          </span>
-          <span class="col s10">
-            {{{title}}}
-            {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
-            {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
-          </span>
-        </a>
+        <span class="col s2">
+          <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
+          "{{else}}img/image-not-found.png{{/if}}">
+        </span>
+        <span class="col s10">
+          {{{title}}}
+          {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
+          {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
+        </span>
+        <p class="index">{{@index}}</p>
       </li>
       <hr>
     {{/each}}
   </script>
 
   <script id="search-book-info-tpl" type="text/template">
-    <header>
+    <div>
       <nav>
-        <a class="brand-logo center">책 정보</a>
         <ul>
           <li>
-            <a class="back"><i class="material-icons">arrow_back</i></a>
+            <a class="header-text">책 정보</a>
+          </li>
+          <li class="right">
+            <a class="overlayClose">
+              <i class="material-icons">close</i>
+            </a>
           </li>
         </ul>
       </nav>
-    </header>
-    <div class="content">
-      <ul class="book-list collection with-header">
-        <li class="valign-wrapper collection-header">
-          <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
-          "{{else}}img/image-not-found.png{{/if}}">
-          <span>
-            {{{title}}}
-            {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
-            {{#if publisher}}<p>{{publisher}} (출판)</p>{{/if}}
+    </div>
+    <div class="content book-list">
+      <ul class="row">
+        <li class="col s12">
+          <span class="col s2">
+            <img class="responsive-img z-depth-2" src="{{#if image}}{{image}}"+
+            "{{else}}img/image-not-found.png{{/if}}">
+          </span>
+          <span class="info-table col s10">
+            <div class="table-row">
+              <div class="table-head">제목</div><p class="table-body">{{{title}}}</p>
+            </div>
+            <div class="table-row">
+              <div class="table-head">지은이</div><p class="table-body">{{{author}}}</p>
+            </div>
+            <div class="table-row">
+              <div class="table-head">출판사</div><p class="table-body">{{publisher}}</p>
+            </div>
+            <div class="table-row">
+              <div class="table-head">총 페이지</div><input id="a_page" class="table-body" type="number" name="s_page">
+            </div>
           </span>
         </li>
-        <li class="collection-item">
-          상세정보
-          <p>{{{description}}}</p>
-        </li>
-        <li class="collection-item button-li">  
+        <li class="col s12">  
           <button class="btn waves-effect waves-light add-book" type="submit" name="action">추가하기</button>
         </li>
       </ul>

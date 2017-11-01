@@ -1,15 +1,18 @@
-var SearchView = function (data, qdata, pdata) {
+var SearchView = function (bdata, qdata, pdata) {
 
   var searchListView;
+  var searchBookInfoView;
   var api;
   var items = [];
+  var data = [];
   var query;
   var page;
 
   this.initialize = function () {
     searchListView = new SearchListView();
+    searchBookInfoView = new SearchBookInfoView();
     api = new API();
-    items = data;
+    items = bdata;
     query = qdata;
     page = pdata;
     this.$el = $('<div/>');
@@ -17,6 +20,9 @@ var SearchView = function (data, qdata, pdata) {
     this.$el.on('click', '.close', this.clear);
     this.$el.on('click', '.barcode', this.barcode);
     this.$el.on('click', this.check);
+    this.$el.on('click', '.search-book-list li', this.searchInfo);
+    this.$el.on('click', '.overlayClose', searchBookInfoView.close);
+    this.$el.on('click', '.add-book', searchBookInfoView.addBook);
     
     $('.errorM').css('display', 'none');
     $('.spinner-wrapper', this.$el).css('display', 'none');
@@ -47,6 +53,15 @@ var SearchView = function (data, qdata, pdata) {
 
     this.render();
   };
+
+  this.searchInfo = function (event) {
+    event.preventDefault();
+    $('#overlay').css("display", "block");
+    index = $(this).children(".index").text();
+    data = items[index];
+    searchBookInfoView.setData(data);
+    searchBookInfoView.render();
+  }
 
   this.check = function (event) {
     if ($('label.label-icon').hasClass('active')) {
@@ -95,10 +110,6 @@ var SearchView = function (data, qdata, pdata) {
     $('#search').val('');
   }
 
-  this.back = function () {
-    window.history.back();
-  }
-
   this.findbook = function (event) {
     event.preventDefault();
 
@@ -140,6 +151,7 @@ var SearchView = function (data, qdata, pdata) {
     this.$el.html(this.template());
     searchListView.setData(items);
     $('ul.search-book-list', this.$el).html(searchListView.render().$el);
+    $('.view-wrap', this.$el).html(searchBookInfoView.$el);
     return this;
   };
 

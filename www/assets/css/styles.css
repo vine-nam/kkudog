@@ -108,12 +108,21 @@ header ~ .content {
   margin: 12px;
   display: none;
 }
-
 .errorM {
   text-align: center;
   margin: 12px;
   display: none;
   font-size: large;
+}
+
+.table-row {
+  display: flex;
+}
+.table-head {
+  flex: 4;
+}
+.table-body {
+  flex: 10;
 }
 
 
@@ -231,7 +240,8 @@ ul {
   background-color: rgba(0,0,0,0.5);
   z-index: 2;
 }
-.character-list-view {
+.character-list-view, 
+.search-book-info-view {
   padding: 25px;
   padding-top: 63px;
 }
@@ -239,7 +249,8 @@ ul {
   background: white;
   margin-bottom: 100px;
 }
-.character-list-view .contents {  
+.character-list-view .contents,
+.search-book-info-view .contents {  
   height: -webkit-fill-available;
   overflow: auto;
 }
@@ -404,7 +415,16 @@ a .calendar-all {
 }
 .header-more-ul {
   top: 70px;
-}  
+}
+.booklist-info {
+  width: 65%;
+}
+/* progress */
+.progress {
+  width: 80%;
+  margin-right: 5px;
+  float: left;
+}
 
 
 /* percent */

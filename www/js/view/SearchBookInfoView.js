@@ -1,28 +1,38 @@
 var SearchBookInfoView = function (items) {
 
+  var items = [];
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
   
   this.initialize = function () {
     this.$el = $('<div/>');
-    this.$el.on('click', '.back', this.back);
-    this.$el.on('click', '.add-book', this.addBook);
 
     this.render();
   };
 
-  this.back = function () {
-    window.history.back();
+  this.close = function () {
+    event.preventDefault();
+    $('#overlay').css("display", "none");
+  };
+
+  this.setData = function (data) {
+    items = data;
   }
 
   this.addBook = function (event) {
+    var page = $('#a_page').val();
+    if(!page) {
+      window.plugins.toast.showShortCenter("페이지를 입력해 주세요");
+      return;
+    }
     var data = [
       items.isbn,
       items.title,
       items.author,
+      page,
       items.image
     ];
     database.transaction(function (transaction) {
-      var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?)";
+      var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?,?)";
       transaction.executeSql(executeQuery, data
         , function (tx, result) {
           // alert('Inserted');
@@ -35,12 +45,12 @@ var SearchBookInfoView = function (items) {
         },
         function (error) {
           // alert('Error occurred');
+          window.plugins.toast.showShortCenter("이미 추가된 책입니다.");
           console.log(JSON.stringify(error));
         });
     }, null);
+    function loca(result) {if(result === 1) {location.href="#mybook";}}
   }
-
-  function loca(result) {if(result === 1) {location.href="#mybook";}}
 
   this.render = function () {
     this.$el.html(this.template(items));

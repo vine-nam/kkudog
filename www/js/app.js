@@ -102,14 +102,6 @@ function App() {
     $('footer').html(new FooterBarView("search").render().$el);
   });
 
-  router.addRoute('search/:index', function (index) {
-    items = searchView.getItems();
-    query = searchView.getQuery();
-    page = searchView.getPage();
-    index = parseInt(index);
-    $('body').html(new SearchBookInfoView(items[index]).render().$el);
-  });
-
   router.addRoute('mybook', function () {
     items = [];
     mybookView = new MybookView();
@@ -119,7 +111,9 @@ function App() {
 
   router.addRoute('mybook/:index', function (i) {
     index = parseInt(i);
+    alert(index);
     items_mb = mybookView.getItems();
+    console.log(JSON.stringify(items_mb[index]));
     $('body').html(new MybookInfoView(items_mb[index]).render().$el);
   });
 
