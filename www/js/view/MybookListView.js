@@ -2,20 +2,6 @@ var MybookListView = function () {
 
   var items;
 
-  //test serve
-  // items = [
-  //   {
-  //     title: "aa",
-  //     image: "../../img/image-not-found.png",
-  //     isbn: "123"
-  //   },
-  //   {
-  //     title: "aa",
-  //     image: "../../img/book-img.png",
-  //     isbn: "123"
-  //   }
-  // ];
-
   this.initialize = function () {
     this.$el = $('<div/>');
 

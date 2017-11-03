@@ -111,9 +111,7 @@ function App() {
 
   router.addRoute('mybook/:index', function (i) {
     index = parseInt(i);
-    alert(index);
     items_mb = mybookView.getItems();
-    console.log(JSON.stringify(items_mb[index]));
     $('body').html(new MybookInfoView(items_mb[index]).render().$el);
   });
 

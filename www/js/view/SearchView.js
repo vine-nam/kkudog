@@ -56,7 +56,7 @@ var SearchView = function (bdata, qdata, pdata) {
 
   this.searchInfo = function (event) {
     event.preventDefault();
-    $('#overlay').css("display", "block");
+    $('#overlay', this.$el).css("display", "block");
     index = $(this).children(".index").text();
     data = items[index];
     searchBookInfoView.setData(data);

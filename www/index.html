@@ -339,7 +339,7 @@
         <a href="#mybook/{{@index}}">
           <img class="z-depth-3" src="{{image}}">
           <div class="percent">
-            {{page}}
+            {{#if SumPercent}}{{SumPercent}}%{{/if}}
           </div>
         </a>
       </li>
@@ -379,11 +379,11 @@
             {{{title}}}
             {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
             {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
-            {{#if page}}<p>{{{page}}} (쪽)</p>{{/if}}
+            {{#if totalPages}}<p>{{totalPages}} (쪽)</p>{{/if}}
             <div class="progress">
-              <div class="determinate" style="width: {#if percent}}{{percent}}%{{/if}}"></div>
+              <div class="determinate" style="width: {{#if SumPercent}}{{SumPercent}}%{{/if}}"></div>
             </div>
-            {{#if percent}}{{percent}}%{{/if}}
+            {{#if SumPercent}}{{SumPercent}}{{else}}0{{/if}}%
           </span>
         </li>
         <div class="contents"></div>
@@ -497,7 +497,7 @@
           </div>
         <div class="row">
           <div class="input-field col s12">
-            <textarea id="textarea1" name="contents" class="materialize-textarea">{{data.contents}}</textarea>
+            <textarea id="textarea" name="contents" class="materialize-textarea">{{data.contents}}</textarea>
             <!-- <label for="textarea">책 내용</label> -->
           </div>
         </div>

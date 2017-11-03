@@ -13,14 +13,34 @@ var MybookView = function () {
 
         items = [];
         var len = results.rows.length, i;
-        var isbn, title, author, image;
+        var isbn, title, author, totalPages, percent, SumPercent, image;
         for (i = 0; i < len; i++) {
           isbn = results.rows.item(i).isbn;
           title = results.rows.item(i).title;
           author = results.rows.item(i).author;
+          totalPages = results.rows.item(i).totalPages;
+          percent = JSON.parse(results.rows.item(i).percent);
           image = results.rows.item(i).image;//왜 img로 만느건야 과거에 나ㅏㅏㅏ
-          items[i] = { isbn: isbn, title: title, author: author, image: image };
+
+          SumPercent = 0;
+          for (var j=0; j<totalPages; j++) {
+            if (percent[j]===1) {
+              SumPercent += percent[j];
+            }
+          }
+          SumPercent = Math.round(SumPercent/totalPages*100);
+
+          items[i] = { 
+            isbn: isbn, 
+            title: title, 
+            author: author, 
+            totalPages: totalPages, 
+            percent: percent,
+            SumPercent: SumPercent,
+            image: image 
+          };
         }
+        console.log(JSON.stringify(items));
 
         mybookListView.setMybook(items);
 

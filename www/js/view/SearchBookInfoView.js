@@ -19,20 +19,27 @@ var SearchBookInfoView = function (items) {
   }
 
   this.addBook = function (event) {
-    var page = $('#a_page').val();
-    if(!page) {
+    var totalPages = $('#a_page').val();
+    if(!totalPages) {
       window.plugins.toast.showShortCenter("페이지를 입력해 주세요");
       return;
     }
+    var percent =[];
+    for(var i=0; i<totalPages; i++) {
+      percent[i] = 0;
+    }
+    
     var data = [
       items.isbn,
       items.title,
       items.author,
-      page,
+      totalPages,
+      JSON.stringify(percent),
       items.image
     ];
+    console.log(JSON.stringify(data));
     database.transaction(function (transaction) {
-      var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?,?)";
+      var executeQuery = "INSERT INTO MybookTable VALUES (?,?,?,?,?,?)";
       transaction.executeSql(executeQuery, data
         , function (tx, result) {
           // alert('Inserted');

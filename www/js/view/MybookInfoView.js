@@ -166,6 +166,7 @@ var MybookInfoView = function (items) {
             transaction.executeSql(executeQuery, query,
               function (tx, result) {
                 // alert('Delete successfully');
+                percentSql(data[index].s_page, data[index].e_page, 0);
                 window.plugins.toast.showShortBottom("삭제되었습니다.");
 
                 data.splice(index, 1);
@@ -177,6 +178,28 @@ var MybookInfoView = function (items) {
           });
         }
       }
+    }
+    
+    function percentSql(first, last, j) {
+      for (var i = first - 1; i < last; i++) {
+        items.percent[i] = j;
+      }
+      var query = [
+        JSON.stringify(items.percent),
+        items.isbn
+      ];
+      executeQuery = "UPDATE MybookTable SET percent=? WHERE isbn=?";
+      database.transaction(function (transaction) {
+        transaction.executeSql(executeQuery, query
+          , function (tx, result) {
+            // alert('Inserted');
+          },
+          function (error) {
+            alert('Error occurred');
+          });
+      }, function (error) {
+        navigator.notification.alert('CREATE error: ' + error.message);
+      });
     }
   }
 

@@ -3,6 +3,7 @@ var WriteView = function (item) {
   var items = {};
   var s_val, e_val, result;
   var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
+  var percent, totalPages;
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -14,6 +15,20 @@ var WriteView = function (item) {
     this.$el.on('click', '.photo', [2] , this.photo_camera);
     this.$el.on('click', '.delete', this.delete);
     items = item;
+
+    executeQuery = "SELECT percent, totalPages FROM MybookTable WHERE isbn=?";
+    database.transaction(function (transaction) {
+      transaction.executeSql(executeQuery, [items.isbn]
+        , function (tx, result) {
+          totalPages = result.rows.item(0).totalPages;
+          percent = JSON.parse(result.rows.item(0).percent);
+        },
+        function (error) {
+          alert('Error occurred');
+        });
+      }, function (error) {
+        navigator.notification.alert('CREATE error: ' + error.message);
+    });
 
     this.render();
   };
@@ -72,6 +87,18 @@ var WriteView = function (item) {
   this.submit = function (event) {
     event.preventDefault();
 
+    s_val = Number($("#s_page").val());
+    e_val = Number($("#e_page").val());
+    var contents =$("#textarea").val();
+    if(s_val<=0 || e_val<=0 || contents==='' || page==='') {
+      window.plugins.toast.showShortBottom("모두 입력해 주세요.");
+      return;
+    }
+    if(s_val>totalPages || e_val>totalPages) {
+      window.plugins.toast.showShortBottom("총 페이지는 "+totalPages+"쪽 입니다.");
+      return;
+    }
+
     var query = $(this).serialize().split("&");
     var file = [];
     var imagefile = $('.imagefile');
@@ -97,24 +124,52 @@ var WriteView = function (item) {
       data.pop();
       data.push(items.data.rowid);
       items.isUpdate = false;
+      sql(executeQuery, data, 0);
+      percentSql(items.data.s_page, items.data.e_page, 0);
+      percentSql(data[0], data[1], 1);
     } else {
       executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?,?,?)";
+      sql(executeQuery, data, 0);
+      percentSql(data[1], data[2], 1);
     }
 
-    database.transaction(function (transaction) {
-      transaction.executeSql(executeQuery, data
-        , function (tx, result) {
-          // alert('Inserted');
-          window.plugins.toast.showShortBottom("저장되었습니다.");
-          history.back();
-        },
-        function (error) {
-          alert('Error occurred');
-        });
-    }, function (error) {
-      navigator.notification.alert('CREATE error: ' + error.message);
-    });
+    function percentSql(first, last, j) {
+      for(var i=first-1; i<last; i++) {
+        percent[i] = j;
+      }
+      if(j===1) {
+        query = [
+          JSON.stringify(percent),
+          items.isbn
+        ];
+        executeQuery = "UPDATE MybookTable SET percent=? WHERE isbn=?";
+        sql(executeQuery, query, 1);
+      }
+    }
+
+    function sql(executeQuery, data, j) {
+      database.transaction(function (transaction) {
+        transaction.executeSql(executeQuery, data
+          , function (tx, result) {
+            // alert('Inserted');
+            if(j!==1) {
+              window.plugins.toast.showShortBottom("저장되었습니다.");
+              history.back();
+            }
+          },
+          function (error) {
+            alert('Error occurred');
+          });
+      }, function (error) {
+        navigator.notification.alert('CREATE error: ' + error.message);
+      });
+    }
+    
   };
+
+  this.getPercent = function () {
+    return percent;
+  }
 
   this.s_page = function () {
     s_val = Number($("#s_page").val());
