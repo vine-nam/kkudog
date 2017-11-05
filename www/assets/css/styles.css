@@ -190,16 +190,29 @@ ul {
   padding: 0;
 }
 #mybook-list {
-  padding-left: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 10px;
 }
 #mybook-list li {
-  padding: 3%;
-  float: left;
+  padding: 2.5%;
+  align-content: stretch;
 }
-#mybook-list img {
+#mybook-list img {  
   width: 67px;
   height: 100px;
 }
+
+/* percent */
+.percent {
+  position: relative;
+  font-size: x-large;
+  right: 1px;
+  /* top: -9px; */
+  margin: auto;
+  text-align: right;
+}
+
 
 /* home의 캐릭터 이미지 관려 */
 .character {
@@ -424,17 +437,6 @@ a .calendar-all {
   width: 80%;
   margin-right: 5px;
   float: left;
-}
-
-
-/* percent */
-.percent {
-  position: relative;
-  font-size: x-large;
-  right: 1px;
-  /* top: -39px; */
-  margin: auto;
-  text-align: right;
 }
 
 

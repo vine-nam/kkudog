@@ -41,35 +41,7 @@ var CalendarMonthHomeView = function (year, month) {
   var date;
   // var tditems = {};
   var md = true;//true: 월, false: 일
-  //C/:index 테스트 코드
-  /*
-  data = [
-    {
-      rowid: 1,
-      s_page: 1,
-      e_page: 3,
-      title: "aaa",
-      contents: "블라브라라ㅏㅏㄴㅇㅁ",
-      date: "9월1일"
-    },
-    {
-      rowid: 2,
-      s_page: 4,
-      e_page: 13,
-      title: "aaa",
-      contents: "이제 나도 그 별에서 함께 살게 되겠지.",
-      date: "7월 29일"
-    },
-    {
-      rowid: 2,
-      s_page: 4,
-      e_page: 13,
-      title: "aaa",
-      contents: "모든건 신의 뜻대로, \n흘러가는 그대로 \n라라라랄라라ㅏ라라랄라",
-      date: "5월 14일"
-    }
-  ];
-// */
+  
   this.initialize = function () {
     calendarView = new CalendarView();
     mybookMonthContentsView = new MybookMonthContentsView();
@@ -79,9 +51,6 @@ var CalendarMonthHomeView = function (year, month) {
     year = year;
     month = month;
     dbPage = new DBPage();
-
-    //C/:index 테스트 코드
-    // mybookMonthContentsView.setMybook(data);
 
     this.$el = $('<div/>');
 
