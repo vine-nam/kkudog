@@ -4,7 +4,9 @@ var MybookInfoView = function (items) {
 
   var data;
   var items = items;
+  var mybookHeaderView;
   var mybookcontentsView;
+  var writeView;
   var rowid;
   var index;
 
@@ -22,7 +24,9 @@ var MybookInfoView = function (items) {
     this.$el.on('click', '.update', this.update);
     this.$el.on('click', '.delete', this.delete);
 
+    writeView = new WriteView(items);
     mybookcontentsView = new MybookContentsView();
+    mybookHeaderView = new MybookHeaderView(items);
 
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT rowid, * FROM WriteTable WHERE isbn=? ORDER BY rowid DESC', [items.isbn], function (tx, results) {
@@ -61,6 +65,8 @@ var MybookInfoView = function (items) {
         }
         // items.data = data;
         mybookcontentsView.setMybook(data);
+        items.percent = writeView.getPercent();
+        mybookHeaderView.setPercent(items.percent);
 
       }, function (error) {
         navigator.notification.alert('error: ' + error.message);
@@ -85,7 +91,6 @@ var MybookInfoView = function (items) {
   }
 
   this.update = function () {
-    var writeView = new WriteView(items);
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT * FROM WriteTable WHERE rowid=?', [rowid], function (tx, results) {
 
@@ -169,8 +174,11 @@ var MybookInfoView = function (items) {
                 percentSql(data[index].s_page, data[index].e_page, 0);
                 window.plugins.toast.showShortBottom("삭제되었습니다.");
 
+                mybookHeaderView.setPercent(items.percent);
+
                 data.splice(index, 1);
                 mybookcontentsView.setMybook(data);
+                
               },
               function (error) {
                 alert('Something went Wrong');
@@ -204,7 +212,8 @@ var MybookInfoView = function (items) {
   }
 
   this.render = function () {
-    this.$el.html(this.template(items));
+    this.$el.html(this.template(items.title));
+    $('.mybook-header', this.$el).html(mybookHeaderView.$el);
     $('.contents', this.$el).html(mybookcontentsView.$el);
     return this;
   };

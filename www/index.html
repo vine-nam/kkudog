@@ -25,6 +25,7 @@
   <script src="js/view/MybookView.js"></script>
   <script src="js/view/MybookListView.js"></script>
   <script src="js/view/MybookInfoView.js"></script>
+  <script src="js/view/MybookHeaderView.js"></script>
   <script src="js/view/MybookContentsView.js"></script>
   <script src="js/view/MybookMonthContentsView.js"></script>
   <script src="js/view/SearchView.js"></script>
@@ -346,11 +347,11 @@
       {{/each}}
     </ul>
   </script>
-
+  
   <script id="mybook-info-tpl" type="text/template">
     <header>
       <nav>
-        <a class="brand-logo center title">{{{title}}}</a>
+        <a class="brand-logo center title">{{{this}}}</a>
         <ul>
           <li>
             <a class="back"><i class="material-icons">arrow_back</i></a>
@@ -365,30 +366,34 @@
     </header>
     <div class="content"> 
       <ul class="book-list collection with-header">
-        <li class="valign-wrapper collection-header">
-          <img class="responsive-img z-depth-2"
-          src="{{#if image}}{{image}}"+
-            "{{else}}img/image-not-found.png{{/if}}">
-          <span>
-            <i class="material-icons more header-more right">more_vert</i>
-            <ul class="hidden header-more-ul z-depth-3">
-              <li class="delete">삭제</li>
-            </ul>
-          </span>
-          <span class="booklist-info">
-            {{{title}}}
-            {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
-            {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
-            {{#if totalPages}}<p>{{totalPages}} (쪽)</p>{{/if}}
-            <div class="progress">
-              <div class="determinate" style="width: {{#if SumPercent}}{{SumPercent}}%{{/if}}"></div>
-            </div>
-            {{#if SumPercent}}{{SumPercent}}{{else}}0{{/if}}%
-          </span>
-        </li>
+        <div class="mybook-header"></div>
         <div class="contents"></div>
       </ul>
     </div>
+  </script>
+
+  <script id="mybook-header-tpl" type="text/template">
+    <li class="valign-wrapper collection-header">
+      <img class="responsive-img z-depth-2"
+      src="{{#if image}}{{image}}"+
+        "{{else}}img/image-not-found.png{{/if}}">
+      <span>
+        <i class="material-icons more header-more right">more_vert</i>
+        <ul class="hidden header-more-ul z-depth-3">
+          <li class="delete">삭제</li>
+        </ul>
+      </span>
+      <span class="booklist-info">
+        {{{title}}}
+        {{#if author}}<p>{{{author}}} (지음)</p>{{/if}}
+        {{#if publisher}}<p>{{{publisher}}} (출판)</p>{{/if}}
+        {{#if totalPages}}<p>{{totalPages}} (쪽)</p>{{/if}}
+        <div class="progress">
+          <div class="determinate" style="width: {{#if SumPercent}}{{SumPercent}}%{{/if}}"></div>
+        </div>
+        {{#if SumPercent}}{{SumPercent}}{{else}}0{{/if}}%
+      </span>
+    </li>
   </script>
 
   <script id="mybook-contents-tpl" type="text/template">

@@ -47,6 +47,7 @@ function HandlebarsCompile() {
   MybookView.prototype.template = Handlebars.compile($("#mybook-tpl").html());
   MybookListView.prototype.template = Handlebars.compile($("#mybook-list-tpl").html());
   MybookInfoView.prototype.template = Handlebars.compile($("#mybook-info-tpl").html());
+  MybookHeaderView.prototype.template = Handlebars.compile($("#mybook-header-tpl").html());
   MybookContentsView.prototype.template = Handlebars.compile($("#mybook-contents-tpl").html());
   MybookMonthContentsView.prototype.template = Handlebars.compile($("#mybook-month-contents-tpl").html());
   SearchView.prototype.template = Handlebars.compile($("#search-tpl").html());
