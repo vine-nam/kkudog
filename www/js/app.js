@@ -9,7 +9,7 @@ $(document).on('deviceready', function () {
 
 function onBackKeyDown(e) {
   var exitApp = false;
-  var intval = setInterval(function () { exitApp = false; }, 500);
+  var intval = setInterval(function () { exitApp = false; }, 1000);
   document.addEventListener("backbutton", function (e) {
     e.preventDefault();
     if (exitApp) {
@@ -94,12 +94,7 @@ function App() {
   });
 
   router.addRoute('search', function () {
-    if (items === []) {
-      query = '';
-      page = 1;
-    }
-    searchView = new SearchView(items, query, page);
-    $('body').html(searchView.render().$el);
+    $('body').html(new SearchView().render().$el);
     $('footer').html(new FooterBarView("search").render().$el);
   });
 

@@ -28,7 +28,7 @@ var MybookView = function () {
               SumPercent += percent[j];
             }
           }
-          SumPercent = Math.round(SumPercent/totalPages*100);
+          SumPercent = Math.ceil(SumPercent/totalPages*100);
 
           items[i] = { 
             isbn: isbn, 

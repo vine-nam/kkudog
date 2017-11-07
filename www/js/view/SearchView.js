@@ -1,20 +1,15 @@
-var SearchView = function (bdata, qdata, pdata) {
+var SearchView = function () {
 
   var searchListView;
   var searchBookInfoView;
   var api;
   var items = [];
   var data = [];
-  var query;
-  var page;
 
   this.initialize = function () {
     searchListView = new SearchListView();
     searchBookInfoView = new SearchBookInfoView();
     api = new API();
-    items = bdata;
-    query = qdata;
-    page = pdata;
     this.$el = $('<div/>');
     this.$el.on('submit', '#target', this.findbook);
     this.$el.on('click', '.close', this.clear);
@@ -140,16 +135,8 @@ var SearchView = function (bdata, qdata, pdata) {
     return items;
   }
 
-  this.getQuery = function () {
-    return query;
-  }
-  this.getPage = function () {
-    return page;
-  }
-
   this.render = function () {
     this.$el.html(this.template());
-    searchListView.setData(items);
     $('ul.search-book-list', this.$el).html(searchListView.render().$el);
     $('.view-wrap', this.$el).html(searchBookInfoView.$el);
     return this;

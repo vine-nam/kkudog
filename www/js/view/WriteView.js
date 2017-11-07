@@ -9,8 +9,8 @@ var WriteView = function (item) {
     this.$el = $('<div/>');
     this.$el.on('click', '.back', this.back);
     this.$el.on('submit', '#target', this.submit);
-    this.$el.on('keyup keydown autoresize', '#s_page', this.s_page);
-    this.$el.on('keyup keydown autoresize', '#e_page', this.e_page);
+    this.$el.on('keyup keydown autoresize', '#s_page', this.pageMath);
+    this.$el.on('keyup keydown autoresize', '#e_page', this.pageMath);
     this.$el.on('click', '.photo_camera', [1] , this.photo_camera);
     this.$el.on('click', '.photo', [2] , this.photo_camera);
     this.$el.on('click', '.delete', this.delete);
@@ -171,18 +171,7 @@ var WriteView = function (item) {
     return percent;
   }
 
-  this.s_page = function () {
-    s_val = Number($("#s_page").val());
-    e_val = Number($("#e_page").val());
-    if (s_val > 0 && e_val > 0 && s_val <= e_val) {
-      result = e_val - s_val + 1;
-      $("#page").val(result);
-    } else {
-      $("#page").val("");
-    }
-  }
-
-  this.e_page = function () {
+  this.pageMath = function () {
     s_val = Number($("#s_page").val());
     e_val = Number($("#e_page").val());
     if (s_val > 0 && e_val > 0 && s_val <= e_val) {

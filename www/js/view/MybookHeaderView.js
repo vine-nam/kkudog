@@ -16,7 +16,7 @@ var MybookHeaderView = function (items) {
           items.SumPercent += items.percent[j];
         }
       }
-      items.SumPercent = Math.round(items.SumPercent/items.totalPages*100);
+      items.SumPercent = Math.ceil(items.SumPercent/items.totalPages*100);
       this.render();
     }
 
