@@ -26,8 +26,6 @@ var ChangeTdItems = function() {
 
 
 var CalendarMonthHomeView = function (year, month) {
-  
-  var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
 
   var calendarView;
   var mybookcontentsView;
@@ -38,7 +36,6 @@ var CalendarMonthHomeView = function (year, month) {
   var dbPage;
   var items = {};
   var bookitems = {};
-  var date;
   // var tditems = {};
   var md = true;//true: 월, false: 일
   
@@ -217,23 +214,43 @@ var CalendarMonthHomeView = function (year, month) {
       Materialize.updateTextFields();
     });
   }
-
+//뭐지?? 나 뭐한거지????
   this.delete = function () {
-    var executeQuery = "DELETE FROM WriteTable WHERE rowid=?";
-    query = [rowid];
-
-    database.transaction(function (transaction) {
-      transaction.executeSql(executeQuery, query,
-        function (tx, result) { 
-          alert('Delete successfully'); 
-
-          bookitems.splice(index, 1); 
-          mybookMonthContentsView.setMybook(bookitems);
-        },
-        function (error) { 
-          alert('Something went Wrong'); 
+    navigator.notification.confirm(
+      '삭제하기',
+      deleteItem,
+      '정말로 삭제하시겠습니까',
+      ['확인', '취소']
+    );
+    function deleteItem(result) {
+      if (result === 1) {
+        $.when(new WriteTable().deleteOne(rowid)).done(function() {
+          $.when(new MybookTable().selectPercent([bookitems[index].isbn])).done(function(results) {
+            percent = results.percent;
+            percentSql(bookitems[index].s_page, bookitems[index].e_page, 0, percent);
+            window.plugins.toast.showShortBottom("삭제되었습니다.");
+            
+            dbPage.getData(items).then(function (results) {
+              items.c_page = results;
+              calendarView.setCal(items);
+              calendarView.render(false);
+            });
+            bookitems.splice(index, 1); 
+            mybookMonthContentsView.setMybook(bookitems);
+          });
         });
-    });
+      }
+    }
+    function percentSql(first, last, j, percent) {
+      for (var i = first - 1; i < last; i++) {
+        percent[i] = j;
+      }
+      var query = [
+        JSON.stringify(percent),
+        bookitems[index].isbn
+      ];
+      new MybookTable().updatePercent(query);
+    }
   }
 
   this.render = function () {

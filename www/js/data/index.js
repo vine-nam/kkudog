@@ -17,7 +17,7 @@ var sqlite_db = function () {
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS MybookTable ('
         + 'isbn TEXT PRIMARY KEY NOT NULL, '
-        + 'title TEXT NOT NULL, author TEXT, '
+        + 'title TEXT NOT NULL, author TEXT, publisher TEXT, '
         + 'totalPages INTEGER NOT NULL, percent TEXT, image TEXT '
         + ');';
       transaction.executeSql(executeQuery, [],

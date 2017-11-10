@@ -370,6 +370,9 @@
         <div class="contents"></div>
       </ul>
     </div>
+    <div class="search-book-info-view" id="overlay">
+      <div class="z-depth-4 view-wrap"></div>
+    </div>
   </script>
 
   <script id="mybook-header-tpl" type="text/template">
@@ -380,6 +383,8 @@
       <span>
         <i class="material-icons more header-more right">more_vert</i>
         <ul class="hidden header-more-ul z-depth-3">
+          <li class="complete">완독</li>
+          <li class="updateBook">수정</li>
           <li class="delete">삭제</li>
         </ul>
       </span>
@@ -614,7 +619,8 @@
               <div class="table-head">출판사</div><p class="table-body">{{publisher}}</p>
             </div>
             <div class="table-row">
-              <div class="table-head">총 페이지</div><input id="a_page" class="table-body" type="number" name="s_page">
+              <div class="table-head">총 페이지</div>
+              <input id="totalPages" class="table-body" type="number" name="totalPages" value="{{totalPages}}">
             </div>
           </span>
         </li>
@@ -652,7 +658,7 @@
         <hr>
         <li id="backup" class="col s12">
           <p>백업하기</p>
-          <span>Last upload:-</span>
+          <span>Last upload:<span class="now"></span></span>
         </li>
         <hr>
         <li id="bring" class="col s12">
@@ -700,6 +706,8 @@
   <script src="js/api/key.js"></script>
   <script src="js/api/index.js"></script>
   <script src="js/data/index.js"></script>
+  <script src="js/data/MybookTable.js"></script>
+  <script src="js/data/WriteTable.js"></script>
   <script src="js/calendar.js"></script>
   <script src="js/characterData.js"></script>
   <script src="js/app.js"></script>

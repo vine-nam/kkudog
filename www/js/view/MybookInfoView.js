@@ -1,76 +1,37 @@
 var MybookInfoView = function (items) {
 
-  var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
-
   var data;
   var items = items;
   var mybookHeaderView;
   var mybookcontentsView;
+  var searchBookInfoView;
+  var writeTable;
   var writeView;
   var rowid;
   var index;
 
   this.initialize = function () {
-    this.$el = $('<div/>');
-    this.$el.on('click', '.back', this.back);
-    this.$el.on('click', function (e) {
-      if (!$(e.target).hasClass("more")) {
-        if ($("ul").hasClass("show")) {
-          $("ul").removeClass("show");
-        }
-      }
-    });
-    this.$el.on('click', '.more', this.more);
-    this.$el.on('click', '.update', this.update);
-    this.$el.on('click', '.delete', this.delete);
-
     writeView = new WriteView(items);
     mybookcontentsView = new MybookContentsView();
     mybookHeaderView = new MybookHeaderView(items);
+    searchBookInfoView = new SearchBookInfoView();
+    writeTable = new WriteTable();
 
-    database.transaction(function (transaction) {
-      transaction.executeSql('SELECT rowid, * FROM WriteTable WHERE isbn=? ORDER BY rowid DESC', [items.isbn], function (tx, results) {
+    this.$el = $('<div/>');
+    this.$el.on('click', '.back', this.back);
+    this.$el.on('click', this.classShow);
+    this.$el.on('click', '.more', this.more);
+    this.$el.on('click', '.update', this.update);
+    this.$el.on('click', '.delete', this.delete);
+    this.$el.on('click', '.updateBook', this.updateBook);
+    this.$el.on('click', '.overlayClose', this.headerRender);
+    this.$el.on('click', '.add-book', searchBookInfoView.addBook);
 
-        data = [];
-        var month, day;
-        var len = results.rows.length, i;
-        var isbn, s_page, e_page, contents, date;
-        for (i = 0; i < len; i++) {
-          rowid = results.rows.item(i).rowid;
-          // isbn = results.rows.item(i).isbn;
-          s_page = results.rows.item(i).s_page;
-          e_page = results.rows.item(i).e_page;
-          // page = results.rows.item(i).page;
-          contents = results.rows.item(i).contents;
-          date = results.rows.item(i).date;
-          photos = results.rows.item(i).photos;
-
-          var dt = new Date(date);
-          month = dt.getMonth() + 1;
-          day = dt.getDate();
-          date = month + "월 " + day + "일";
-
-          var pt = photos.split("//imagefile//");
-          pt.shift();
-
-          data[i] = {
-            rowid: rowid,
-            s_page: s_page,
-            e_page: e_page,
-            // page: page,
-            contents: contents,
-            date: date,
-            photos: pt
-          };
-        }
-        // items.data = data;
-        mybookcontentsView.setMybook(data);
-        items.percent = writeView.getPercent();
-        mybookHeaderView.setPercent(items.percent);
-
-      }, function (error) {
-        navigator.notification.alert('error: ' + error.message);
-      });
+    $.when(writeTable.select(items.isbn)).done(function(results) {
+      data = results;
+      mybookcontentsView.setMybook(data);
+      items.percent = writeView.getPercent();
+      mybookHeaderView.setPercent(items.percent);
     });
 
     this.render();
@@ -90,38 +51,31 @@ var MybookInfoView = function (items) {
     }
   }
 
+  this.classShow = function (e) {
+    if (!$(e.target).hasClass("more")) {
+      if ($("ul").hasClass("show")) {
+        $("ul").removeClass("show");
+      }
+    }
+  }
+
+  this.updateBook = function (event) {
+    event.preventDefault();
+    $('#overlay', this.$el).css("display", "block");
+    searchBookInfoView.setData(items, 1);//1 = update
+    searchBookInfoView.render();
+  }
+
+  this.headerRender = function (event) {
+    event.preventDefault();
+    items.percent = searchBookInfoView.getPercent();
+    mybookHeaderView.setPercent(items.percent);
+    $('#overlay').css("display", "none");
+  }
+
   this.update = function () {
-    database.transaction(function (transaction) {
-      transaction.executeSql('SELECT * FROM WriteTable WHERE rowid=?', [rowid], function (tx, results) {
-
-        items = [];
-        var isbn, s_page, e_page, contents, photos;
-        isbn = results.rows.item(0).isbn;
-        s_page = results.rows.item(0).s_page;
-        e_page = results.rows.item(0).e_page;
-        page = results.rows.item(0).page;
-        contents = results.rows.item(0).contents;
-        date = results.rows.item(0).date;
-        photos = results.rows.item(0).photos;
-
-        var pt = photos.split("//imagefile//");
-        pt.shift();
-
-        items = { //rowid 있음 주의 **
-          rowid: rowid,
-          isbn: isbn,
-          s_page: s_page,
-          e_page: e_page,
-          page: page,
-          contents: contents,
-          photos: pt
-        };
-
-        writeView.setWrite(items);
-
-      }, function (error) {
-        navigator.notification.alert('SELECT error: ' + error.message);
-      });
+    $.when(writeTable.selectOne(rowid)).done(function(results) {
+      writeView.setWrite(results);
     });
   }
 
@@ -136,53 +90,18 @@ var MybookInfoView = function (items) {
     function deleteItem(result) {
       if (result === 1) {
         if (rowid === "") {
-          var executeQuery = "DELETE FROM WriteTable WHERE isbn=?";
-          query = [items.isbn];//다른곳은 data라 했지만 이미 data라는 변수를 쓰고 있으므로 query라 하겠다....
-
-          database.transaction(function (transaction) {
-            transaction.executeSql(executeQuery, query,
-              function (tx, result) {
-                // alert('WriteTable Delete successfully');
-
-                executeQuery = "DELETE FROM MybookTable WHERE isbn=?";
-                database.transaction(function (transaction) {
-                  transaction.executeSql(executeQuery, query,
-                    function (tx, result) {
-                      // alert('MybookTable Delete successfully');
-                      window.plugins.toast.showShortBottom("삭제되었습니다.");
-                      history.back();
-                    },
-                    function (error) {
-                      alert('MybookTable Something went Wrong');
-                    });
-                });
-
-              },
-              function (error) {
-                alert('WriteTable Something went Wrong');
-              });
+          $.when(writeTable.delete(items.isbn)).done(function() {
+            $.when(new MybookTable().delete(items.isbn)).done(function() {
+              window.plugins.toast.showShortBottom("삭제되었습니다.");
+              history.back();
+            });
           });
-
         } else {
-          var executeQuery = "DELETE FROM WriteTable WHERE rowid=?";
-          query = [rowid];
-
-          database.transaction(function (transaction) {
-            transaction.executeSql(executeQuery, query,
-              function (tx, result) {
-                // alert('Delete successfully');
-                percentSql(data[index].s_page, data[index].e_page, 0);
-                window.plugins.toast.showShortBottom("삭제되었습니다.");
-
-                mybookHeaderView.setPercent(items.percent);
-
-                data.splice(index, 1);
-                mybookcontentsView.setMybook(data);
-                
-              },
-              function (error) {
-                alert('Something went Wrong');
-              });
+          $.when(writeTable.deleteOne(rowid)).done(function() {
+            percentSql(data[index].s_page, data[index].e_page, 0);
+            window.plugins.toast.showShortBottom("삭제되었습니다.");
+            data.splice(index, 1);
+            mybookcontentsView.setMybook(data);
           });
         }
       }
@@ -196,17 +115,8 @@ var MybookInfoView = function (items) {
         JSON.stringify(items.percent),
         items.isbn
       ];
-      executeQuery = "UPDATE MybookTable SET percent=? WHERE isbn=?";
-      database.transaction(function (transaction) {
-        transaction.executeSql(executeQuery, query
-          , function (tx, result) {
-            // alert('Inserted');
-          },
-          function (error) {
-            alert('Error occurred');
-          });
-      }, function (error) {
-        navigator.notification.alert('CREATE error: ' + error.message);
+      $.when(new MybookTable().updatePercent(query)).done(function() {
+        mybookHeaderView.setPercent(JSON.stringify(items.percent));
       });
     }
   }
@@ -215,6 +125,7 @@ var MybookInfoView = function (items) {
     this.$el.html(this.template(items.title));
     $('.mybook-header', this.$el).html(mybookHeaderView.$el);
     $('.contents', this.$el).html(mybookcontentsView.$el);
+    $('.view-wrap', this.$el).html(searchBookInfoView.$el);    
     return this;
   };
 

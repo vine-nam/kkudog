@@ -4,9 +4,7 @@ var MybookListView = function () {
 
   this.initialize = function () {
     this.$el = $('<div/>');
-
     this.render();
-
   };
 
   this.setMybook = function(data) {
@@ -18,8 +16,6 @@ var MybookListView = function () {
     this.$el.html(this.template(items));
     return this;
   };
-
-
 
   this.initialize();
 

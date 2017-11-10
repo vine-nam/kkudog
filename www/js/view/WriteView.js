@@ -2,7 +2,6 @@ var WriteView = function (item) {
 
   var items = {};
   var s_val, e_val, result;
-  var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
   var percent, totalPages;
 
   this.initialize = function () {
@@ -16,18 +15,9 @@ var WriteView = function (item) {
     this.$el.on('click', '.delete', this.delete);
     items = item;
 
-    executeQuery = "SELECT percent, totalPages FROM MybookTable WHERE isbn=?";
-    database.transaction(function (transaction) {
-      transaction.executeSql(executeQuery, [items.isbn]
-        , function (tx, result) {
-          totalPages = result.rows.item(0).totalPages;
-          percent = JSON.parse(result.rows.item(0).percent);
-        },
-        function (error) {
-          alert('Error occurred');
-        });
-      }, function (error) {
-        navigator.notification.alert('CREATE error: ' + error.message);
+    $.when(new MybookTable().selectPercent(items.isbn)).done(function(results) {
+      totalPages = results.totalPages;
+      percent = results.percent;
     });
 
     this.render();
@@ -35,7 +25,6 @@ var WriteView = function (item) {
 
   this.delete = function(event) {
     event.preventDefault();
-
     var target = $( event.target );
     if(target.is('i')) {
       target.parent().remove();
@@ -117,19 +106,17 @@ var WriteView = function (item) {
       // new Date(2017, (query[0].split("=")[1])/12, query[1].split("=")[1])
     ];
 
-    var executeQuery;
     if (items.isUpdate) {
-      executeQuery = "UPDATE WriteTable SET s_page=?, e_page=?, page=?, contents=?, photos=? WHERE rowid=?";
       data.shift();
       data.pop();
       data.push(items.data.rowid);
-      items.isUpdate = false;
-      sql(executeQuery, data, 0);
+      // items.isUpdate = false;
+
+      new WriteTable().update(data);
       percentSql(items.data.s_page, items.data.e_page, 0);
       percentSql(data[0], data[1], 1);
     } else {
-      executeQuery = "INSERT INTO WriteTable VALUES (?,?,?,?,?,?,?)";
-      sql(executeQuery, data, 0);
+      new WriteTable().insert(data);
       percentSql(data[1], data[2], 1);
     }
 
@@ -142,29 +129,9 @@ var WriteView = function (item) {
           JSON.stringify(percent),
           items.isbn
         ];
-        executeQuery = "UPDATE MybookTable SET percent=? WHERE isbn=?";
-        sql(executeQuery, query, 1);
+        new MybookTable().updatePercent(query);
       }
     }
-
-    function sql(executeQuery, data, j) {
-      database.transaction(function (transaction) {
-        transaction.executeSql(executeQuery, data
-          , function (tx, result) {
-            // alert('Inserted');
-            if(j!==1) {
-              window.plugins.toast.showShortBottom("저장되었습니다.");
-              history.back();
-            }
-          },
-          function (error) {
-            alert('Error occurred');
-          });
-      }, function (error) {
-        navigator.notification.alert('CREATE error: ' + error.message);
-      });
-    }
-    
   };
 
   this.getPercent = function () {
