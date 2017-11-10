@@ -50,125 +50,11 @@ var CalendarMonthHomeView = function (year, month) {
     dbPage = new DBPage();
 
     this.$el = $('<div/>');
-
-    this.$el.on('click', 'td', function(event) {
-      event.preventDefault();
-      var target = $( event.target );
-      var tmp = date;
-      if (!target.is("div")) {
-        if(target.is("td")) {
-          date = target.children("div").text();
-        } else {
-          date = target.parent().children("div").text();
-        } 
-      } else {
-        date = target.text();
-      }
-      if(date>0&&date<=items.date) {
-        md = changeTdItems.getItems(date, bookitems);
-      } else {
-        date = tmp;
-      }
-    });
-    
-    this.$el.on('click', '.change-md', function() {
-      event.preventDefault();
-      if($(".change-md").text() === "일") {
-        date = 1;
-        md = changeTdItems.getItems(date, bookitems);
-      } else {
-        md = true;
-        $(".date").text("");
-        $(".change-md").text("일");
-        mybookMonthContentsView.setMybook(bookitems);
-      }
-    });
-
-    this.$el.on('click', '.prev', function (event) {
-      event.preventDefault();
-      if(md) {//월
-        items = cal.getCal(year, --month);
-        dbPage.getData(items).then(function (results) {
-          items.c_page = results;
-          calendarView.setCal(items);
-          calendarView.render(false);
-        });
-        $(".year").text(items.year);
-        $(".month").text(items.month);
-        $(".date").text("");
-        dbPage.getItems(items).then(function (results) {
-          bookitems = results;
-          mybookMonthContentsView.setMybook(bookitems);
-        });
-      } else {
-        date--;
-        if(date<=0){
-          items = cal.getCal(year, --month);
-          dbPage.getData(items).then(function (results) {
-            items.c_page = results;
-            calendarView.setCal(items);
-            calendarView.render(false);
-          });
-          $(".year").text(items.year);
-          $(".month").text(items.month);
-          $(".date").text(" / "+items.date);
-          dbPage.getItems(items).then(function (results) {
-            bookitems = results;
-            mybookMonthContentsView.setMybook(bookitems);
-            date = items.date;
-            changeTdItems.getItems(date, bookitems);
-          });
-        } else {
-          changeTdItems.getItems(date, bookitems);
-        }
-      }
-    });
-    this.$el.on('click', '.next', function (event) {
-      if(md) {
-        event.preventDefault();
-        items = cal.getCal(year, ++month);
-        dbPage.getData(items).then(function (results) {
-          items.c_page = results;
-          calendarView.setCal(items);
-          calendarView.render(false);
-        });
-        $(".year").text(items.year);
-        $(".month").text(items.month);
-        $(".date").text("");
-        dbPage.getItems(items).then(function (results) {
-          bookitems = results;
-          mybookMonthContentsView.setMybook(bookitems);
-        });
-      } else {
-        date++;
-        if(date>items.date){
-          items = cal.getCal(year, ++month);
-          dbPage.getData(items).then(function (results) {
-            items.c_page = results;
-            calendarView.setCal(items);
-            calendarView.render(false);
-          });
-          $(".year").text(items.year);
-          $(".month").text(items.month);
-          $(".date").text(" / 1");
-          dbPage.getItems(items).then(function (results) {
-            bookitems = results;
-            mybookMonthContentsView.setMybook(bookitems);
-            date = 1;
-            changeTdItems.getItems(date, bookitems);
-          });
-        } else {
-          changeTdItems.getItems(date, bookitems);
-        }
-      }
-    });
-    this.$el.on('click', function(event) {
-      if(!$(event.target).hasClass("more")) {
-        if ($("ul").hasClass("show")) {
-          $("ul").removeClass("show");
-        }
-      }
-    });
+    this.$el.on('click', 'td', this.tdClick);
+    this.$el.on('click', '.change-md', this.changeMD);
+    this.$el.on('click', '.prev', this.prev);
+    this.$el.on('click', '.next', this.next);
+    this.$el.on('click', this.classShow);
     this.$el.on('click', '.more', this.more);
     this.$el.on('click', '.update', this.update);
     this.$el.on('click', '.delete', this.delete);
@@ -188,6 +74,99 @@ var CalendarMonthHomeView = function (year, month) {
     this.render();
   };
   
+  this.tdClick = function(event) {
+    event.preventDefault();
+    var target = $( event.target );
+    var tmp = date;
+    if (!target.is("div")) {
+      if(target.is("td")) {
+        date = target.children("div").text();
+      } else {
+        date = target.parent().children("div").text();
+      } 
+    } else {
+      date = target.text();
+    }
+    if(date>0&&date<=items.date) {
+      md = changeTdItems.getItems(date, bookitems);
+    } else {
+      date = tmp;
+    }
+  }
+
+  this.changeMD =  function(event) {
+    event.preventDefault();
+    if($(".change-md").text() === "일") {
+      date = 1;
+      md = changeTdItems.getItems(date, bookitems);
+    } else {
+      md = true;
+      $(".date").text("");
+      $(".change-md").text("일");
+      mybookMonthContentsView.setMybook(bookitems);
+    }
+  }
+
+  this.prev = function (event) {
+    event.preventDefault();
+    if(md) {//월
+      calMonth(year, --month);
+    } else {
+      date--;
+      if(date<=0){
+        calMonth(year, --month, items.date);
+      } else {
+        changeTdItems.getItems(date, bookitems);
+      }
+    }
+  }
+
+  this.next = function (event) {
+    event.preventDefault();
+    if(md) {
+      calMonth(year, ++month);
+    } else {
+      date++;
+      if(date>items.date){
+        calMonth(year, ++month, 1);
+      } else {
+        changeTdItems.getItems(date, bookitems);
+      }
+    }
+  }
+  
+  function calMonth(year, month, date1) {
+    items = cal.getCal(year, month);
+    dbPage.getData(items).then(function (results) {
+      items.c_page = results;
+      calendarView.setCal(items);
+      calendarView.render(false);
+    });
+    $(".year").text(items.year);
+    $(".month").text(items.month);
+    if(md) {
+      $(".date").text("");
+    } else {
+      date = date1;
+      $(".date").text("/" + date);
+    }
+    dbPage.getItems(items).then(function (results) {
+      bookitems = results;
+      mybookMonthContentsView.setMybook(bookitems);
+      if(!md) {
+        changeTdItems.getItems(date, bookitems);
+      }
+    });
+  }
+
+  this.classShow = function (e) {
+    if (!$(e.target).hasClass("more")) {
+      if ($("ul").hasClass("show")) {
+        $("ul").removeClass("show");
+      }
+    }
+  }
+
   this.more = function () {
     rowid = $(this).siblings(".rowid").text();
     index = $(this).siblings(".index").text();
