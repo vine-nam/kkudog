@@ -9,7 +9,7 @@ var HomeView = function () {
   var characterView;
   var characterListView;
   var tdData;
-  var dbUserData;
+  var userTable;
   var userData = {};
   var characterData;
   var character;
@@ -27,7 +27,7 @@ var HomeView = function () {
     dbPage = new DBPage();
     dbTodayPage = new DBTodayPage();
     tdData = new TdData();
-    dbUserData = new DBUserData()
+    userTable = new UserTable()
     character = characterData.getCharacter();
 
     this.$el = $('<div/>');
@@ -49,7 +49,7 @@ var HomeView = function () {
     });
 
     //캐릭터
-    $.when(dbUserData.getData(), characterData.getCharacter(), dbTodayPage.getData(), dbTodayPage.getAllData())
+    $.when(userTable.select(), characterData.getCharacter(), dbTodayPage.getData(), dbTodayPage.getAllData())
       .done(function (userResults, characterResults, TResult, AResult) {
         userData = userResults;
         userindex = userData.character;
@@ -58,8 +58,8 @@ var HomeView = function () {
         if (userData.todayPage !== TResult || userData.AllPage !== AResult) {
           userData.todayPage = TResult;
           userData.AllPage = AResult;
-          dbUserData.updateData("todayPage", TResult);
-          dbUserData.updateData("AllPage", AResult);
+          userTable.update("todayPage", TResult);
+          userTable.update("AllPage", AResult);
           characterView.setData(TResult);
           characterView.setAllData(AResult);
         }
@@ -69,7 +69,7 @@ var HomeView = function () {
         if (userData.dayCount !== gcount) {
           userData.dayCount = gcount;
           characterView.setDayCount(gcount);
-          dbUserData.updateData("dayCount", gcount);
+          userTable.update("dayCount", gcount);
         }
         gcount = gcount >= 3 ? 3 : gcount - 1;
         var gData = tdData.getData(gcount);
@@ -105,7 +105,7 @@ var HomeView = function () {
     $('#overlay').css("display", "none");
     characterView.setCharacterData(character[userindex].name);
     characterView.render();
-    dbUserData.updateData("character", userindex);
+    userTable.update("character", userindex);
   }
 
   this.using = function () {
@@ -131,7 +131,7 @@ var HomeView = function () {
       index = characterData.mission(userData.AllPage, userindex, i);
       if (userindex !== index) {
         characterState(index);
-        dbUserData.updateData("character", userindex);
+        userTable.update("character", userindex);
         characterView.setCharacterData(character[userindex].name);
         characterView.render();
       }
