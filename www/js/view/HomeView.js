@@ -31,90 +31,11 @@ var HomeView = function () {
     character = characterData.getCharacter();
 
     this.$el = $('<div/>');
-
-    this.$el.on('click', '.character-list', function () {
-      event.preventDefault();
-      $('#overlay').css("display", "block");
-      characterListUpdate();
-    });
-    this.$el.on('click', '.close', function () {
-      event.preventDefault();
-      $('#overlay').css("display", "none");
-      characterView.setCharacterData(character[userindex].name);
-      characterView.render();
-      dbUserData.updateData("character", userindex);
-    });
-    this.$el.on('click', '.using', function () {
-      event.preventDefault();
-      var index = $(this).siblings('.index').text();
-      characterState(index);
-    });
-
-    this.$el.on('click', '.prev', function (event) {
-      event.preventDefault();
-      calMonth(year, --month);
-    });
-    this.$el.on('click', '.next', function (event) {
-      event.preventDefault();
-      calMonth(year, ++month);
-    });
-
-    function calMonth(year, month) {
-      items = cal.getCal(year, month);
-      dbPage.getData(items).then(function (results) {
-        items.c_page = results;
-        calendarView.setCal(items);
-        calendarView.render(true);
-
-        if (year === tdData.getYear() && month === tdData.getMonth()) {
-          tdData.setTodayTd();
-        }
-      });
-    }
-
-    function alarmSet(dcount) {
-      //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
-      if (Number(localStorage.getItem('alarm')) === 1) {
-        var now = new Date().getTime(),
-          _3_day_from_now = new Date(now + 60*60*24*dcount*1000);
-
-        cordova.plugins.notification.local.schedule({
-          text: "3일 동안의 기록이 없습니다.",
-          at: _3_day_from_now,
-          led: "00FF00",
-          sound: null,
-          icon: "file:///img/icon/128x128.png",
-          smallIcon: "file:///img/icon/32x32.png"
-          //icon 어떻게 하는거야??????
-        });
-      }
-    }
-
-    function characterState(index) {
-      userData.character = index;
-      character[userindex].state = false;
-      character[index].state = true;
-      userindex = index;
-      characterListView.setData(character);
-    }
-
-    function characterListUpdate() {
-      var index;
-
-      character[userindex].state = true;
-
-      for(var i=3; i>0; i--) {
-        index = characterData.mission(userData.AllPage, userindex, i);
-        if (userindex !== index) {
-          characterState(index);
-          dbUserData.updateData("character", userindex);
-          characterView.setCharacterData(character[userindex].name);
-          characterView.render();
-        }
-      }
-
-      characterListView.setData(character);
-    }
+    this.$el.on('click', '.character-list', this.characterList);
+    this.$el.on('click', '.close', this.close);
+    this.$el.on('click', '.using', this.using);
+    this.$el.on('click', '.prev', this.prev);
+    this.$el.on('click', '.next', this.next);
 
     //달력
     items = cal.getCal(year, month);
@@ -159,7 +80,7 @@ var HomeView = function () {
           else { break; }
         } alarmSet(dcount);
 
-//???왜 characterView에서 sort한 gData가 이곳 gData에도 sort를 하는 거지???
+        //???왜 characterView에서 sort한 gData가 이곳 gData에도 sort를 하는 거지???
         characterView.setTdData(gData);
         characterView.render();
         characterListUpdate();
@@ -172,6 +93,90 @@ var HomeView = function () {
 
     this.render();
   };
+
+  this.characterList = function () {
+    event.preventDefault();
+    $('#overlay').css("display", "block");
+    characterListUpdate();
+  }
+
+  this.close = function () {
+    event.preventDefault();
+    $('#overlay').css("display", "none");
+    characterView.setCharacterData(character[userindex].name);
+    characterView.render();
+    dbUserData.updateData("character", userindex);
+  }
+
+  this.using = function () {
+    event.preventDefault();
+    var index = $(this).siblings('.index').text();
+    characterState(index);
+  }
+
+  this.prev = function (event) {
+    event.preventDefault();
+    calMonth(year, --month);
+  }
+
+  this.next = function (event) {
+    event.preventDefault();
+    calMonth(year, ++month);
+  }
+
+  function characterListUpdate() {
+    var index;
+    character[userindex].state = true;
+    for(var i=3; i>0; i--) {
+      index = characterData.mission(userData.AllPage, userindex, i);
+      if (userindex !== index) {
+        characterState(index);
+        dbUserData.updateData("character", userindex);
+        characterView.setCharacterData(character[userindex].name);
+        characterView.render();
+      }
+    }
+    characterListView.setData(character);
+  }
+
+  function characterState(index) {
+    userData.character = index;
+    character[userindex].state = false;
+    character[index].state = true;
+    userindex = index;
+    characterListView.setData(character);
+  }
+
+  function calMonth(year, month) {
+    items = cal.getCal(year, month);
+    dbPage.getData(items).then(function (results) {
+      items.c_page = results;
+      calendarView.setCal(items);
+      calendarView.render(true);
+
+      if (year === tdData.getYear() && month === tdData.getMonth()) {
+        tdData.setTodayTd();
+      }
+    });
+  }
+
+  function alarmSet(dcount) {
+    //오늘 읽은 책이 없다면 3일 뒤에 알람을 설정해 놓기
+    if (Number(localStorage.getItem('alarm')) === 1) {
+      var now = new Date().getTime(),
+        _3_day_from_now = new Date(now + 60*60*24*dcount*1000);
+
+      cordova.plugins.notification.local.schedule({
+        text: "3일 동안의 기록이 없습니다.",
+        at: _3_day_from_now,
+        led: "00FF00",
+        sound: null,
+        icon: "file:///img/icon/128x128.png",
+        smallIcon: "file:///img/icon/32x32.png"
+        //icon 어떻게 하는거야??????
+      });
+    }
+  }
 
   this.render = function () {
     this.$el.html(this.template());
