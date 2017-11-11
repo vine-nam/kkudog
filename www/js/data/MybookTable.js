@@ -12,8 +12,9 @@ var MybookTable = function () {
         for (i = 0; i < len; i++) {
           item = results.rows.item(i);
           items[i] = { 
-            isbn: item.isbn, 
-            title: item.title, 
+            isbn: item.isbn,
+            complete: item.complete,
+            title: item.title,
             author: item.author,
             publisher: item.publisher, 
             totalPages: item.totalPages, 
@@ -51,7 +52,7 @@ var MybookTable = function () {
   this.insert = function (query) {
     var deferred = $.Deferred();
     database.transaction(function (transaction) {
-      transaction.executeSql("INSERT INTO MybookTable VALUES (?,?,?,?,?,?,?)", query
+      transaction.executeSql("INSERT INTO MybookTable VALUES (?,?,?,?,?,?,?,?)", query
         , function (tx, result) {
           deferred.resolve();
         },
@@ -60,6 +61,22 @@ var MybookTable = function () {
           console.log(JSON.stringify(error));
         });
     }, null);
+    return deferred.promise();
+  }
+
+  this.updateComplete = function (query) {
+    var deferred = $.Deferred();
+    database.transaction(function (transaction) {
+      transaction.executeSql("UPDATE MybookTable SET complete=? WHERE isbn=?", query
+        , function (tx, result) {
+          deferred.resolve();
+        },
+        function (error) {
+          alert('Error occurred');
+        });
+    }, function (error) {
+      alert('CREATE error: ' + error.message);
+    });
     return deferred.promise();
   }
 
@@ -84,7 +101,8 @@ var MybookTable = function () {
     database.transaction(function (transaction) {
       transaction.executeSql("UPDATE MybookTable SET totalPages=?, percent=? WHERE isbn=?", query
         , function (tx, result) {
-          deferred.resolve();
+          var SumPercent = sumPercent(query[0], query[1]);
+          deferred.resolve(SumPercent);
         },
         function (error) {
           window.plugins.toast.showShortCenter("오류가 발생했습니다...죄송합니다.ㅠㅠ");
@@ -106,18 +124,17 @@ var MybookTable = function () {
     });
     return deferred.promise();
   }
-}
 
-
-function sumPercent(tdata, pdata) {
-  var SumPercent = 0;
-  var totalPages = tdata;
-  var percent = JSON.parse(pdata);
-  for (var j=0; j<totalPages; j++) {
-    if (percent[j]===1) {
-      SumPercent += percent[j];
+  function sumPercent(tdata, pdata) {
+    var SumPercent = 0;
+    var totalPages = tdata;
+    var percent = JSON.parse(pdata);
+    for (var j=0; j<totalPages; j++) {
+      if (percent[j]===1) {
+        SumPercent += percent[j];
+      }
     }
+    SumPercent = Math.ceil(SumPercent/totalPages*100);
+    return SumPercent;
   }
-  SumPercent = Math.ceil(SumPercent/totalPages*100);
-  return SumPercent;
 }

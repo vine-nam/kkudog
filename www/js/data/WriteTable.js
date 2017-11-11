@@ -27,7 +27,7 @@ var WriteTable = function () {
     return deferred.promise();
   }
 
-  this.selectPage = function (query) {
+  this.selectSEPage = function (query) {
     var deferred = $.Deferred();
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT s_page, e_page FROM WriteTable WHERE isbn=?', [query], function (tx, results) {
@@ -44,7 +44,7 @@ var WriteTable = function () {
     });
     return deferred.promise();
   }
-
+  
   this.selectOne = function (query) {
     var deferred = $.Deferred();
     database.transaction(function (transaction) {
@@ -128,12 +128,12 @@ var WriteTable = function () {
     return deferred.promise();
   }
 
+  function dateToString (date) {
+    var month, day;
+    var dt = new Date(date);
+    month = dt.getMonth() + 1;
+    day = dt.getDate();
+    return  (month + "월 " + day + "일");
+  }
 }
 
-function dateToString (date) {
-  var month, day;
-  var dt = new Date(date);
-  month = dt.getMonth() + 1;
-  day = dt.getDate();
-  return  (month + "월 " + day + "일");
-}

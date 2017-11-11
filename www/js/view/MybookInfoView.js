@@ -21,9 +21,10 @@ var MybookInfoView = function (items) {
     this.$el.on('click', '.back', this.back);
     this.$el.on('click', this.classShow);
     this.$el.on('click', '.more', this.more);
+    this.$el.on('click', '.complete', this.complete);
+    this.$el.on('click', '.updateBook', this.updateBook);
     this.$el.on('click', '.update', this.update);
     this.$el.on('click', '.delete', this.delete);
-    this.$el.on('click', '.updateBook', this.updateBook);
     this.$el.on('click', '.overlayClose', this.headerRender);
     this.$el.on('click', '.add-book', searchBookInfoView.addBook);
 
@@ -37,8 +38,17 @@ var MybookInfoView = function (items) {
     this.render();
   };
 
-  this.back = function () {
+  this.back = function (event) {
+    event.preventDefault();
     window.history.back();
+  }
+  
+  this.classShow = function () {
+    if (!$(e.target).hasClass("more")) {
+      if ($("ul").hasClass("show")) {
+        $("ul").removeClass("show");
+      }
+    }
   }
 
   this.more = function () {
@@ -51,12 +61,26 @@ var MybookInfoView = function (items) {
     }
   }
 
-  this.classShow = function (e) {
-    if (!$(e.target).hasClass("more")) {
-      if ($("ul").hasClass("show")) {
-        $("ul").removeClass("show");
+  this.complete = function () {
+    if(items.complete) {//취소하기
+      completeUpdate(0);
+    } else {//완독
+      if(items.SumPercent < 90) {
+        window.plugins.toast.showShortBottom("90%이상 읽어주세요.");
+      } else {
+        completeUpdate(1);
       }
     }
+  }
+
+  function completeUpdate(isComplete) {
+    var query = [
+      isComplete,
+      items.isbn
+    ];
+    $.when(new MybookTable().updateComplete(query)).done(function() {
+      mybookHeaderView.setComplete(isComplete);
+    });
   }
 
   this.updateBook = function (event) {
@@ -68,8 +92,8 @@ var MybookInfoView = function (items) {
 
   this.headerRender = function (event) {
     event.preventDefault();
-    items.percent = searchBookInfoView.getPercent();
-    mybookHeaderView.setPercent(items.percent);
+    items.SumPercent = searchBookInfoView.getSumPercent();
+    mybookHeaderView.setSumPercent(items.SumPercent);
     $('#overlay').css("display", "none");
   }
 

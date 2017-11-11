@@ -212,6 +212,10 @@ ul {
   margin: auto;
   text-align: right;
 }
+.percent .complete {
+  color: orange;
+  text-align: center;
+}
 
 
 /* home의 캐릭터 이미지 관려 */

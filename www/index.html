@@ -340,7 +340,11 @@
         <a href="#mybook/{{@index}}">
           <img class="z-depth-3" src="{{image}}">
           <div class="percent">
-            {{#if SumPercent}}{{SumPercent}}%{{/if}}
+            {{#if complete}}
+              <div class="complete">완독</div>
+            {{else}}
+              {{#if SumPercent}}{{SumPercent}}%{{/if}}
+            {{/if}}
           </div>
         </a>
       </li>
@@ -383,7 +387,7 @@
       <span>
         <i class="material-icons more header-more right">more_vert</i>
         <ul class="hidden header-more-ul z-depth-3">
-          <li class="complete">완독</li>
+          <li class="complete">{{#if complete}}취소{{else}}완독{{/if}}</li>
           <li class="updateBook">수정</li>
           <li class="delete">삭제</li>
         </ul>

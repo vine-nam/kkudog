@@ -1,7 +1,6 @@
 var SearchBookInfoView = function () {
 
   var items = [];
-  var database = window.sqlitePlugin.openDatabase({ name: 'book.db', location: 'default' });
   var isUpdate = 0;
   var percent = [];
   var totalPages = 0;
@@ -44,6 +43,7 @@ var SearchBookInfoView = function () {
   function addBookFun() {
     var query = [
       items.isbn,
+      0,
       items.title,
       items.author,
       items.publisher,
@@ -63,10 +63,8 @@ var SearchBookInfoView = function () {
   }
 
   function updatePercent () {
-    $.when(writeTable.selectPage(items.isbn)).done(function(results) {
+    $.when(writeTable.selectSEPage(items.isbn)).done(function(results) {
       var page = results, len = results.length;
-      console.log(JSON.stringify(page));
-      console.log(len);
       for (i = 0; i < len; i++) {
         for (var j = page[i].s_page - 1; j < page[i].e_page; j++) {
           percent[j] = 1;
@@ -83,12 +81,18 @@ var SearchBookInfoView = function () {
       items.isbn
     ]; 
     $.when(new MybookTable().updatePage(query)).done(function(results) {
+      items.SumPercent = results;
       window.plugins.toast.showShortCenter("수정이 완료되었습니다.");
     });
   }
 
   this.getPercent = function (){
     return percent;
+  }
+
+  this.getSumPercent = function (){
+    alert(items.SumPercent);
+    return items.SumPercent;
   }
   
   this.render = function () {

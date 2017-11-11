@@ -16,7 +16,7 @@ var sqlite_db = function () {
     var deferred = $.Deferred();
     database.transaction(function (transaction) {
       var executeQuery = 'CREATE TABLE IF NOT EXISTS MybookTable ('
-        + 'isbn TEXT PRIMARY KEY NOT NULL, '
+        + 'isbn TEXT PRIMARY KEY NOT NULL, complete INTEGER NOT NULL, '
         + 'title TEXT NOT NULL, author TEXT, publisher TEXT, '
         + 'totalPages INTEGER NOT NULL, percent TEXT, image TEXT '
         + ');';
