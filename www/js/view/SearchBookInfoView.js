@@ -91,11 +91,11 @@ var SearchBookInfoView = function () {
   }
 
   this.getSumPercent = function (){
-    alert(items.SumPercent);
     return items.SumPercent;
   }
   
   this.render = function () {
+    items.isUpdate = isUpdate;
     this.$el.html(this.template(items));
     return this;
   };

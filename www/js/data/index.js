@@ -28,7 +28,7 @@ var sqlite_db = function () {
         });
         deferred.resolve();
     }, function (error) {
-      navigator.notification.alert('CREATE error: ' + error.message);
+      alert('CREATE error: ' + error.message);
     });
     return deferred.promise();
   }
@@ -49,7 +49,7 @@ var sqlite_db = function () {
         });
         deferred.resolve();
     }, function (error) {
-      navigator.notification.alert('CREATE error: ' + error.message);
+      alert('CREATE error: ' + error.message);
     });
     return deferred.promise();
   }
@@ -69,7 +69,7 @@ var sqlite_db = function () {
           alert("Error occurred while creating the table.");
         });
     }, function (error) {
-      navigator.notification.alert('CREATE error: ' + error.message);
+      alert('CREATE error: ' + error.message);
     });
     return deferred.promise();
   }

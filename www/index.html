@@ -629,7 +629,9 @@
           </span>
         </li>
         <li class="col s12">  
-          <button class="btn waves-effect waves-light add-book" type="submit" name="action">추가하기</button>
+          <button class="btn waves-effect waves-light add-book" type="submit" name="action">
+            {{#if isUpdate}}수정하기{{else}}추가하기{{/if}}
+          </button>
         </li>
       </ul>
     </div>
