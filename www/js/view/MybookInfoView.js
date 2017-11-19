@@ -31,8 +31,8 @@ var MybookInfoView = function (items) {
     $.when(writeTable.select(items.isbn)).done(function(results) {
       data = results;
       mybookcontentsView.setMybook(data);
-      items.percent = writeView.getPercent();
-      mybookHeaderView.setPercent(items.percent);
+      items.percent = writeView.getPercent(); 
+      mybookHeaderView.setPercent(items.totalPages, JSON.stringify(items.percent));
     });
 
     this.render();
@@ -43,8 +43,8 @@ var MybookInfoView = function (items) {
     window.history.back();
   }
   
-  this.classShow = function () {
-    if (!$(e.target).hasClass("more")) {
+  this.classShow = function (event) {
+    if (!$(event.target).hasClass("more")) {
       if ($("ul").hasClass("show")) {
         $("ul").removeClass("show");
       }
@@ -113,19 +113,19 @@ var MybookInfoView = function (items) {
 
     function deleteItem(result) {
       if (result === 1) {
-        if (rowid === "") {
+        if (rowid === "") {//책 삭제
           $.when(writeTable.delete(items.isbn)).done(function() {
             $.when(new MybookTable().delete(items.isbn)).done(function() {
               window.plugins.toast.showShortBottom("삭제되었습니다.");
               history.back();
             });
           });
-        } else {
+        } else {//기록 삭제
           $.when(writeTable.deleteOne(rowid)).done(function() {
             percentSql(data[index].s_page, data[index].e_page, 0);
-            window.plugins.toast.showShortBottom("삭제되었습니다.");
             data.splice(index, 1);
             mybookcontentsView.setMybook(data);
+            window.plugins.toast.showShortBottom("삭제되었습니다.");
           });
         }
       }
@@ -140,7 +140,7 @@ var MybookInfoView = function (items) {
         items.isbn
       ];
       $.when(new MybookTable().updatePercent(query)).done(function() {
-        mybookHeaderView.setPercent(JSON.stringify(items.percent));
+        mybookHeaderView.setPercent(items.totalPages, JSON.stringify(items.percent));
       });
     }
   }

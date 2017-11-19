@@ -17,6 +17,20 @@ var MybookHeaderView = function (items) {
     this.render();
   }
 
+  this.setPercent = function (tdata, pdata) {
+    var SumPercent = 0;
+    var totalPages = tdata;
+    var percent = JSON.parse(pdata);
+    for (var j=0; j<totalPages; j++) {
+      if (percent[j]===1) {
+        SumPercent += percent[j];
+      }
+    }
+    SumPercent = Math.ceil(SumPercent/totalPages*100);
+    items.SumPercent = SumPercent;
+    this.render();
+  }
+
   this.render = function () {
     this.$el.html(this.template(items));
     return this;

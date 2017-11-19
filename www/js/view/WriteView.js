@@ -2,7 +2,7 @@ var WriteView = function (item) {
 
   var items = {};
   var s_val, e_val, result;
-  var percent, totalPages;
+  var percent, totalPages, SumPercent;
 
   this.initialize = function () {
     this.$el = $('<div/>');
@@ -126,16 +126,23 @@ var WriteView = function (item) {
       }
       if(j===1) {
         query = [
+          totalPages,
           JSON.stringify(percent),
           items.isbn
         ];
-        new MybookTable().updatePercent(query);
+        $.when(new MybookTable().updatePage(query)).done(function(result) {
+          SumPercent = result;
+        });
       }
     }
   };
 
   this.getPercent = function () {
     return percent;
+  }
+
+  this.getSumPercent = function () {
+    return SumPercent;
   }
 
   this.pageMath = function () {
