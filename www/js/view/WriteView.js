@@ -122,8 +122,17 @@ var WriteView = function (item) {
 
     function percentSql(first, last, j) {
       for(var i=first-1; i<last; i++) {
-        percent[i] = j;
+        if(j===0) {
+          if(percent[i]>0) {
+            percent[i] -= 1;
+          } else {
+            percent[i] = 0;
+          }
+        } else {
+          percent[i] += 1;
+        }
       }
+      console.log(JSON.stringify(percent));
       if(j===1) {
         query = [
           totalPages,

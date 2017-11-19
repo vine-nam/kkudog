@@ -22,8 +22,8 @@ var MybookHeaderView = function (items) {
     var totalPages = tdata;
     var percent = JSON.parse(pdata);
     for (var j=0; j<totalPages; j++) {
-      if (percent[j]===1) {
-        SumPercent += percent[j];
+      if (percent[j]!==0) {
+        SumPercent += 1;
       }
     }
     SumPercent = Math.ceil(SumPercent/totalPages*100);

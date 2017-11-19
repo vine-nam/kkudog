@@ -133,7 +133,7 @@ var MybookInfoView = function (items) {
     
     function percentSql(first, last, j) {
       for (var i = first - 1; i < last; i++) {
-        items.percent[i] = j;
+        items.percent[i] -= 1;
       }
       var query = [
         JSON.stringify(items.percent),
