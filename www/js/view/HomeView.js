@@ -171,9 +171,8 @@ var HomeView = function () {
         at: _3_day_from_now,
         led: "00FF00",
         sound: null,
-        icon: "file:///img/icon/128x128.png",
-        smallIcon: "file:///img/icon/32x32.png"
-        //icon 어떻게 하는거야??????
+        icon: "file://assets/img/icon/128x128.png",
+        smallIcon: "file://assets/img/icon/32x32.png"
       });
     }
   }

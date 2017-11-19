@@ -16,12 +16,12 @@ var API = function () {
             },
             success: function (data) {
                 items = data.items;
-                deferred.resolve(items);
             },
             error: function (jqXHR, textStatus) {
-                console.log(textStatus);
-                deferred.resolve(textStatus);
+                items = textStatus;
             }
+        }).done(function() {
+            deferred.resolve(items);
         });
         return deferred.promise();
     }

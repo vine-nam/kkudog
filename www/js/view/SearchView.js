@@ -28,21 +28,18 @@ var SearchView = function () {
     w.scroll(function () {
       if (w.scrollTop() === d.height() - w.height()) {
         $('.spinner-wrapper').css('display', 'block');
-
-        setTimeout(function () {
-          page += 10;
-          api.requestBook(query, page).then(function (results) {
-
-            for (var i in results) {
-              items[page + i] = results[i];
-            }
-
-            searchListView.setData(items);
-            searchListView.render();
-
-            $('.spinner-wrapper').css('display', 'none');
-          })
-        }, 1200);
+        
+        checkConnection();
+        page += 10;
+        api.requestBook(query, page).then(function (results) {
+          for (var i in results) {
+            items[page + i] = results[i];
+          }
+          searchListView.setData(items);
+          searchListView.render();
+          $('.errorM').css('display', 'none');
+          $('.spinner-wrapper').css('display', 'none');
+        });
       }
     });
 
@@ -115,20 +112,28 @@ var SearchView = function () {
     searchListView.render();
     $('.errorM').css('display', 'none');
     $('.spinner-wrapper').css('display', 'block');
-
-    setTimeout(function () {
-      api.requestBook(query, page).then(function (results) {
-        if(typeof results === "object") {
-          items = results;
-          searchListView.setData(items);
-          searchListView.render();
-        } else {
-          $('.errorM').css('display', 'block');
-        }
-
-        $('.spinner-wrapper').css('display', 'none');
-      });
-    }, 1200);
+    
+    checkConnection();
+    api.requestBook(query, page).then(function (results) {
+      if(typeof results === "object") {
+        items = results;
+        searchListView.setData(items);
+        searchListView.render();
+      } else {
+        $('.errorM').css('display', 'block');
+      }
+      $('.spinner-wrapper').css('display', 'none');
+    });
+  }
+  
+  function checkConnection() {
+    var networkState = navigator.connection.type;
+    if (networkState === Connection.NONE) {
+      window.plugins.toast.showShortCenter("네트워크 연결을 확인해 주세요");
+      $('.spinner-wrapper').css('display', 'none');
+      $('.errorM').css('display', 'block');
+      return;
+    }
   }
 
   this.getItems = function () {
