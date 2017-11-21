@@ -64,11 +64,13 @@ var MybookInfoView = function (items) {
   this.complete = function () {
     if(items.complete) {//취소하기
       completeUpdate(0);
+      window.plugins.toast.showShortCenter("취소 되었습니다.");
     } else {//완독
       if(items.SumPercent < 90) {
-        window.plugins.toast.showShortBottom("90%이상 읽어주세요.");
+        window.plugins.toast.showShortCenter("90%이상 읽어주세요.");
       } else {
         completeUpdate(1);
+        window.plugins.toast.showShortCenter("완료 되었습니다.");
       }
     }
   }

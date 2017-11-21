@@ -1,7 +1,7 @@
 var WriteView = function (item) {
 
   var items = {};
-  var s_val, e_val, result;
+  var s_val, e_val, page, result;
   var percent, totalPages, SumPercent;
 
   this.initialize = function () {
@@ -78,8 +78,9 @@ var WriteView = function (item) {
 
     s_val = Number($("#s_page").val());
     e_val = Number($("#e_page").val());
+    page = Number($("#page").val());
     var contents =$("#textarea").val();
-    if(s_val<=0 || e_val<=0 || contents==='' || page==='') {
+    if(s_val<=0 || e_val<=0 || contents==='' || page===0) {
       window.plugins.toast.showShortBottom("모두 입력해 주세요.");
       return;
     }
