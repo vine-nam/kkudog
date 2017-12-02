@@ -1,6 +1,13 @@
 # kkudog
 꾸준한 독서 `꾸독`입니다:)
 
+## run
+```c
+  > cd 폴더위치
+  > cordova prepar
+  > cordova run android
+```
+
 ## lib
 - css
   - materialize
