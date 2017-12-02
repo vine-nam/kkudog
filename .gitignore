@@ -2,7 +2,6 @@
 node_modules/
 platforms/
 plugins/
-res/
 package-log.json
 www/assets/font-awesome/
 www/assets/materialize/
